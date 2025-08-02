@@ -1,27 +1,38 @@
-.carousel-inner {
-  max-width: 300px;
-  max-height: 300px;
-  width: 100%;
-  height: auto;
-  margin: auto;
-}
-.carousel-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background-color: white;
-  padding: 10px;
-}
-
-
-/* Estilo específico para el input de  nombre y edad  */
+/* Inputs */
 #age.form-control,
 #name.form-control {
   max-width: 40em;
 }
+
 @media (max-width: 600px) {
   #name.form-control,
   #age.form-control {
     max-width: 100%;
   }
+}
+
+/* Tarjetas de grupo */
+.group-card {
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
+}
+
+.group-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.group-card.selected {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.25);
+  transform: scale(1.05);
+}
+
+/* Contenedor responsive */
+.grupo-container {
+  max-width: 40em;
 }

@@ -1,7 +1,8 @@
+/* Fuente y layout principal */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: white;
-  color: black;
+  color: #212529;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,59 +12,70 @@ body {
   box-sizing: border-box;
 }
 
+/* Título */
 h1 {
-  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0d6efd;
   text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
+/* Contenedor del juego */
 .pato-container {
-  width: 60%;
-  max-width: 90vw;
-  height: auto;
+  width: 100%;
+  max-width: 700px;
   aspect-ratio: 16 / 9;
-  background-color: skyblue;
-  border: 2px solid #555;
+  background: linear-gradient(to bottom right, #87ceeb, #b0e0e6);
+  border: 2px solid #0d6efd;
+  border-radius: 16px;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* Imagen del pato */
 .pato {
   width: 28%;
   height: auto;
   margin-bottom: 10%;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 50%;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+.pato:hover {
+  transform: scale(1.05);
 }
 
+/* Botón de disparar */
 #shootButton {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   padding: 1rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
-  background-color: red;
+  background: linear-gradient(to top, #dc3545, #ff4d4d);
   color: white;
-  border: 5px outset #990000;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
   cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s, border 0.2s;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+#shootButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.5);
 }
 
 #shootButton:active,
 #shootButton:disabled {
   background-color: #880000;
-  border-style: inset;
-  cursor: not-allowed;
-}
-
-.carousel-item img {
-  max-height: 300px;
-  object-fit: cover;
-}
-#imageSection {
-  display: none;
-}
-#initButton:disabled {
-  opacity: 0.5;
+  box-shadow: none;
   cursor: not-allowed;
 }
