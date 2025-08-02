@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validateForm() {
     const nameFilled = nameInput.value.trim() !== '';
-    const ageFilled = ageInput.value.trim() !== '';
+    const ageFilled = ageInput.value.trim() !== '' && !isNaN(ageInput.value);
     // Si alguno está vacío, también limpiamos la selección
     if (!nameFilled || !ageFilled) {
       groupCards.forEach(c => c.classList.remove('selected'));

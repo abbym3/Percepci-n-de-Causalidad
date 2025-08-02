@@ -3,7 +3,6 @@
 #name.form-control {
   max-width: 40em;
 }
-
 @media (max-width: 600px) {
   #name.form-control,
   #age.form-control {
