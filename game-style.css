@@ -56,3 +56,14 @@ h1 {
   cursor: not-allowed;
 }
 
+.carousel-item img {
+  max-height: 300px;
+  object-fit: cover;
+}
+#imageSection {
+  display: none;
+}
+#initButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
