@@ -13,3 +13,21 @@
   padding: 10px;
 }
 
+
+/* Estilo específico para el input de edad  */
+#age.form-control {
+  max-width: 20em; 
+}
+
+/* Estilo específico para el input de nombre  */
+#name.form-control {
+  max-width: 20em;
+}
+
+/* Asegura que se adapten en móviles */
+@media (max-width: 600px) {
+  #name.form-control,
+  #age.form-control {
+    max-width: 100%;
+  }
+}
