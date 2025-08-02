@@ -1,39 +1,26 @@
-let startTime = null;
-let tickCount = 0;
+let startTime = performance.now();
+// Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js"))
 
-onmessage = function (e) {
-  if (e.data === 'start') {
-    startTime = Date.now();
-    tick();
+function simulate() {
+  const now = performance.now();
+  // Obtener el tiempo actual
+
+  const elapsed = now - startTime;
+  // Calcular cuánto tiempo ha pasado desde el último reinicio
+
+  if (elapsed >= 100) {
+    // Si han pasado al menos 100 ms...
+
+    postMessage(`Tiempo: ${Math.floor(elapsed)} ms`);
+    // Enviar mensaje al hilo principal
+
+    startTime = performance.now();
+    // Nuevo punto de referencia que marca el momento en que se imprimió el último mensaje
   }
-};
 
-function tick() {
-  tickCount++;
-  const now = Date.now();
-  const targetTime = startTime + tickCount * 1000; // tiempo ideal del tick actual
-  const drift = now - targetTime; // cuánto nos desviamos
-  const elapsed = Math.floor((now - startTime) / 1000);
-
-  postMessage(`Han pasado ${elapsed} s (deriva: ${drift} ms)`);
-
-  setTimeout(tick, 1000 - drift); // compensamos el retraso
+  setTimeout(simulate, 5);
+  // Repetir la función cada 5 ms
 }
 
-
-//Verión anterior (sin deriva)
-// let startTime = null;
-
-// self.onmessage = function (e) {
-//   if (e.data === 'start') {
-//     startTime = Date.now();
-//     tick();
-//   }
-// };
-
-// function tick() {
-//   const now = Date.now();
-//   const elapsed = (now - startTime)/1000;
-//   postMessage(`Han pasado ${elapsed} s`);
-//   setTimeout(tick, 1000);
-// }
+simulate();
+// Iniciar la simulación
