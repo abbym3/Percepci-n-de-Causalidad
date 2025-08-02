@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () { 
+  //Esperar a que el DOM esté listo
+
+  //Referencias a elementos del DOM
   const nameInput = document.getElementById('name');
   const ageInput = document.getElementById('age');
   const startBtn = document.getElementById('startBtn');
@@ -29,7 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Acción del botón
-  startBtn?.addEventListener("click", function () {
-    window.location.href = "game.html"; //"https://erick-m-8.github.io/Percepci-n-de-Causalidad/game.html" //
-  });
+startBtn?.addEventListener("click", function () {
+  // 1. Guarda los datos en localStorage
+  localStorage.setItem("nombre", nameInput.value);
+  localStorage.setItem("edad", ageInput.value);
+  localStorage.setItem("grupo", selectedGroup);
+
+  // 2. Luego lleva al usuario al juego
+  window.location.href = "game.html";
+});
 });
