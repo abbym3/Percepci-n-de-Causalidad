@@ -56,12 +56,12 @@
     
     
 
-    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
-        TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
-        TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
-        TXT.WriteLine("Subject: ")
-        TXT.WriteLine()
-    End Sub
+    'Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
+        'TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
+        'TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
+        'TXT.WriteLine("Subject: ")
+        'TXT.WriteLine()
+    'End Sub
 
     Private Sub Empecemos_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Empecemos.Click 'Se ejecuta con click al boton Empecemos
         Inicia.Visible = False 'Asumo que es un label que muestra la palabra iniciar
@@ -135,17 +135,17 @@
         Demora = 0 'se reinicia a 0 para que no interfiera en futuras mediciones.
     End Sub
 
-    Function Dado_1() 'es un dado cuyo tamaño depende de cuántos clics hizo el participante
-        Randomize()
-        If b = 0 Then 'b es el numero de clicks en el bloque anterior, en la primera iteracion o si el usuario no da clics b = 0
-            dado1 = 0 'por lo que dado1 = 0'
-        Else
-            dado1 = Int((100 / b * Rnd()) + 1) 'Int(100/100*0.0001+1) = 1'
-                                                'Int(100/1*0.9999+1) = 100' 
-            '(En todos los casos el minimo es 1 pero a menos clicks el numero maximo es mas alto)
-        End If
-        Return dado1
-    End Function
+    ' Function Dado_1() 'es un dado cuyo tamaño depende de cuántos clics hizo el participante
+    '     Randomize()
+    '     If b = 0 Then 'b es el numero de clicks en el bloque anterior, en la primera iteracion o si el usuario no da clics b = 0
+    '         dado1 = 0 'por lo que dado1 = 0'
+    '     Else
+    '         dado1 = Int((100 / b * Rnd()) + 1) 'Int(100/100*0.0001+1) = 1'
+    '                                             'Int(100/1*0.9999+1) = 100' 
+    '         '(En todos los casos el minimo es 1 pero a menos clicks el numero maximo es mas alto)
+    '     End If
+    '     Return dado1
+    ' End Function
 
     Sub Cambio_estimuloR()
         CER = CER + 1 'cambios de estímulo han sido provocados por el comportamiento de la maquina
@@ -407,26 +407,26 @@
     'Private Sub Timer3_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer3.Tick 'simula los pulsos de la maquina
         'n = n + 1 'Cada que timer 3 se ejecuta se incrementa n en 1 (contador de ciclos)
         'Label5.Text = n 
-        If permiso = True Then 'solo genera pulsos si permiso está activado(evita que se generen estímulos durante el reforzamiento) aqui puedes ver cuando se bloquean pulsos de maquina
-            Dado_1() 'Solo si el resultado es exactamente 1,
-            Label7.Text = dado1
-            If dado1 = 1 Then
-                Randomize()
-                dado_rob = Int(18 * Rnd() + 1) ' Dado de 18 caras, en promedio, uno de cada 18 pulsos de la computadora provocará que la tecla se apague
-                pr = pr + 1 '(contador de intentos de apagado).
-                Label8.Text = dado_rob
-                If dado_rob = 2 Then ' ' Solo si dado1 = 1 (probabilidad depende de b), se lanza dado_rob
+        'If permiso = True Then 'solo genera pulsos si permiso está activado(evita que se generen estímulos durante el reforzamiento) aqui puedes ver cuando se bloquean pulsos de maquina
+            'Dado_1() 'Solo si el resultado es exactamente 1,
+            'Label7.Text = dado1
+            'If dado1 = 1 Then
+                'Randomize()
+                'dado_rob = Int(18 * Rnd() + 1) ' Dado de 18 caras, en promedio, uno de cada 18 pulsos de la computadora provocará que la tecla se apague
+                'pr = pr + 1 '(contador de intentos de apagado).
+                'Label8.Text = dado_rob
+                'If dado_rob = 2 Then ' ' Solo si dado1 = 1 (probabilidad depende de b), se lanza dado_rob
                                         ' dado_rob tiene 1/18 ≈ 5.5% de probabilidad de activar el cambio
                                         ' Probabilidad total = P(dado1 = 1) × (1/18)
-                    Cambio_estimuloR()
-                End If
-            End If
-        End If
+                    'Cambio_estimuloR()
+                'End If
+            'End If
+        'End If
         'If n >= 100 Then
             'b = contador 'cada 10 segundos se guarda el numero de clicks
             'n = 0 'se reinicia n
             'Label6.Text = "Click dados en el bloque anterior" & b
             'contador = 0 'El contador otra vez cambia a 0
         'End If
-    End Sub
+    'End Sub
 
