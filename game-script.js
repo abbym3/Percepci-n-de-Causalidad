@@ -7,12 +7,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const worker = new Worker("timerWorker.js");
     // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
 
-    worker.postMessage({type:"start"});
+    //worker.postMessage({type:"start"});
     // Enviar mensaje al worker para indicarle que inicie su proceso
 
     worker.onmessage = function (e) {
-        console.log("Mensaje del Worker:", e.data); 
+        //console.log("Mensaje del Worker:", e.data); 
         // Escuchar mensajes enviados por el worker y mostrarlos en consola
+        const mensaje = e.data;
+        if (mensaje = "10 ms"){
+
+        }
+        if(mensaje = "10s"){
+            
+        }
     };
 
     shootbutton .addEventListener("click", function () {
