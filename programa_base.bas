@@ -1,67 +1,3 @@
-Imports System.IO
-
-Public Class Form1
-    'archivo de texto para guardar el registro del experimento
-    Public TXT As StreamWriter 
-    
-    'controlan los tiempos del experimento
-    Public InicioEntrenamiento As Integer 
-    Public tiempo_entrenamiento As Integer
-    Public Tiempo_actual As Integer
-
-    'estadísticas del desempeño
-    Public CEH As Integer
-    Public CER As Integer
-    Public Aciertos As Integer
-    Public Errores As Integer
-
-    'control de estado.
-    'Public booleano As Boolean = False 'No esta en uso(?)
-    Public BanderaD As Boolean = False
-    Public permiso As Boolean = True 'Bloquea o permite la accion Timer3
-
-    'manejan cuánto esperar antes de cambiar el estímulo.
-    Public ContadorDemora As Integer
-    Public ValorDemora As String
-
-    Public Entrenamiento As String = "entrenamiento"
-    Public DemoraInicia As Integer
-    Public DemoraActual As Integer
-
-    Public tr As Integer ' Toques 
-    Public pr As Integer ' Pulsos 
-    Public promedio As Integer
-    Public promedioRedondeado As Double
-    Public score As Integer
-
-    Public derecha As Integer
-    Public izquierda As Integer
-    Public verde As Integer
-    Public rojo As Integer
-
-    Public contador As Integer
-
-    Public dado_human As Integer 'resultado del dado que determina si se apagará la tecla tras presionar.
-
-    Public dcolor As Integer
-
-    Public Duracion_Ref As Integer 'duración del refuerzo
-
-    Public Demora As Integer
-    Public n As Integer 'ciclos del Timer3
-    Public b As Integer 'clicks acumulados en un bloque
-    'Public D As Integer 'no se usa(?)
-    Public dado1 As Integer 'resultado de función Dado_1
-    Public dado_rob As Integer 'dado de la computadora
-    
-    
-
-    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
-        TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
-        TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
-        TXT.WriteLine("Subject: ")
-        TXT.WriteLine()
-    End Sub
 
     Private Sub Empecemos_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Empecemos.Click 'Se ejecuta con click al boton Empecemos
         Inicia.Visible = False 'Asumo que es un label que muestra la palabra iniciar
@@ -405,7 +341,7 @@ Public Class Form1
 
 
     Private Sub Timer3_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer3.Tick 'simula los pulsos de la maquina
-        n = n + 1 'Cada que timer 3 se ejecuta se incrementa n en 1 (contador de ciclos)
+        'n = n + 1 'Cada que timer 3 se ejecuta se incrementa n en 1 (contador de ciclos)
         Label5.Text = n 
         If permiso = True Then 'solo genera pulsos si permiso está activado(evita que se generen estímulos durante el reforzamiento) aqui puedes ver cuando se bloquean pulsos de maquina
             Dado_1() 'Solo si el resultado es exactamente 1,
@@ -423,7 +359,7 @@ Public Class Form1
             End If
         End If
         If n >= 100 Then
-            b = contador 'cada 10 segundos se guarda el numero de clicks
+            'b = contador 'cada 10 segundos se guarda el numero de clicks
             n = 0 'se reinicia n
             Label6.Text = "Click dados en el bloque anterior" & b
             contador = 0 'El contador otra vez cambia a 0

@@ -1,5 +1,5 @@
 let startTime = performance.now();
-// Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js"))
+// Guarda el tiempo actual en milisegundos con decimales (Cuando se cree el objeto Worker("timerWorker.js)
 let blocks_100_ms = null
 
 function simulate() {
@@ -13,14 +13,17 @@ function simulate() {
     // Si han pasado al menos 100 ms...
 
     blocks_100_ms += 1
-    postMessage(`Tiempo: ${Math.floor(elapsed)} ms`);
+    //Sumamos un bloque de 100 ms
+
+    postMessage(`10 ms`);
     // Enviar mensaje al hilo principal
 
     startTime = performance.now();
     // Nuevo punto de referencia que marca el momento en que se imprimió el último mensaje
 
     if(blocks_100_ms == 100){
-      postMessage(`han pasado 100 bloques de 100 ms`);
+      postMessage(`10 s`);
+      //Si pasan 100 bloques de 100 ms se indica que han pasado 10 s
       blocks_100_ms = 0
     }
   }
