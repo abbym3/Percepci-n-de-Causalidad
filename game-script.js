@@ -1,7 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {     
     // Esperar a que todos los elementos del DOM estén completamente cargados
 
+    const worker = new Worker("timerWorker.js");
+    // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
+
+    const shootbutton = document.getElementById("shootButton"); 
+    // Obtener referencia al botón con ID 'shootButton'
+
     let number_try_machine = 0;
+    //Número de intentos de la máquina por generar un CEI
+
+    let shoots = 0;
+    //Número de disparos (clicks al boton central)
+
+    let shoots_interval_10s = [];
+    //Arreglo que permite guardar el número de disparos cada 10 segundos 
+
+    let i = 0;
+    //Indice que permite seleccionar la posición 0 a n, donde 0 guarda la cantidad de disparos en el primer intervalo de 10s  
+
+    let permission_calc_p_machine = true;
+    // Flag que permite bloquear al calculo de probabilidad de la máquina
 
     function calc_p_machine(shoots_interval_10s_previous) {
         let p_machine_1;
@@ -10,52 +29,37 @@ document.addEventListener("DOMContentLoaded", function () {
             p_machine_1 = 0;
         } else {
             p_machine_1 = Math.floor((100 / shoots_interval_10s_previous * Math.random()) + 1);
-        }
 
-        if (p_machine_1 === 1) {
-            const p_machine_2 = Math.floor(Math.random() * 18) + 1;
-            number_try_machine += 1;
+            if (p_machine_1 === 1) {
+                const p_machine_2 = Math.floor(Math.random() * 18) + 1;
+                number_try_machine += 1;
 
-            if (p_machine_2 === 2) {
-                CEI();
+                if (p_machine_2 === 2) {
+                    CEI();
+                }
             }
         }
     }
 
     function CEI() {
-        console.log("¡Cambio de estímulo reforzante activado!");
+        console.log("¡Cambio de estímulo independiente activado!");
     }
 
-    const shootbutton = document.getElementById("shootButton"); 
-    // Obtener referencia al botón con ID 'shootButton'
 
-    const worker = new Worker("timerWorker.js");
-    // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
-
-    let shoots = 0;
-    let shoots_interval_10s = [];
-    let i = 0;
-    let permission_calc_p_machine = true;
-
-    //worker.postMessage({type:"start"});
-    // Enviar mensaje al worker para indicarle que inicie su proceso
 
     worker.onmessage = function (e) {
-        //console.log("Mensaje del Worker:", e.data); 
-        // Escuchar mensajes enviados por el worker y mostrarlos en consola
-
         const mensaje = e.data;
 
         if (mensaje === "100 ms" && permission_calc_p_machine === true && i !== 0) {
             // La máquina no genera pulsos hasta los primeros 10 segundos (donde i+=1)
             //console.log('Han pasado 100 ms');
-            calc_p_machine(shoots_interval_10s[i - 1]);
+            calc_p_machine(shoots_interval_10s[i - 1]); //Lo que necesito para cacular p machine son los clics del intervalo anterior
         }
 
         if (mensaje === "10 s") {
             //console.log('Han pasado 10s');
             shoots_interval_10s[i] = shoots;
-            console.log(`${shoots_interval_10s[i]}`);
+            console.log(`Número de clics en intervalo anterior: ${shoots_interval_10s[i]}`);
             shoots = 0;
             i += 1;
         }
