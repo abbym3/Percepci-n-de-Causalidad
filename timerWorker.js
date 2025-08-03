@@ -14,12 +14,14 @@ function simulate() {
     //Calcula cuantos bloques de completos de 100 ms han pasado
 
     //console.log(`Pasaron ${elapsed.toFixed(2)} ms`);
+    postMessage('100 ms')
     // Enviar mensaje al hilo principal
 
     /*---------------------------------*/
     blocks_100_ms += blocksPassed;
     if (blocks_100_ms >= 100) {
-      //onsole.log(`Pasaron 10 s`);
+      postMessage('10 s')
+      //console.log(`Pasaron 10 s`);
       blocks_100_ms = 0; // Reiniciar contador
     }
     /*--------------------------------*/
@@ -28,7 +30,7 @@ function simulate() {
     // Avanza el startTime exactamente la cantidad de tiempo ya procesado
   }
 
-  setTimeout(simulate, 4);
+  setTimeout(simulate, 5);
   // Repetir la función cada 4 ms
 }
 
