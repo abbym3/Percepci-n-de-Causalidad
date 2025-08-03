@@ -30,8 +30,8 @@ function simulate() {
     // Avanza el startTime exactamente la cantidad de tiempo ya procesado (Bloques de 100 ms)
   }
 
-  setTimeout(simulate, 5);
-  // Repetir la función cada 5 ms
+  setTimeout(simulate, 4);
+  // Repetir la función cada 4 ms
 }
 
 simulate();
