@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             p_machine_1 = 0;
         } else {
             p_machine_1 = Math.floor((100 / shoots_interval_10s_previous * Math.random()) + 1);
+            console.log("Calculos p_machine_1")
 
             if (p_machine_1 === 1) {
                 const p_machine_2 = Math.floor(Math.random() * 18) + 1;
