@@ -406,7 +406,7 @@
 
     'Private Sub Timer3_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer3.Tick 'simula los pulsos de la maquina
         'n = n + 1 'Cada que timer 3 se ejecuta se incrementa n en 1 (contador de ciclos)
-        Label5.Text = n 
+        'Label5.Text = n 
         If permiso = True Then 'solo genera pulsos si permiso está activado(evita que se generen estímulos durante el reforzamiento) aqui puedes ver cuando se bloquean pulsos de maquina
             Dado_1() 'Solo si el resultado es exactamente 1,
             Label7.Text = dado1
@@ -423,10 +423,10 @@
             End If
         End If
         'If n >= 100 Then
-            b = contador 'cada 10 segundos se guarda el numero de clicks
-            n = 0 'se reinicia n
-            Label6.Text = "Click dados en el bloque anterior" & b
-            contador = 0 'El contador otra vez cambia a 0
-        End If
+            'b = contador 'cada 10 segundos se guarda el numero de clicks
+            'n = 0 'se reinicia n
+            'Label6.Text = "Click dados en el bloque anterior" & b
+            'contador = 0 'El contador otra vez cambia a 0
+        'End If
     End Sub
 

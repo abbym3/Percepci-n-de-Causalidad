@@ -9,7 +9,7 @@ function simulate() {
   const elapsed = now - startTime;
   // Calcular cuánto tiempo ha pasado desde el último reinicio
 
-  if (elapsed >= 100) {
+  if (elapsed >= 94) { //Frecuencia de eventos ~ 100 ms
     const blocksPassed = Math.floor(elapsed / 100);
     //Calcula cuantos bloques de completos de 100 ms han pasado
 
