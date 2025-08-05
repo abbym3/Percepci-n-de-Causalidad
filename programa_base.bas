@@ -63,22 +63,22 @@
         'TXT.WriteLine()
     'End Sub
 
-    Private Sub Empecemos_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Empecemos.Click 'Se ejecuta con click al boton Empecemos
-        Inicia.Visible = False 'Asumo que es un label que muestra la palabra iniciar
-        Timer3.Start() 'es un objeto System.Windows.Forms.Timer  lanza eventos en intervalos definidos (por ejemplo, cada 100 ms)
+    'Private Sub Empecemos_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Empecemos.Click 'Se ejecuta con click al boton Empecemos
+        'Inicia.Visible = False 'Asumo que es un label que muestra la palabra iniciar
+        'Timer3.Start() 'es un objeto System.Windows.Forms.Timer  lanza eventos en intervalos definidos (por ejemplo, cada 100 ms)
 
-        Button1.Visible = True 'Al inicio el boton del centro es visible 
-        BtnIzqOff.Visible = True 'Botones laterales en estado apagado se muestran
-        BtnDerOff.Visible = True
+        'Button1.Visible = True 'Al inicio el boton del centro es visible 
+        'BtnIzqOff.Visible = True 'Botones laterales en estado apagado se muestran
+        'BtnDerOff.Visible = True
         Label9.Visible = True 'muestra cuánto tiempo lleva el entrenamiento en milisegundos
 
-        Empecemos.Visible = False 'Oculta el boton de Empecemos
-        InicioEntrenamiento = Environment.TickCount 'Guarda el momento exacto en que el usuario hace clic en “Empecemos”
+        'Empecemos.Visible = False 'Oculta el boton de Empecemos
+        'InicioEntrenamiento = Environment.TickCount 'Guarda el momento exacto en que el usuario hace clic en “Empecemos”
 
         'Este es un bucle infinito
-        Do
-            Tiempo_actual = Environment.TickCount
-            tiempo_entrenamiento = (Tiempo_actual - InicioEntrenamiento) 'Mide cuánto tiempo ha pasado desde que pulso Empecemos click
+        'Do
+            'Tiempo_actual = Environment.TickCount
+            'tiempo_entrenamiento = (Tiempo_actual - InicioEntrenamiento) 'Mide cuánto tiempo ha pasado desde que pulso Empecemos click
             Label9.Text = tiempo_entrenamiento
 
             If dado_human = 1 Then 'es una variable que se activa cuando el usuario presiona el botón central y el dado da 1. 
@@ -90,8 +90,8 @@
                 End If
             End If
             My.Application.DoEvents() 'Esto permite que la interfaz responda mientras se ejecuta el bucle
-        Loop
-    End Sub
+        'Loop
+    'End Sub
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click 'Cuando se le da click a button 1
         TXT.WriteLine(tiempo_entrenamiento & ";Centro") 'Se registra el tiempo de entrenamiento (Desde el inicio) y el evento centro
