@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let p_tck_machine = Math.floor(Math.random() * 18) + 1;
         //La probailidad de que la máquina haga un intento es de 1/18
         number_try_machine += 1;
-        console.log(`Calculo p_machine: ${p_machine}`)
+        console.log(`Calculo p_machine: ${p_tck_machine}`)
         if (p_tck_machine === 2) {
             CEI();
         }
