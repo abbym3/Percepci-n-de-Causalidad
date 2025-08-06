@@ -1,4 +1,3 @@
-/* Fuente y layout principal */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: white;
@@ -12,7 +11,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Título */
 h1 {
   font-size: 2rem;
   font-weight: 600;
@@ -22,7 +20,6 @@ h1 {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-/* Contenedor del juego */
 .pato-container {
   width: 100%;
   max-width: 700px;
@@ -38,7 +35,6 @@ h1 {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Imagen del pato */
 .pato {
   width: 28%;
   height: auto;
@@ -53,7 +49,6 @@ h1 {
   transform: scale(1.05);
 }
 
-/* Botón de disparar */
 #shootButton {
   margin-top: 2rem;
   padding: 1rem 2rem;
@@ -82,18 +77,49 @@ h1 {
 
 .arma {
   position: absolute;
-  width: 25vw; 
-  max-width: 220px; 
+  width: 30vw;
+  max-width: 220px;
   height: auto;
-  transition: transform 0.2s ease;
+  transition: transform 0.1s ease;
 }
 
 #armaIzquierda {
-  bottom: -11vh;
-  left: 5vh;
+  bottom: -13vh;
+  left: 1vh;
+  transform-origin: 80% center;
 }
 
 #armaDerecha {
-  bottom: -11vh;
-  right: 5vh;
+  bottom: -13vh;
+  right: 1vh;
+  transform-origin: 20% center;
+}
+
+.retroceso_izquierda {
+  animation: 
+    sacudida 0.1s ease,
+    retrocesoArma_izquierda 0.3s ease-out;
+}
+
+.retroceso_derecha {
+  animation: 
+    sacudida 0.1s ease,
+    retrocesoArma_derecha 0.3s ease-out;
+}
+
+@keyframes retrocesoArma_izquierda {
+  0% { transform: translateX(0) rotate(0deg); } 
+  20% { transform: translateX(-12px) rotate(-8deg); } 
+  100% { transform: translateX(0) rotate(0deg); } 
+}
+@keyframes retrocesoArma_derecha {
+  0% { transform: translateX(0) rotate(0deg); } 
+  20% { transform: translateX(12px) rotate(8deg); } 
+  100% { transform: translateX(0) rotate(0deg); } 
+}
+@keyframes sacudida {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-2px, -3px); }
+  50% { transform: translate(3px, -5px); }
+  75% { transform: translate(-1px, -2px); }
 }
