@@ -31,7 +31,7 @@ h1 {
   border: 2px solid #0d6efd;
   border-radius: 16px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -78,4 +78,22 @@ h1 {
   background-color: #880000;
   box-shadow: none;
   cursor: not-allowed;
+}
+
+.arma {
+  position: absolute;
+  width: 25vw; 
+  max-width: 220px; 
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+#armaIzquierda {
+  bottom: -11vh;
+  left: 5vh;
+}
+
+#armaDerecha {
+  bottom: -11vh;
+  right: 5vh;
 }
