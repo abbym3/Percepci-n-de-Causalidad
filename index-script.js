@@ -18,8 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const ageInput = document.getElementById('age');
   const startBtn = document.getElementById('startBtn');
   const groupCards = document.querySelectorAll('.group-card'); //Es un array con todas las tarjetas (Cada tarjeta (imagen) es un grupo)
-  //Referencias a elementos del DOM
-
+  
   let selectedGroup = null;
   groupCards.forEach(card => { //Esto recorre cada tarjeta ...
     card.addEventListener('click', () => { // y le pone un event listenner (función que se ejecuta al hacer un click)
@@ -39,10 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
         grupo: selectedGroup
       }
     };
-    localStorage.setItem("jugador", JSON.stringify(jugador));
-    // Guarda los datos en localStorage
-    window.location.href = "game.html";
-    //Lleva al usuario al juego
+    localStorage.setItem("jugador", JSON.stringify(jugador)); // Guarda los datos en localStorage
+    window.location.href = "game.html"; //Lleva al usuario al juego
   });
   // Acción del botón
 
