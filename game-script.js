@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handle10sTick(){
-        console.log(`Intervalo ${i}: Disparos = ${shoots}`);
+        console.log(`-----------Intervalo ${i}: Disparos = ${shoots}--------------`);
         //console.log('Han pasado 10s');
         shoots_interval_10s[i] = shoots; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shoots_interval_10s[i]}`);
