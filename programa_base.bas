@@ -123,11 +123,11 @@
         Timer3.Stop() 'Timer3.Stop() pausa timer3 (posible pulso de la maquina)
         Randomize()
         dcolor = Int(2 * Rnd()) + 1 'Lanza un dado de 2 caras para decidir el paquete de botones
-        If dcolor = 1 Then
-            Paquete_1() 'se activa el paquete 1 (izq rojo| der verde)
-        Else
-            Paquete_2() 'se activa el paquete 2 (izq verde| der rojo)
-        End If
+        'If dcolor = 1 Then
+            'Paquete_1() 'se activa el paquete 1 (izq rojo| der verde)
+        'Else
+            'Paquete_2() 'se activa el paquete 2 (izq verde| der rojo)
+        'End If
         dado_human = 4 'Evita volver a ejecutar la logica del bucle Do
         ListBox3.SetSelected(ContadorDemora, False) 'Deselecciona el valor de demora que se usó en esta ronda.
         ContadorDemora = ContadorDemora + 1 'Avanza el índice para que en el próximo cambio humano se use el siguiente valor de demora en ListBox3
@@ -252,11 +252,11 @@
         End If
 
         ' Oculta botones de respuesta
-        Button1.Visible = False
-        BotonIzqRoj.Visible = False
-        BotonVer.Visible = False
-        BtnDerVer.Visible = False
-        BtnDerRoj.Visible = False
+        ' Button1.Visible = False
+        ' BotonIzqRoj.Visible = False
+        ' BotonVer.Visible = False
+        ' BtnDerVer.Visible = False
+        ' BtnDerRoj.Visible = False
 
         ' Muestra reforzamiento visual
         PictureBox1.Visible = True

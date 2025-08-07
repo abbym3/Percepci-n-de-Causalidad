@@ -5,12 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const shootbutton = document.getElementById("shootButton"); 
     const armaIzquierda = document.getElementById("armaIzquierda");
     const armaDerecha = document.getElementById("armaDerecha");
+    const buttonleft = document.getElementById("ceButtonLeft");
+    const buttonright = document.getElementById("ceButtonRight");
     let number_try_machine = 0; //Número de intentos de la máquina por generar un CEI
     let shoots = 0; //Número de disparos (clicks al boton central)
     let shoots_interval_10s = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
     let i = 0; //Indice que permite seleccionar la posición 0 a n, donde i guarda la cantidad de disparos en intervalo n de 10s  
     let permission_adjust_p1 = true; // Flag para habilitar o bloquear el cálculo de probabilidad de la máquina
     let ButtonsConfig = null; // Guardará 0 (verde-izq) o 1 (verde-der)
+    let correctColor = null; // 'green' o 'red' según el tipo de CE
+    let permission_set_number_clics = true;
 
 
     function adjust_p1_based_on_clicks(shoots_interval_10s_previous) {
@@ -38,8 +42,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function CEI() {
         console.log("¡Cambio de estímulo independiente activado!");
+        correctColor = 'green';
+        activateCE();
+    }
+
+    function CED() {
+        console.log("¡Cambio de estímulo dependiente activado!");
+        correctColor = 'red';
+        activateCE();
+    }
+
+    function activateCE(){
         // Desactivar ajustes de probabilidad
         permission_adjust_p1 = false
+        // Desactivar almacenamiento de clics c/10s
+        permission_set_number_clics = false   
 
         // Cambiar pantallas
         document.getElementById("GameScreen").classList.remove("ScreenOn");
@@ -58,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
         rightButton.className = "ce-button";
 
         // Aleatorio: 0 o 1
-        currentCEIConfig = Math.random() > 0.5 ? 1 : 0;
+        ButtonsConfig = Math.random() > 0.5 ? 1 : 0;
 
-        if (currentCEIConfig === 0) {
+        if (ButtonsConfig === 0) {
             leftButton.classList.add("green");
             rightButton.classList.add("red");
         } else {
@@ -71,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function handle100msTick(){
         //console.log('Han pasado 100 ms');
-        if(i > 0 && typeof shoots_interval_10s[i - 1] === "number" && permission_adjust_p1 === true){  // Para ejecutar adjust_p1_based_on_the_number_of_clicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
+        if(i > 0 && typeof shoots_interval_10s[i - 1] === "number"){  // Para ejecutar adjust_p1_based_on_the_number_of_clicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjust_p1_based_on_clicks(shoots_interval_10s[i - 1]); 
         }
         
@@ -85,7 +102,39 @@ document.addEventListener("DOMContentLoaded", function () {
         i += 1; //Avanzamos el indice para almacenar el numero de disparos del siguiente intervalo de 10s
         
     }
-    
+
+    function handleCEClick(selectedButton) {
+        //Determinar el botón correcto
+        const correctButton = (correctColor === 'green') ? // ¿Es CEI (verde correcto)?
+            (ButtonsConfig === 0 ? 0 : 1) : // Si es CEI: ¿Verde está en izquierda (0)? Si sí, correcto=0, sino 1
+            (ButtonsConfig === 0 ? 1 : 0);  // Si es CED (rojo correcto): ¿Verde está en izquierda (0)? 
+                                        // Entonces rojo está en derecha (1)
+
+        // Verificar si el clic fue correcto
+        const isCorrect = selectedButton === correctButton;
+        
+        // Registrar resultado en consola
+        console.log(isCorrect ? 
+            `¡Correcto!` : 
+            `¡Incorrecto!`);
+
+        // Volver al juego después de 1.5 segundos
+        setTimeout(() => {
+            resetCEScreen();
+        }, 1500);
+    }
+
+    function resetCEScreen() {
+        document.getElementById("TestScreen").classList.remove("ScreenOn");
+        document.getElementById("GameScreen").classList.add("ScreenOn");
+        
+        permission_adjust_p1 = true;
+        permission_set_number_clics = true
+        currentCEType = null;
+        correctColor = null;
+        ButtonsConfig = null;
+    }
+
     function guns_animation(){
         armaIzquierda.classList.add("retroceso_izquierda");
         armaDerecha.classList.add("retroceso_derecha");
@@ -99,11 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
     worker.onmessage = function (e) {
         const mensaje = e.data;
 
-        if (mensaje === "100 ms") {
+        if (mensaje === "100 ms" && permission_adjust_p1 === true) {
             handle100msTick();
         }
 
-        if (mensaje === "10 s") {
+        if (mensaje === "10 s" && permission_set_number_clics == true) {
             handle10sTick();
         }
     };
@@ -113,5 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         guns_animation();
     });
 
+    buttonleft.addEventListener("click", () => handleCEClick(0));
+    buttonright.addEventListener("click", () => handleCEClick(1));
 });
 
