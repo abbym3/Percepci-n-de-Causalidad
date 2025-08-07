@@ -149,39 +149,39 @@
 
     Sub Cambio_estimuloR()
         CER = CER + 1 'cambios de estímulo han sido provocados por el comportamiento de la maquina
-        Button1.Enabled = False 'Desactiva el boton central (eso no ocurre con el cambio_estimulo H osi ?)
-        Try
+        'Button1.Enabled = False 'Desactiva el boton central (eso no ocurre con el cambio_estimulo H osi ?)
+        'Try
             TXT.Writeline(tiempo_entrenamiento & ";CE INDEP") 'Guarda el tiempo de netrenamiento y el CEI 
-        Catch
-        End Try
-        permiso = False 'deshabilita los permisos de timer_3
-        Timer3.Stop() 'deshabilita los pulsos '
+        'Catch
+        'End Try
+        'permiso = False 'deshabilita los permisos de timer_3
+        'Timer3.Stop() 'deshabilita los pulsos '
 
-        Randomize() 'se reinicia el generador de numeros aleatorios
-        dcolor = Int(2 * Rnd()) + 1 'Se genera un numero aleatorio entre 0-1
+        'Randomize() 'se reinicia el generador de numeros aleatorios
+        'dcolor = Int(2 * Rnd()) + 1 'Se genera un numero aleatorio entre 0-1
 
-        If dcolor = 1 Then
-            Paquete_1() 'se activa el paquete 1 (izq rojo| der verde)
-        Else
-            Paquete_2() 'se activa el paquete 2 (izq verde| der rojo)
-        End If
-    End Sub
+        'If dcolor = 1 Then
+            'Paquete_1() 'se activa el paquete 1 (izq rojo| der verde)
+        'Else
+            'Paquete_2() 'se activa el paquete 2 (izq verde| der rojo)
+        'End If
+    'End Sub
 
-    Sub Paquete_1()
-        BtnDerVer.Visible = True
-        BotonIzqRoj.Visible = True
-        Button1.BackColor = Color.Black
-        BtnDerOff.Visible = False
-        BtnIzqOff.Visible = False
-    End Sub
+    ' Sub Paquete_1()
+    '     BtnDerVer.Visible = True
+    '     BotonIzqRoj.Visible = True
+    '     Button1.BackColor = Color.Black
+    '     BtnDerOff.Visible = False
+    '     BtnIzqOff.Visible = False
+    ' End Sub
 
-    Sub Paquete_2()
-        BtnDerRoj.Visible = True
-        BotonVer.Visible = True
-        Button1.BackColor = Color.Black
-        BtnDerOff.Visible = False
-        BtnIzqOff.Visible = False
-    End Sub
+    ' Sub Paquete_2()
+    '     BtnDerRoj.Visible = True
+    '     BotonVer.Visible = True
+    '     Button1.BackColor = Color.Black
+    '     BtnDerOff.Visible = False
+    '     BtnIzqOff.Visible = False
+    ' End Sub
 
     Private Sub BtnDerVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerVer.Click
         verde = verde + 1

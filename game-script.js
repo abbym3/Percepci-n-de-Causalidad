@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let shoots_interval_10s = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
     let i = 0; //Indice que permite seleccionar la posición 0 a n, donde i guarda la cantidad de disparos en intervalo n de 10s  
     let permission_adjust_p1 = true; // Flag para habilitar o bloquear el cálculo de probabilidad de la máquina
+    let ButtonsConfig = null; // Guardará 0 (verde-izq) o 1 (verde-der)
 
 
     function adjust_p1_based_on_clicks(shoots_interval_10s_previous) {
@@ -37,9 +38,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function CEI() {
         console.log("¡Cambio de estímulo independiente activado!");
+        // Desactivar ajustes de probabilidad
         permission_adjust_p1 = false
+
+        // Cambiar pantallas
         document.getElementById("GameScreen").classList.remove("ScreenOn");
         document.getElementById("TestScreen").classList.add("ScreenOn");
+
+        //Asignar colores aleatorios
+        assignRandomColors();
+    }
+
+    function assignRandomColors() {
+        const leftButton = document.getElementById("ceButtonLeft");
+        const rightButton = document.getElementById("ceButtonRight");
+
+        // Resetear clases
+        leftButton.className = "ce-button";
+        rightButton.className = "ce-button";
+
+        // Aleatorio: 0 o 1
+        currentCEIConfig = Math.random() > 0.5 ? 1 : 0;
+
+        if (currentCEIConfig === 0) {
+            leftButton.classList.add("green");
+            rightButton.classList.add("red");
+        } else {
+            leftButton.classList.add("red");
+            rightButton.classList.add("green");
+        }
     }
 
     function handle100msTick(){
