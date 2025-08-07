@@ -12,10 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let shoots = 0; //Número de disparos (clicks al boton central)
     let shoots_interval_10s = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
     let i = 0; //Indice que permite seleccionar la posición 0 a n, donde i guarda la cantidad de disparos en intervalo n de 10s  
-    let permission_adjust_p1 = true; // Flag para habilitar o bloquear el cálculo de probabilidad de la máquina
     let ButtonsConfig = null; // Guardará 0 (verde-izq) o 1 (verde-der)
     let correctColor = null; // 'green' o 'red' según el tipo de CE
-    let permission_set_number_clics = true;
 
 
     function adjust_p1_based_on_clicks(shoots_interval_10s_previous) {
@@ -54,11 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function activateCE(){
-        // Desactivar ajustes de probabilidad
-        permission_adjust_p1 = false
-        // Desactivar almacenamiento de clics c/10s
-        permission_set_number_clics = false   
-
+        worker.postMessage("pause")
+        
         // Cambiar pantallas
         document.getElementById("GameScreen").classList.remove("ScreenOn");
         document.getElementById("TestScreen").classList.add("ScreenOn");
@@ -94,12 +89,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handle10sTick(){
+        console.log(i)
+        console.log(shoots)
         //console.log('Han pasado 10s');
         shoots_interval_10s[i] = shoots; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shoots_interval_10s[i]}`);
         shoots = 0; //Reiniciamos el contador de disparos 
         i += 1; //Avanzamos el indice para almacenar el numero de disparos del siguiente intervalo de 10s
-        
+        execut = 0
     }
 
     function handleCEClick(selectedButton) {
@@ -117,10 +114,11 @@ document.addEventListener("DOMContentLoaded", function () {
             `¡Correcto!` : 
             `¡Incorrecto!`);
 
-        // Volver al juego después de 1.5 segundos
+        // Volver al juego después de 2.5 segundos
         setTimeout(() => {
             resetCEScreen();
-        }, 1500);
+            worker.postMessage("resume")
+        }, 2500);
     }
 
     function resetCEScreen() {
@@ -146,11 +144,11 @@ document.addEventListener("DOMContentLoaded", function () {
     worker.onmessage = function (e) {
         const mensaje = e.data;
 
-        if (mensaje === "100 ms" && permission_adjust_p1 === true) {
+        if (mensaje === "100 ms") {
             handle100msTick();
         }
 
-        if (mensaje === "10 s" && permission_set_number_clics == true) {
+        if (mensaje === "10 s") {
             handle10sTick();
         }
     };

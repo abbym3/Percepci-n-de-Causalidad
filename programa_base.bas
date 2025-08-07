@@ -263,12 +263,12 @@
         Labelscore.Visible = True
 
         ' Espera 2.5 segundos (30 ticks)
-        Timer1.Start()
-        Do
-            If Duracion_Ref >= 30 Then Exit Do '<- Aqui esta la duración del reforzamiento 2.5s
+        ' Timer1.Start()
+        ' Do
+        '     If Duracion_Ref >= 30 Then Exit Do '<- Aqui esta la duración del reforzamiento 2.5s
 
-            My.Application.DoEvents()
-        Loop
+        '     My.Application.DoEvents()
+        ' Loop
         dado_rob = 5
         Duracion_Ref = 0
         Timer1.Stop()
@@ -340,13 +340,13 @@
         EBO.Visible = True
         Labelscore.Visible = True
         Timer1.Start()
-        Do
-        Labelscore.Visible = True
-        Timer1.Start()
-        Do
-            If Duracion_Ref >= 30 Then Exit Do '<- Aqui esta la duración del reforzamiento 2.5s
-            My.Application.DoEvents()
-        Loop
+        ' Do
+        ' Labelscore.Visible = True
+        ' Timer1.Start()
+        ' Do
+        '     If Duracion_Ref >= 30 Then Exit Do '<- Aqui esta la duración del reforzamiento 2.5s
+        '     My.Application.DoEvents()
+        ' Loop
         dado_rob = 5
         Duracion_Ref = 0
         Timer1.Stop()
@@ -398,10 +398,10 @@
 
   
 
-    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
-        Duracion_Ref = Duracion_Ref + 1
-        Label3.Text = Duracion_Ref
-    End Sub
+    ' Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
+    '     Duracion_Ref = Duracion_Ref + 1
+    '     Label3.Text = Duracion_Ref
+    ' End Sub
 
 
     'Private Sub Timer3_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer3.Tick 'simula los pulsos de la maquina
