@@ -5,8 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const shootbutton = document.getElementById("shootButton"); 
     const armaIzquierda = document.getElementById("armaIzquierda");
     const armaDerecha = document.getElementById("armaDerecha");
-    const buttonleft = document.getElementById("ceButtonLeft");
-    const buttonright = document.getElementById("ceButtonRight");
+    const leftButton = document.getElementById("ceButtonLeft");
+    const rightButton = document.getElementById("ceButtonRight");
+
     let number_try_machine = 0; //Número de intentos de la máquina por generar un CEI
     let shoots = 0; //Número de disparos (clicks al boton central)
     let shoots_interval_10s = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
@@ -67,12 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function assignRandomColors() {
-        const leftButton = document.getElementById("ceButtonLeft");
-        const rightButton = document.getElementById("ceButtonRight");
 
         // Resetear clases
-        leftButton.className = "ce-button";
-        rightButton.className = "ce-button";
+        leftButton.classList.remove("green", "red");
+        rightButton.classList.remove("green", "red");
 
         // Aleatorio: 0 o 1
         ButtonsConfig = Math.random() > 0.5 ? 1 : 0;
@@ -130,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
         permission_adjust_p1 = true;
         permission_set_number_clics = true
-        currentCEType = null;
         correctColor = null;
         ButtonsConfig = null;
     }
@@ -162,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
         guns_animation();
     });
 
-    buttonleft.addEventListener("click", () => handleCEClick(0));
-    buttonright.addEventListener("click", () => handleCEClick(1));
+    leftButton.addEventListener("click", () => handleCEClick(0));
+    rightButton.addEventListener("click", () => handleCEClick(1));
 });
 
