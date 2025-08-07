@@ -9,13 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>¡Dispara al Pato!</h1>
-
-  <div class="pato-container">
-    <img src="img/pato.png" alt="Pato arcade" class="pato" id="pato">
-    <img src="img/arma1.png" alt="Arma izquierda" class="arma" id="armaIzquierda">
-    <img src="img/arma2.png" alt="Arma derecha" class="arma" id="armaDerecha">
+ <div id="GameScreen" class="Screen ScreenOn">
+    <h1>¡Dispara al Pato!</h1>
+    <div class="pato-container">
+      <img src="img/pato.png" alt="Pato arcade" class="pato" id="pato">
+      <img src="img/arma1.png" alt="Arma izquierda" class="arma" id="armaIzquierda">
+      <img src="img/arma2.png" alt="Arma derecha" class="arma" id="armaDerecha">
+    </div>
+    <button id="shootButton">DISPARAR</button>
   </div>
-  <button id="shootButton">DISPARAR</button>
+
+  <div id="TestScreen" class="Screen">
+    <div class="TestScreen-content">
+      <h1>¡Evento Especial!</h1>
+      <img src="img/paloma.png" alt="Evento especial" style="width: 150px;">
+      <p>¡Cambio de estímulo independiente activado!</p>
+      <button id="volver-btn">Volver al juego</button>
+    </div>
+  </div>
 </body>
 </html>

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let shoots = 0; //Número de disparos (clicks al boton central)
     let shoots_interval_10s = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
     let i = 0; //Indice que permite seleccionar la posición 0 a n, donde i guarda la cantidad de disparos en intervalo n de 10s  
-    let permission_calc_p_machine = true; // Flag para habilitar o bloquear el cálculo de probabilidad de la máquina
+    let permission_adjust_p1 = true; // Flag para habilitar o bloquear el cálculo de probabilidad de la máquina
 
 
     function adjust_p1_based_on_clicks(shoots_interval_10s_previous) {
@@ -37,11 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function CEI() {
         console.log("¡Cambio de estímulo independiente activado!");
+        permission_adjust_p1 = false
+        document.getElementById("GameScreen").classList.remove("ScreenOn");
+        document.getElementById("TestScreen").classList.add("ScreenOn");
     }
 
     function handle100msTick(){
         //console.log('Han pasado 100 ms');
-        if(i > 0 && typeof shoots_interval_10s[i - 1] === "number"){  // Para ejecutar adjust_p1_based_on_the_number_of_clicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
+        if(i > 0 && typeof shoots_interval_10s[i - 1] === "number" && permission_adjust_p1 === true){  // Para ejecutar adjust_p1_based_on_the_number_of_clicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjust_p1_based_on_clicks(shoots_interval_10s[i - 1]); 
         }
         
@@ -69,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
     worker.onmessage = function (e) {
         const mensaje = e.data;
 
-        if (mensaje === "100 ms" && permission_calc_p_machine === true) {
+        if (mensaje === "100 ms") {
             handle100msTick();
         }
 

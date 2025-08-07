@@ -123,3 +123,37 @@ h1 {
   50% { transform: translate(3px, -5px); }
   75% { transform: translate(-1px, -2px); }
 }
+
+.Screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 10;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.ScreenOn{
+  opacity: 1;
+  pointer-events: all;
+}
+
+.TestScreen-content {
+  text-align: center;
+  animation: appear 0.8s ease-out;
+}
+
+@keyframes appear {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
