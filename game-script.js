@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
         //console.log(`Número de clics en intervalo anterior: ${shoots_interval_10s[i]}`);
         shoots = 0; //Reiniciamos el contador de disparos 
         i += 1; //Avanzamos el indice para almacenar el numero de disparos del siguiente intervalo de 10s
-        execut = 0
     }
 
     function handleCEClick(selectedButton) {
@@ -123,9 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetCEScreen() {
         document.getElementById("TestScreen").classList.remove("ScreenOn");
         document.getElementById("GameScreen").classList.add("ScreenOn");
-        
-        permission_adjust_p1 = true;
-        permission_set_number_clics = true
         correctColor = null;
         ButtonsConfig = null;
     }
