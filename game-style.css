@@ -83,13 +83,13 @@ h1 {
   transition: transform 0.1s ease;
 }
 
-#armaIzquierda {
+#weaponLeft {
   bottom: -13vh;
   left: 1vh;
   transform-origin: 80% center;
 }
 
-#armaDerecha {
+#weaponRight {
   bottom: -13vh;
   right: 1vh;
   transform-origin: 20% center;

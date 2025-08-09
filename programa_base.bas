@@ -120,9 +120,9 @@
         CEH = CEH + 1 'cambios de estímulo han sido provocados por el comportamiento del usuario
 
         TXT.WriteLine(tiempo_entrenamiento & ";CE DEP;" & ListBox3.SelectedItem.ToString) 'Se guarda el número de CE DEP y el tiempo en milisegundos en que ocurrió'
-        Timer3.Stop() 'Timer3.Stop() pausa timer3 (posible pulso de la maquina)
-        Randomize()
-        dcolor = Int(2 * Rnd()) + 1 'Lanza un dado de 2 caras para decidir el paquete de botones
+        'Timer3.Stop() 'Timer3.Stop() pausa timer3 (posible pulso de la maquina)
+        'Randomize()
+        'dcolor = Int(2 * Rnd()) + 1 'Lanza un dado de 2 caras para decidir el paquete de botones
         'If dcolor = 1 Then
             'Paquete_1() 'se activa el paquete 1 (izq rojo| der verde)
         'Else
