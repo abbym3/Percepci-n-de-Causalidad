@@ -1,8 +1,9 @@
 
 let startTime = performance.now(); // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js"))
-let blockCounter = 0; // Contador de bloques de 100 ms para detectar 10 s
+let blockCounter = 0; // Contador de bloques de 100 ms (útil para contar los 10 s)
 let running = true; // Control de pausa
-let pauseTime = null; //Almacena el momento en que se pausó
+let pauseTime = null; // Almacena el momento en que se pausó
+let accumulated_time_ms = 0; // Tiempo total acumulado (sin pausas)
 
 function simulate() {
 
@@ -14,6 +15,7 @@ function simulate() {
   if (elapsed >= 100) { //Frecuencia de eventos ~ 100 ms
     const blocksPassed = Math.floor(elapsed / 100); //Calcula cuantos bloques de completos de 100 ms han pasado
     blockCounter += blocksPassed;        // Solo para contar hasta 100 bloques
+    accumulated_time_ms += blocksPassed * 100; // Sumar al acumulado
 
     postMessage('100 ms') // Enviar mensaje al hilo principal
 
@@ -30,18 +32,25 @@ function simulate() {
 simulate(); // Iniciar la simulación
 
 onmessage = function (e) {
-  if (e.data === 'pause') {
-    running = false;
-    pauseTime = performance.now(); // Guardar el momento en que se pausó
-  } 
-  if (e.data === 'resume') {
-    if (!running && pauseTime !== null) {
-      const now = performance.now();
-      const pausedDuration = now - pauseTime; // Cuánto tiempo estuvo en pausa
-      startTime += pausedDuration; // Ajusta el reloj para ignorar el tiempo en pausa y mantener continuidad
-      pauseTime = null;
-    }
-    running = true;
-    simulate(); // Retomar la simulación
+  switch (e.data) {
+    case 'pause':
+      running = false;
+      pauseTime = performance.now(); // Guardar el momento en que se pausó
+      break;
+
+    case 'resume':
+      if (!running && pauseTime !== null) {
+        const now = performance.now();
+        const pausedDuration = now - pauseTime; // Cuánto tiempo estuvo en pausa
+        startTime += pausedDuration; // Ajusta el reloj para ignorar el tiempo en pausa y mantener continuidad
+        pauseTime = null;
+      }
+      running = true;
+      simulate();
+      break;
+
+    case 'get_time':
+      postMessage({type: 'time', value: accumulated_time_ms});
+      break;
   }
 };
