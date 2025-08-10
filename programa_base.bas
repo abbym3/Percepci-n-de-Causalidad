@@ -101,8 +101,8 @@
         If tiempo_entrenamiento >= 10000 Then 'Si el tiempo de entrenamiento(desde que se epulso inicio ) llega a  10 segundos 
             'dado_rob()
             Randomize() 'Reiniciar el randomize
-            If dado_human = 1 Then ' Valor fuera de rango como bandera
-            Else
+            'If dado_human = 1 Then ' Valor fuera de rango como bandera
+            'Else
                 dado_human = Int((6 * Rnd()) + 1) 'dado de 6 caras= 1 de cada 6 pulsos, en promedio, provoca que la tecla se apague
                 Label1.Text = dado_human 'label1 toma el valor de daodo human
                 If dado_human = 1 Then ' probabilidad de 75% de apagar la tecla(?) en realidad es 1/6
@@ -112,7 +112,7 @@
                     ValorDemora = ListBox3.SelectedItem.ToString 'Esto es cuánto tarda en mostrar el estimulo humano
                     DemoraInicia = Environment.TickCount 'El momento en que se decidió que se debe esperar
                 End If
-            End If
+            'End If
         End If
     End Sub
 
@@ -197,48 +197,48 @@
         End If
     End Sub
 
-    Private Sub BtnDerRoj_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerRoj.Click
-        rojo = rojo + 1
-        derecha = derecha + 1
-        If dado_rob = 2 Then
-            Aciertos = Aciertos + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";rojo" & ";Acierto")
-            Reforzar()
-        Else
-            Errores = Errores + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";rojo" & ";Error")
-            Blackout()
-        End If
-    End Sub
+    ' Private Sub BtnDerRoj_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerRoj.Click
+    '     rojo = rojo + 1
+    '     derecha = derecha + 1
+    '     If dado_rob = 2 Then
+    '         Aciertos = Aciertos + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";rojo" & ";Acierto")
+    '         Reforzar()
+    '     Else
+    '         Errores = Errores + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";rojo" & ";Error")
+    '         Blackout()
+    '     End If
+    ' End Sub
 
 
-    Private Sub BotonVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BotonVer.Click
-        izquierda = izquierda + 1
-        verde = verde + 1
-        If dado_rob = 2 Then
-            Errores = Errores + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";verde" & ";Error")
-            Blackout()
-        Else
-            Aciertos = Aciertos + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";verde" & ";Acierto")
-            Reforzar()
-        End If
-    End Sub
+    ' Private Sub BotonVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BotonVer.Click
+    '     izquierda = izquierda + 1
+    '     verde = verde + 1
+    '     If dado_rob = 2 Then
+    '         Errores = Errores + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";verde" & ";Error")
+    '         Blackout()
+    '     Else
+    '         Aciertos = Aciertos + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";verde" & ";Acierto")
+    '         Reforzar()
+    '     End If
+    ' End Sub
 
-    Private Sub BotonIzqRoj_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BotonIzqRoj.Click
-        rojo = rojo + 1
-        izquierda = izquierda + 1
-        If dado_rob = 2 Then
-            Aciertos = Aciertos + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";rojo" & ";Acierto")
-            Reforzar()
-        Else
-            Errores = Errores + 1
-            TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";rojo" & ";Error")
-            Blackout()
-        End If
-    End Sub
+    ' Private Sub BotonIzqRoj_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BotonIzqRoj.Click
+    '     rojo = rojo + 1
+    '     izquierda = izquierda + 1
+    '     If dado_rob = 2 Then
+    '         Aciertos = Aciertos + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";rojo" & ";Acierto")
+    '         Reforzar()
+    '     Else
+    '         Errores = Errores + 1
+    '         TXT.WriteLine(tiempo_entrenamiento & ";izquierda" & ";rojo" & ";Error")
+    '         Blackout()
+    '     End If
+    ' End Sub
 
     Sub Reforzar() 'Se ejecurta cuando el sujero acierta
         TXT.WriteLine(tiempo_entrenamiento & ";R+") ' Registra reforzamiento
@@ -259,7 +259,7 @@
         ' BtnDerRoj.Visible = False
 
         ' Muestra reforzamiento visual
-        PictureBox1.Visible = True
+        'PictureBox1.Visible = True
         Labelscore.Visible = True
 
         ' Espera 2.5 segundos (30 ticks)
@@ -269,21 +269,21 @@
 
         '     My.Application.DoEvents()
         ' Loop
-        dado_rob = 5
-        Duracion_Ref = 0
-        Timer1.Stop()
-        PictureBox1.Visible = False
+        'dado_rob = 5
+        'Duracion_Ref = 0
+        'Timer1.Stop()
+        'PictureBox1.Visible = False
         Labelscore.Visible = False
 
-        Button1.BackColor = Color.White
-        BtnIzqOff.Visible = True
-        BtnDerOff.Visible = True
+        ' Button1.BackColor = Color.White
+        ' BtnIzqOff.Visible = True
+        ' BtnDerOff.Visible = True
 
-        Button1.BackColor = Color.White
-        BtnIzqOff.Visible = True
-        BtnDerOff.Visible = True
-        Button1.Visible = True
-        Button1.Enabled = True
+        ' Button1.BackColor = Color.White
+        ' BtnIzqOff.Visible = True
+        ' BtnDerOff.Visible = True
+        ' Button1.Visible = True
+        ' Button1.Enabled = True
 
         If score = 150 Then
 
@@ -293,13 +293,13 @@
             Labelscore.Visible = True
             Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "% ")
 
-            BtnDerOff.Visible = False
-            BtnIzqOff.Visible = False
-            Button1.Visible = False
-            BotonIzqRoj.Visible = False
-            BotonVer.Visible = False
-            BtnDerVer.Visible = False
-            BtnDerRoj.Visible = False
+            ' BtnDerOff.Visible = False
+            ' BtnIzqOff.Visible = False
+            ' Button1.Visible = False
+            ' BotonIzqRoj.Visible = False
+            ' BotonVer.Visible = False
+            ' BtnDerVer.Visible = False
+            ' BtnDerRoj.Visible = False
 
             TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
             TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
@@ -308,15 +308,10 @@
             TXT.WriteLine("Cambios de Estimulo Dependientes:" & ";" & CEH)
             TXT.WriteLine("Cambios de Estimulo Independientes:" & ";" & CER)
             TXT.WriteLine("Veces que eligió izquierda:" & ";" & izquierda)
-            TXT.WriteLine("Pulsos totales máquina" & "," & pr)
-            TXT.WriteLine("Aciertos:" & "," & Aciertos)
-            TXT.WriteLine("Errores:" & "," & Errores)
-            TXT.WriteLine("Cambios de Estimulo Dependientes:" & "," & CEH)
-            TXT.WriteLine("Cambios de Estimulo Independientes:" & "," & CER)
-            TXT.WriteLine("Veces que eligió izquierda:" & "," & izquierda)
             TXT.WriteLine("Veces que eligió derecha:" & "," & derecha)
             TXT.WriteLine("Veces que eligió verde:" & "," & verde)
             TXT.WriteLine("Veces que eligió rojo:" & "," & rojo)
+            TXT.WriteLine("Pulsos totales máquina" & "," & pr)
             TXT.Close()
             Me.Close()
         End If
@@ -332,14 +327,14 @@
 
         Labelscore.Text = ("Tu porcentaje de aciertos bajó al " & " " & promedio & "%")
 
-        Button1.Visible = False
-        BotonIzqRoj.Visible = False
-        BotonVer.Visible = False
-        BtnDer.Visible = False
-        BtnDerRoj.Visible = False
-        EBO.Visible = True
-        Labelscore.Visible = True
-        Timer1.Start()
+        ' Button1.Visible = False
+        ' BotonIzqRoj.Visible = False
+        ' BotonVer.Visible = False
+        ' BtnDer.Visible = False
+        ' BtnDerRoj.Visible = False
+        ' EBO.Visible = True
+        ' Labelscore.Visible = True
+        ' Timer1.Start()
         ' Do
         ' Labelscore.Visible = True
         ' Timer1.Start()
@@ -347,17 +342,17 @@
         '     If Duracion_Ref >= 30 Then Exit Do '<- Aqui esta la duración del reforzamiento 2.5s
         '     My.Application.DoEvents()
         ' Loop
-        dado_rob = 5
+        'dado_rob = 5
         Duracion_Ref = 0
         Timer1.Stop()
         EBO.Visible = False
-        Labelscore.Visible = False
+        ' Labelscore.Visible = False
 
-        Button1.BackColor = Color.White
-        Button1.Visible = True
-        BtnIzqOff.Visible = True
-        BtnDerOff.Visible = True
-        Button1.Enabled = True
+        ' Button1.BackColor = Color.White
+        ' Button1.Visible = True
+        ' BtnIzqOff.Visible = True
+        ' BtnDerOff.Visible = True
+        ' Button1.Enabled = True
 
         If score = 150 Then
             Me.BackColor = Color.WhiteSmoke
@@ -370,13 +365,13 @@
             Labelscore.Visible = True
             Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "% ")
 
-            BtnDerOff.Visible = False
-            BtnIzqOff.Visible = False
-            Button1.Visible = False
-            BotonIzqRoj.Visible = False
-            BotonVer.Visible = False
-            BtnDerVer.Visible = False
-            BtnDerRoj.Visible = False
+            ' BtnDerOff.Visible = False
+            ' BtnIzqOff.Visible = False
+            ' Button1.Visible = False
+            ' BotonIzqRoj.Visible = False
+            ' BotonVer.Visible = False
+            ' BtnDerVer.Visible = False
+            ' BtnDerRoj.Visible = False
 
             TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
             TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
@@ -388,6 +383,7 @@
             TXT.WriteLine("Veces que eligió derecha:" & ";" & derecha)
             TXT.WriteLine("Veces que eligió verde:" & ";" & verde)
             TXT.WriteLine("Veces que eligió rojo:" & ";" & rojo)
+            XT.WriteLine("Pulsos totales máquina" & "," & pr)
             TXT.Close()
             'Me.Close()
         End If
