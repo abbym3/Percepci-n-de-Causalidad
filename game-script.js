@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let correctColor = null; // 'green' o 'red' según el tipo de CE
     let greenClicks = 0, redClicks = 0, leftClicks = 0, rightClicks = 0, successes = 0, errors = 0, trainingTime = 0;
 
+    let number_clicks = 0;
+
     function adjustP1BasedOnClicks(shotsPer10sInterval_previous) {
         let p1;
         if (shotsPer10sInterval_previous === 0) { 
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             p1 = Math.floor((100 / shotsPer10sInterval_previous * Math.random()) + 1); //La probabilidad se ajusta al número de clics del intervalo de 10s anterior 
                                                                                        //Un número mas alto de clics aumenta las probabilidades de obtener 1 
-            console.log(`Ajuste_P1: ${p1}`)
+            // console.log(`Ajuste_P1: ${p1}`)
             if (p1 === 1) { 
                 p_tick_machine() // Si la probabilidad ajustada da 1, se procede a calcular si la máquina hace CEI
             }
@@ -37,6 +39,14 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(`Calculo p_machine: ${p_tck_machine}`)
         if (p_tck_machine === 2) { 
             CEI();
+        }
+    }
+    function p_tick_human(){
+        let p_tck_human = Math.floor(Math.random() * 6) + 1; // La probailidad de que la máquina haga un intento es de 1/6
+        number_clicks += 1;
+        console.log(`Calculo p_tck_human: ${p_tck_human}`)
+        if (p_tck_human === 2) { 
+            CED();
         }
     }
 
@@ -97,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handle10sTick(){
-        console.log(`-----------Intervalo ${i}: Disparos = ${shotCount}--------------`);
+        // console.log(`-----------Intervalo ${i}: Disparos = ${shotCount}--------------`);
         //console.log('Han pasado 10s');
         shotsPer10sInterval[i] = shotCount; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shotsPer10sInterval[i]}`);
@@ -182,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
     shootbutton.addEventListener("click", function () {
         shotCount += 1;
         guns_animation();
+        p_tick_human();
     });
 
     leftButton.addEventListener("click", () => handleCEClick(0));
