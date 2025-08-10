@@ -54,16 +54,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function activateCE(){
         worker.postMessage("pause")
-
-        // Solicitar al Worker el mensaje tiempo acumulado / tiempo de entrenamiento
-        worker.postMessage('get_time');
+        worker.postMessage('get_time'); // Solicitar al Worker el mensaje tiempo acumulado / tiempo de entrenamiento
         
-        // Cambiar pantallas
-        document.getElementById("GameScreen").classList.remove("ScreenOn");
-        document.getElementById("TestScreen").classList.add("ScreenOn");
+        shootbutton.disabled = true;
 
-        //Asignar colores aleatorios
-        assignRandomColors();
+        pato.classList.add("fall-back");
+
+        setTimeout(() => {
+            // Cambiar pantallas
+            document.getElementById("GameScreen").classList.remove("ScreenOn");
+            document.getElementById("TestScreen").classList.add("ScreenOn");
+
+            //Asignar colores aleatorios
+            assignRandomColors();
+        }, 1200);
     }
 
     function assignRandomColors() {
@@ -132,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Volver al juego después de 2.5 segundos (Poner dentro de Blackout y Reforzar)
         setTimeout(() => {
             resetCEScreen();
-            worker.postMessage("resume")
         }, 2500);
     }
 
@@ -141,15 +144,18 @@ document.addEventListener("DOMContentLoaded", function () {
         // Volver al juego después de 2.5 segundos (Poner dentro de Blackout y Reforzar)
         setTimeout(() => {
             resetCEScreen();
-            worker.postMessage("resume")
         }, 2500);
     }
 
     function resetCEScreen() {
+        shootbutton.disabled = false;
+        pato.classList.remove("fall-back");
+
         document.getElementById("TestScreen").classList.remove("ScreenOn");
         document.getElementById("GameScreen").classList.add("ScreenOn");
         correctColor = null;
         buttonColorConfig = null;
+        worker.postMessage("resume")
     }
 
     function guns_animation(){
@@ -157,8 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
         weaponRight.classList.add("retroceso_derecha");
 
         setTimeout(() => {
-        weaponLeft.classList.remove("retroceso_izquierda");
-        weaponRight.classList.remove("retroceso_derecha");
+            weaponLeft.classList.remove("retroceso_izquierda");
+            weaponRight.classList.remove("retroceso_derecha");
         }, 100); // Duración del retroceso
     }
 

@@ -43,10 +43,36 @@ h1 {
   padding: 0.5rem;
   border-radius: 50%;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
+  transform-origin: bottom center;
+  will-change: transform;
 }
 .pato:hover {
   transform: scale(1.05);
+}
+.pato.hit {
+  transform: perspective(600px) translateY(-10px) scaleY(0.85);
+}
+.pato.fall-back {
+  animation: patoFallBack 1.2s ease-out forwards;
+  transform-origin: center bottom;
+  perspective: 1000px;
+}
+@keyframes patoFallBack {
+  0% {
+    transform: rotateX(0deg) translateY(0);
+    opacity: 1;
+  }
+  30% {
+    transform: rotateX(45deg) translateY(80px);
+  }
+  60% {
+    transform: rotateX(90deg) translateY(200px);
+  }
+  100% {
+    transform: rotateX(100deg) translateY(320px);
+    opacity: 1;
+  }
 }
 
 #shootButton {
