@@ -89,7 +89,7 @@
                     Cambio_estímuloH()
                 End If
             End If
-            My.Application.DoEvents() 'Esto permite que la interfaz responda mientras se ejecuta el bucle
+            'My.Application.DoEvents() 'Esto permite que la interfaz responda mientras se ejecuta el bucle
         'Loop
     'End Sub
 
@@ -98,9 +98,9 @@
         'tr = tr + 1 'tr: total de toques al botón central.
         'contador = contador + 1 'clics acumulados en el bloque actual (se reinicia cada 100 ciclos en timer 3 (cada 10,000 ms o 10 segundos)).
         Label2.Text = contador 'contador es igual a tr ambos guardad cuantos clicks se dan?,no?
-        If tiempo_entrenamiento >= 10000 Then 'Si el tiempo de entrenamiento(desde que se epulso inicio ) llega a  10 segundos 
+        'If tiempo_entrenamiento >= 10000 Then 'Si el tiempo de entrenamiento(desde que se epulso inicio ) llega a  10 segundos 
             'dado_rob()
-            Randomize() 'Reiniciar el randomize
+            'Randomize() 'Reiniciar el randomize
             'If dado_human = 1 Then ' Valor fuera de rango como bandera
             'Else
                 'dado_human = Int((6 * Rnd()) + 1) 'dado de 6 caras= 1 de cada 6 pulsos, en promedio, provoca que la tecla se apague
@@ -111,13 +111,13 @@
                     ListBox3.SetSelected(ContadorDemora, True) 'ListBox3 contiene una lista de posibles tiempos de espera, Contador Demora es el indidice que selecciona un elemento de esta lista                           
                     ValorDemora = ListBox3.SelectedItem.ToString 'Esto es cuánto tarda en mostrar el estimulo humano
                     DemoraInicia = Environment.TickCount 'El momento en que se decidió que se debe esperar
-                End If
+                'End If
             'End If
-        End If
+        'End If
     End Sub
 
     Sub Cambio_estimuloH()
-        CEH = CEH + 1 'cambios de estímulo han sido provocados por el comportamiento del usuario
+        'CEH = CEH + 1 'cambios de estímulo han sido provocados por el comportamiento del usuario
 
         TXT.WriteLine(tiempo_entrenamiento & ";CE DEP;" & ListBox3.SelectedItem.ToString) 'Se guarda el número de CE DEP y el tiempo en milisegundos en que ocurrió'
         'Timer3.Stop() 'Timer3.Stop() pausa timer3 (posible pulso de la maquina)
@@ -128,12 +128,12 @@
         'Else
             'Paquete_2() 'se activa el paquete 2 (izq verde| der rojo)
         'End If
-        dado_human = 4 'Evita volver a ejecutar la logica del bucle Do
-        ListBox3.SetSelected(ContadorDemora, False) 'Deselecciona el valor de demora que se usó en esta ronda.
-        ContadorDemora = ContadorDemora + 1 'Avanza el índice para que en el próximo cambio humano se use el siguiente valor de demora en ListBox3
+        'dado_human = 4 'Evita volver a ejecutar la logica del bucle Do
+        'ListBox3.SetSelected(ContadorDemora, False) 'Deselecciona el valor de demora que se usó en esta ronda.
+        'ContadorDemora = ContadorDemora + 1 'Avanza el índice para que en el próximo cambio humano se use el siguiente valor de demora en ListBox3
         'BanderaD = False 'Creo que no hace nada
-        Demora = 0 'se reinicia a 0 para que no interfiera en futuras mediciones.
-    End Sub
+        'Demora = 0 'se reinicia a 0 para que no interfiera en futuras mediciones.
+    'End Sub
 
     ' Function Dado_1() 'es un dado cuyo tamaño depende de cuántos clics hizo el participante
     '     Randomize()
@@ -148,7 +148,7 @@
     ' End Function
 
     Sub Cambio_estimuloR()
-        CER = CER + 1 'cambios de estímulo han sido provocados por el comportamiento de la maquina
+        'CER = CER + 1 'cambios de estímulo han sido provocados por el comportamiento de la maquina
         'Button1.Enabled = False 'Desactiva el boton central (eso no ocurre con el cambio_estimulo H osi ?)
         'Try
             TXT.Writeline(tiempo_entrenamiento & ";CE INDEP") 'Guarda el tiempo de netrenamiento y el CEI 
@@ -191,7 +191,7 @@
             TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Error") ' Se registra como error en el archivo
             Blackout() '' Se aplica castigo visual
         Else
-            Aciertos = Aciertos + 1 ' Se considera acierto
+            'Aciertos = Aciertos + 1 ' Se considera acierto
             TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Acierto") '' Se registra como acierto
             Reforzar()  ' Se aplica reforzamiento visual
         End If
@@ -243,8 +243,8 @@
     Sub Reforzar() 'Se ejecurta cuando el sujero acierta
         TXT.WriteLine(tiempo_entrenamiento & ";R+") ' Registra reforzamiento
 
-        score = (CEH + CER) 'Total de oportunidades
-        promedio = Math.Round((Aciertos / score) * 100)  ' Calcula porcentaje de aciertos
+        'score = (CEH + CER) 'Total de oportunidades
+        'promedio = Math.Round((Aciertos / score) * 100)  ' Calcula porcentaje de aciertos
         If promedio = 100 Then
             Labelscore.Text = ("Tienes un " & " " & promedio & "% " & " " & "de aciertos")
         Else
@@ -322,8 +322,8 @@
 
     Sub Blackout()
         TXT.WriteLine(tiempo_entrenamiento & ";BO")
-        score = (CEH + CER)
-        promedio = Math.Round((Aciertos / score) * 100)
+        'score = (CEH + CER)
+        'promedio = Math.Round((Aciertos / score) * 100)
 
         Labelscore.Text = ("Tu porcentaje de aciertos bajó al " & " " & promedio & "%")
 
@@ -343,9 +343,9 @@
         '     My.Application.DoEvents()
         ' Loop
         'dado_rob = 5
-        Duracion_Ref = 0
-        Timer1.Stop()
-        EBO.Visible = False
+        'Duracion_Ref = 0
+        'Timer1.Stop()
+        'EBO.Visible = False
         ' Labelscore.Visible = False
 
         ' Button1.BackColor = Color.White

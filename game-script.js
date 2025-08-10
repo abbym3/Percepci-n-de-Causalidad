@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let correctColor = null; // 'green' o 'red' según el tipo de CE
     let greenClicks = 0, redClicks = 0, leftClicks = 0, rightClicks = 0, successes = 0, errors = 0, trainingTime = 0;
 
-    let number_clicks = 0;
+    let number_clicks = 0, countCED = 0, countCEI = 0;
 
     function adjustP1BasedOnClicks(shotsPer10sInterval_previous) {
         let p1;
@@ -45,18 +45,20 @@ document.addEventListener("DOMContentLoaded", function () {
         let p_tck_human = Math.floor(Math.random() * 6) + 1; // La probailidad de que la máquina haga un intento es de 1/6
         number_clicks += 1;
         console.log(`Calculo p_tck_human: ${p_tck_human}`)
-        if (p_tck_human === 2) { 
+        if (p_tck_human === 1) { 
             CED();
         }
     }
 
     function CEI() {
+        countCEI+=1
         console.log("¡Cambio de estímulo independiente activado!");
         correctColor = 'green';
         activateCE();
     }
 
     function CED() {
+        countCED+=1
         console.log("¡Cambio de estímulo dependiente activado!");
         correctColor = 'red';
         activateCE();
@@ -142,7 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function reinforce() {
-        console.log("Refuerzo visual");
+        calculate_average();erage = Math.round((successes/score)*100)
+
         // Volver al juego después de 2.5 segundos (Poner dentro de Blackout y Reforzar)
         setTimeout(() => {
             resetCEScreen();
@@ -150,11 +153,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function punish() {
-        console.log("Castigo visual");
+        calculate_average();
+
         // Volver al juego después de 2.5 segundos (Poner dentro de Blackout y Reforzar)
         setTimeout(() => {
             resetCEScreen();
         }, 2500);
+    }
+
+    function calculate_average(){
+        let score = countCED + countCEI
+        let average = Math.round((successes/score)*100)
     }
 
     function resetCEScreen() {
