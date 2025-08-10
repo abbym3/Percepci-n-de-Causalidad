@@ -184,10 +184,10 @@
     ' End Sub
 
     Private Sub BtnDerVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerVer.Click
-        verde = verde + 1
-        derecha = derecha + 1
-        If dado_rob = 2 Then ' Si el cambio fue generado por la máquina
-            Errores = Errores + 1 '' Se considera error
+        'verde = verde + 1
+        'derecha = derecha + 1
+        'If dado_rob = 2 Then ' Si el cambio fue generado por la máquina
+            'Errores = Errores + 1 '' Se considera error
             TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Error") ' Se registra como error en el archivo
             Blackout() '' Se aplica castigo visual
         Else
