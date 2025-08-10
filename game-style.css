@@ -35,43 +35,61 @@ h1 {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.pato {
-  width: 28%;
-  height: auto;
+
+.pato-wrapper {
+  width: min(32%, 180px); 
   margin-bottom: 10%;
   background: white;
-  padding: 0.5rem;
+  padding: min(1.5vw, 12px);
   border-radius: 50%;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-  transform-origin: bottom center;
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  overflow: visible;
+}
+
+.pato {
+  width: 100%;
+  height: auto;
+  display: block;
+  transform-origin: center bottom;
   will-change: transform;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  perspective: 800px; 
 }
 .pato:hover {
-  transform: scale(1.05);
-}
-.pato.hit {
-  transform: perspective(600px) translateY(-10px) scaleY(0.85);
+  transform: scale(1.03);
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2));
 }
 .pato.fall-back {
-  animation: patoFallBack 1.2s ease-out forwards;
-  transform-origin: center bottom;
-  perspective: 1000px;
+  animation: duckImpactAnimation 1.6s ease-out forwards;
 }
-@keyframes patoFallBack {
+
+@keyframes duckImpactAnimation {
   0% {
-    transform: rotateX(0deg) translateY(0);
-    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) translateZ(0);
+  }
+  15% {
+    transform: perspective(800px) rotateX(-35deg) translateZ(10px); 
   }
   30% {
-    transform: rotateX(45deg) translateY(80px);
+    transform: perspective(800px) rotateX(18deg) translateZ(6px); 
+  }
+  45% {
+    transform: perspective(800px) rotateX(-12deg) translateZ(8px); 
   }
   60% {
-    transform: rotateX(90deg) translateY(200px);
+    transform: perspective(800px) rotateX(6deg) translateZ(5px);   
+  }
+  75% {
+    transform: perspective(800px) rotateX(-50deg) translateZ(-5px); 
+  }
+  90% {
+    transform: perspective(800px) rotateX(-80deg) translateZ(-10px); 
   }
   100% {
-    transform: rotateX(100deg) translateY(320px);
-    opacity: 1;
+    transform: perspective(800px) rotateX(-90deg) translateZ(-15px);
   }
 }
 

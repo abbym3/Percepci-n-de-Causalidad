@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //Asignar colores aleatorios
             assignRandomColors();
-        }, 1200);
+        }, 2000);
     }
 
     function assignRandomColors() {
