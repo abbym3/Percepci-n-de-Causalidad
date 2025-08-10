@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function handle100msTick(){
         //console.log('Han pasado 100 ms');
-        if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjust_p1_based_on_the_number_of_clicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
+        if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
         }
         
@@ -192,7 +192,9 @@ document.addEventListener("DOMContentLoaded", function () {
     shootbutton.addEventListener("click", function () {
         shotCount += 1;
         guns_animation();
-        p_tick_human();
+        if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar p_tick_human se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
+             p_tick_human();
+        }
     });
 
     leftButton.addEventListener("click", () => handleCEClick(0));

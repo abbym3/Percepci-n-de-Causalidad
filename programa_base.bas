@@ -95,19 +95,19 @@
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click 'Cuando se le da click a button 1
         TXT.WriteLine(tiempo_entrenamiento & ";Centro") 'Se registra el tiempo de entrenamiento (Desde el inicio) y el evento centro
-        tr = tr + 1 'tr: total de toques al botón central.
-        contador = contador + 1 'clics acumulados en el bloque actual (se reinicia cada 100 ciclos en timer 3 (cada 10,000 ms o 10 segundos)).
+        'tr = tr + 1 'tr: total de toques al botón central.
+        'contador = contador + 1 'clics acumulados en el bloque actual (se reinicia cada 100 ciclos en timer 3 (cada 10,000 ms o 10 segundos)).
         Label2.Text = contador 'contador es igual a tr ambos guardad cuantos clicks se dan?,no?
         If tiempo_entrenamiento >= 10000 Then 'Si el tiempo de entrenamiento(desde que se epulso inicio ) llega a  10 segundos 
             'dado_rob()
             Randomize() 'Reiniciar el randomize
             'If dado_human = 1 Then ' Valor fuera de rango como bandera
             'Else
-                dado_human = Int((6 * Rnd()) + 1) 'dado de 6 caras= 1 de cada 6 pulsos, en promedio, provoca que la tecla se apague
+                'dado_human = Int((6 * Rnd()) + 1) 'dado de 6 caras= 1 de cada 6 pulsos, en promedio, provoca que la tecla se apague
                 Label1.Text = dado_human 'label1 toma el valor de daodo human
-                If dado_human = 1 Then ' probabilidad de 75% de apagar la tecla(?) en realidad es 1/6
-                    Button1.Enabled = False
-                    permiso = False 'Bloquea la ejecucion de timer 3
+                'If dado_human = 1 Then ' probabilidad de 75% de apagar la tecla(?) en realidad es 1/6
+                    'Button1.Enabled = False
+                    'permiso = False 'Bloquea la ejecucion de timer 3
                     ListBox3.SetSelected(ContadorDemora, True) 'ListBox3 contiene una lista de posibles tiempos de espera, Contador Demora es el indidice que selecciona un elemento de esta lista                           
                     ValorDemora = ListBox3.SelectedItem.ToString 'Esto es cuánto tarda en mostrar el estimulo humano
                     DemoraInicia = Environment.TickCount 'El momento en que se decidió que se debe esperar
