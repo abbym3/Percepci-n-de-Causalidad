@@ -245,11 +245,11 @@
 
         'score = (CEH + CER) 'Total de oportunidades
         'promedio = Math.Round((Aciertos / score) * 100)  ' Calcula porcentaje de aciertos
-        If promedio = 100 Then
-            Labelscore.Text = ("Tienes un " & " " & promedio & "% " & " " & "de aciertos")
-        Else
-            Labelscore.Text = ("Tu precisión aumentó al " & " " & promedio & "% ")
-        End If
+        ' If promedio = 100 Then
+        '     Labelscore.Text = ("Tienes un " & " " & promedio & "% " & " " & "de aciertos")
+        ' Else
+        '     Labelscore.Text = ("Tu precisión aumentó al " & " " & promedio & "% ")
+        ' End If
 
         ' Oculta botones de respuesta
         ' Button1.Visible = False
@@ -260,7 +260,7 @@
 
         ' Muestra reforzamiento visual
         'PictureBox1.Visible = True
-        Labelscore.Visible = True
+        'Labelscore.Visible = True
 
         ' Espera 2.5 segundos (30 ticks)
         ' Timer1.Start()
@@ -273,7 +273,7 @@
         'Duracion_Ref = 0
         'Timer1.Stop()
         'PictureBox1.Visible = False
-        Labelscore.Visible = False
+        'Labelscore.Visible = False
 
         ' Button1.BackColor = Color.White
         ' BtnIzqOff.Visible = True
@@ -325,7 +325,7 @@
         'score = (CEH + CER)
         'promedio = Math.Round((Aciertos / score) * 100)
 
-        Labelscore.Text = ("Tu porcentaje de aciertos bajó al " & " " & promedio & "%")
+        'Labelscore.Text = ("Tu porcentaje de aciertos bajó al " & " " & promedio & "%")
 
         ' Button1.Visible = False
         ' BotonIzqRoj.Visible = False
