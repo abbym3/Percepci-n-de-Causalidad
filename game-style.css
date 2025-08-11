@@ -260,3 +260,12 @@ h1 {
   background-color: #44ff44;
   background-image: linear-gradient(to bottom right, #66ff66, #00cc00);
 }
+
+#resultsText {
+    font-size: 1rem;          
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; 
+    color: #080808;         
+    font-weight: bold;         
+    text-align: center;        
+    margin-top:  10%;
+}
