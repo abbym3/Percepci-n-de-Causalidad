@@ -355,15 +355,12 @@
         ' Button1.Enabled = True
 
         If score = 150 Then
-            Me.BackColor = Color.WhiteSmoke
-            gpp.Visible = True
+            ' Me.BackColor = Color.WhiteSmoke
+            ' gpp.Visible = True
   
 
-            Labelscore.Visible = True
+            ' Labelscore.Visible = True
             Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "%")
-
-            Labelscore.Visible = True
-            Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "% ")
 
             ' BtnDerOff.Visible = False
             ' BtnIzqOff.Visible = False
