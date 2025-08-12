@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const pato = document.getElementById("pato");
 
     // ---- Contadores ----
-    let machineTryCount = 0; //Número de intentos de la máquina por generar un CEI
-    let shotCount = 0; //Número de disparos (clicks al boton central)
+    let machineTryCount = 0;      //Número de intentos de la máquina por generar un CEI
+    let shotCount = 0;            //Número de disparos (clicks al boton central)
     let shotsPer10sInterval = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
-    let i = 0; //i guarda la cantidad de disparos en intervalo n de 10s  
+    let i = 0;                    //i guarda la cantidad de disparos en intervalo n de 10s  
     
     // ---- Configuración de CE ----
-    let buttonColorConfig = null; // Guardará 0 (verde-izq) o 1 (verde-der)
-    let correctColor = null; // 'green' o 'red' según el tipo de CE
+    let buttonColorConfig = null;   // Guardará 0 (verde-izq) o 1 (verde-der)
+    let correctColor = null;        // 'green' o 'red' según el tipo de CE
     
     // ---- Métricas ----
     let greenClicks = 0, redClicks = 0; 
@@ -44,10 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             return; // Si no hubo clics, no se ajusta la probabilidad
         } else {
             const p1 = Math.floor((100 / prevShots * Math.random()) + 1); //La probabilidad se ajusta al número de clics del intervalo de 10s anterior 
-                                                                                       //Un número mas alto de clics aumenta las probabilidades de obtener 1 
             // console.log(`Ajuste_P1: ${p1}`)
             if (p1 === 1) { 
-                p_tick_machine() // Si la probabilidad ajustada da 1, se procede a calcular si la máquina hace CEI
+                p_tick_machine() // Si la p1 = 1, se procede a calcular si la máquina hace CEI
             }
         }
     }
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function activateCE(){
         worker.postMessage("pause")
-        worker.postMessage('get_time'); // Solicitar al Worker el mensaje tiempo acumulado / tiempo de entrenamiento
+        worker.postMessage('get_time'); // Solicitar al Worker el tiempo de entrenamiento
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
 
@@ -99,18 +98,15 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             document.getElementById("GameScreen").classList.remove("ScreenOn");
             document.getElementById("TestScreen").classList.add("ScreenOn");
 
-            //Asignar colores aleatorios
-            assignRandomColors();
+            assignRandomColors(); //Asignar colores aleatorios
         }, 2000);
     }
 
     function assignRandomColors() {
 
-        // Resetear clases
         leftButton.classList.remove("green", "red");
         rightButton.classList.remove("green", "red");
 
-        // Aleatorio: 0 o 1
         buttonColorConfig = Math.random() > 0.5 ? 1 : 0;
 
         if (buttonColorConfig === 0) {
@@ -122,9 +118,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         }
     }
 
-    // ==============================
+    // ================================
     // 4. LÓGICA DE TICKS DEL WORKER
-    // ==============================
+    // ================================
 
     function handle100msTick(){
         //console.log('Han pasado 100 ms');
@@ -143,9 +139,18 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         i ++; //Avanzamos el indice para almacenar el numero de disparos del siguiente intervalo de 10s
     }
 
+    // ================================
+    // 5. LÓGICA DE TICKS DEL USUARIO
+    // ================================
+
+    function handleTickClick(){
+        if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar p_tick_human se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
+             p_tick_human();
+        }
+    }
 
     // ==============================
-    // 5. GESTIÓN DE CLIC EN TEST
+    // 6. GESTIÓN DE CLIC EN TEST
     // ==============================
 
     function handleCEClick(selectedButton) {
@@ -189,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ==============================
-    // 6. PANTALLAS Y UI
+    // 7. PANTALLAS Y UI
     // ==============================
 
     function showResultsScreen(isCorrect){
@@ -219,6 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(() => {
                 resultText = "Tu porcentaje de aciertos total fue del "+ average +"% "
                 document.getElementById("resultsText").textContent = resultText;
+                document.getElementById("resultHead").textContent = "Gracias!!"
             }, 3500);
         }    
     }
@@ -242,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ==============================
-    // 7. EVENTOS DEL WORKER
+    // 8. EVENTOS DEL WORKER
     // ==============================
 
     worker.onmessage = function (e) {
@@ -255,15 +261,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     };
 
     // ==============================
-    // 8. EVENTOS DE USUARIO
+    // 9. EVENTOS DE USUARIO
     // ==============================
 
     shootbutton.addEventListener("click", function () {
-        shotCount += 1;
+        shotCount ++;
         guns_animation();
-        if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar p_tick_human se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
-             p_tick_human();
-        }
+        handleTickClick();
     });
 
     leftButton.addEventListener("click", () => handleCEClick(0));
