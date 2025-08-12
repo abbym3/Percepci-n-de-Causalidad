@@ -17,7 +17,9 @@ function simulate() {
     blockCounter += blocksPassed;        // Solo para contar hasta 100 bloques
     accumulated_time_ms += blocksPassed * 100; // Sumar al acumulado
 
-    postMessage('100 ms') // Enviar mensaje al hilo principal
+    for (let i = 0; i < blocksPassed; i++) {
+        postMessage('100 ms');
+    }
 
     if (blockCounter >= 100) { // Si se acumulan 100 bloques (de 100 ms) entonces accumulatedMs = 100*100 = 10000 Ms
       postMessage('10 s')
