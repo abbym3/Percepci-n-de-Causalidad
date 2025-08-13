@@ -16,24 +16,34 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const rightButton = document.getElementById("ceButtonRight");
     const pato = document.getElementById("pato");
 
-    // ---- Contadores ----
-    let machineTryCount = 0;      //Número de intentos de la máquina por generar un CEI
-    let shotCount = 0;            //Número de disparos (clicks al boton central)
-    let shotsPer10sInterval = []; //Arreglo que permite guardar el número de disparos cada 10 segundos 
-    let i = 0;                    //i guarda la cantidad de disparos en intervalo n de 10s  
-    
-    // ---- Configuración de CE ----
-    let buttonColorConfig = null;   // Guardará 0 (verde-izq) o 1 (verde-der)
-    let correctColor = null;        // 'green' o 'red' según el tipo de CE
-    
-    // ---- Métricas ----
-    let greenClicks = 0, redClicks = 0; 
-    let leftClicks = 0, rightClicks = 0; 
-    let successes = 0, errors = 0;
-    let number_clicks = 0, countCED = 0, countCEI = 0;
-    let  score = 0, average=0;
-    let trainingTime = 0;
-    let resultText = "";
+    // Estado del experimento
+    let trainingTime = 0;     // Tiempo total de entrenamiento (ms)
+    let i = 0;                // Índice del bloque de 10s actual
+    let shotsPer10sInterval = []; // Disparos por cada bloque de 10s
+
+    // Contadores de interacción
+    let shotCount = 0;        // Disparos en el bloque actual
+    let number_clicks = 0;    // Total de clics que evaluaron probabilidad CED
+    let greenClicks = 0;      // Respuestas verdes totales
+    let redClicks = 0;        // Respuestas rojas totales
+    let leftClicks = 0;       // Respuestas izquierda totales
+    let rightClicks = 0;      // Respuestas derecha totales
+    let successes = 0;        // Respuestas correctas totales
+    let errors = 0;           // Respuestas incorrectas totales
+
+    // Contadores de CE
+    let countCED = 0;         // Cambios de estímulo dependientes (humano)
+    let countCEI = 0;         // Cambios de estímulo independientes (máquina)
+    let machineTryCount = 0;  // Intentos de la máquina para generar CEI
+
+    // Configuración de estímulo actual
+    let buttonColorConfig = null; // 0 = verde-izq, 1 = verde-der
+    let correctColor = null;      // 'green' o 'red' según tipo de CE
+
+    // Métricas globales
+    let score = 0;            // Total de CE (CED + CEI)
+    let average = 0;          // Porcentaje de aciertos
+    let resultText = "";      // Texto mostrado en resultados
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -52,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_machine(){
-        const p = Math.floor(Math.random() * 18) + 1; // La probailidad de que la máquina haga un CEI es de 1/18
         machineTryCount ++;
+        const p = Math.floor(Math.random() * 18) + 1; // La probailidad de que la máquina haga un CEI es de 1/18
         console.log(`Calculo p_machine: ${p}`)
         if (p === 2) { 
             CEI();
@@ -61,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_human(){
-        const p = Math.floor(Math.random() * 6) + 1; // La probailidad de que el humano provoque un CED de 1/6
         number_clicks ++;
+        const p = Math.floor(Math.random() * 6) + 1; // La probailidad de que el humano provoque un CED de 1/6
         console.log(`Calculo p_human: ${p}`)
         if (p === 1) { 
             CED();
@@ -219,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         document.getElementById("resultsText").textContent = resultText;
 
         if(score < 150)
-            setTimeout(showGameScreen, 3500);
+            setTimeout(showGameScreen, 2500);
         else{
             setTimeout(() => {
                 resultText = "Tu porcentaje de aciertos total fue del "+ average +"% "

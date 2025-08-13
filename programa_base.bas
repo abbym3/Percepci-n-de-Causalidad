@@ -58,8 +58,8 @@
 
     'Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
         'TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
-        'TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
-        'TXT.WriteLine("Subject: ")
+        TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
+        TXT.WriteLine("Subject: ")
         'TXT.WriteLine()
     'End Sub
 
