@@ -1,5 +1,13 @@
+import { db, ref, set, push, serverTimestamp } from "./firebase-init.js";
+
 document.addEventListener("DOMContentLoaded", function () { 
 //Esperar a que el DOM esté listo
+
+  const nameInput = document.getElementById('name');
+  const ageInput = document.getElementById('age');
+  const startBtn = document.getElementById('startBtn');
+  const groupCards = document.querySelectorAll('.group-card'); //Es un array con todas las tarjetas (Cada tarjeta (imagen) es un grupo)
+  let selectedGroup = null;
 
   function validateForm() {
     const nameFilled = nameInput.value.trim() !== '';
@@ -14,12 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   //Funcion de validación
 
-  const nameInput = document.getElementById('name');
-  const ageInput = document.getElementById('age');
-  const startBtn = document.getElementById('startBtn');
-  const groupCards = document.querySelectorAll('.group-card'); //Es un array con todas las tarjetas (Cada tarjeta (imagen) es un grupo)
-  
-  let selectedGroup = null;
   groupCards.forEach(card => { //Esto recorre cada tarjeta ...
     card.addEventListener('click', () => { // y le pone un event listenner (función que se ejecuta al hacer un click)
       groupCards.forEach(c => c.classList.remove('selected')); // Le quita a todas las tarjetas la clase selected (borde azul)
@@ -43,17 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const userRef = ref(db, `usuarios/${userId}`);
     set(userRef, Record)
       .then(() => {
-            window.location.href = "game.html";
-        })
-        .catch((error) => {
-            console.error("Error guardando inicio:", error);
-            // Guardar localmente si falla
-            localStorage.setItem('pendingRecords', JSON.stringify({
-                userId: userId,
-                records: Record
-            }));
-        });
+        window.location.href = "game.html";
+      })
+      .catch((error) => {
+        console.error("Error guardando inicio en Firebase:", error);
+      });
   });
   // Acción del botón
-
 });

@@ -1,5 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
+import { db, ref, set, push, serverTimestamp } from "./firebase-init.js";
 
+document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
     // ==============================
     // 1. CONFIGURACIÓN Y VARIABLES
