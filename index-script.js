@@ -31,15 +31,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // Selección de grupo
   
   startBtn?.addEventListener("click", function () {
-    const jugador = {
-      datosPersonales: {
-        nombre: nameInput.value,
-        edad: ageInput.value,
-        grupo: selectedGroup
-      }
+    const userId = `${nameInput.value}_${ageInput.value}_${Date.now() % 1000}`;  // Ej: "Erick_25_100"
+    localStorage.setItem('currentUserId', userId); // Guardamos para usarlo en game.html
+
+    // Primer registro: Inicio de sesión
+    const Record = {
+        "0": ["MIS", new Date().toISOString()]
     };
-    localStorage.setItem("jugador", JSON.stringify(jugador)); // Guarda los datos en localStorage
-    window.location.href = "game.html"; //Lleva al usuario al juego
+
+    // Guardar en Firebase
+    const userRef = ref(db, `usuarios/${userId}`);
+    set(userRef, Record)
+      .then(() => {
+            window.location.href = "game.html";
+        })
+        .catch((error) => {
+            console.error("Error guardando inicio:", error);
+            // Guardar localmente si falla
+            localStorage.setItem('pendingRecords', JSON.stringify({
+                userId: userId,
+                records: Record
+            }));
+        });
   });
   // Acción del botón
 
