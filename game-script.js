@@ -165,25 +165,30 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 6. GESTIÓN DE CLIC EN TEST
     // ==============================
 
+    function getSelectedColor(selectedButton, buttonColorConfig) { 
+        const isGreen = (buttonColorConfig === 0 && selectedButton === 0) || //Si la configuración es verde izquerda y rojo derecha y pulsa izquierda (verde)
+                        (buttonColorConfig === 1 && selectedButton === 1); //si la configuración es rojo izquerda y verde derecha y pulsa derecha (verde)
+        return isGreen ? "green" : "red";
+    }
+
+    function isCorrectResponse(selectedButton, correctColor, buttonColorConfig) {
+        const correctButton = (correctColor === 'green') ?  // ¿Es CEI (verde correcto)?
+            (buttonColorConfig === 0 ? 0 : 1) : // Si es CEI: ¿Verde está en izquierda (0)? Si sí, correcto = 0 (izquierda), si no correcto = 1(derecha)
+            (buttonColorConfig === 0 ? 1 : 0); // Si es CED (rojo correcto): ¿Verde está en izquierda (0)? Si sí, correcto = 1 (derecha), si no correcto = 0 (izquierda) 
+        return selectedButton === correctButton;
+    }
+
     function handleCEClick(selectedButton) {
-        
         // Lado y color que el jugador pulsó
         const lado = selectedButton === 0 ? "left" : "right";
-        const color = (buttonColorConfig === 0 && selectedButton === 0) || //Si la configuración es verde izquerda y rojo derecha y pulsa izquierda (verde)
-                      (buttonColorConfig === 1 && selectedButton === 1) //O si la configuración es rojo izquerda y verde derecha y pulsa derecha (verde)
-        ? "green" : "red";
+        const color = getSelectedColor(selectedButton, buttonColorConfig)
 
         // Sumar contadores de color y lado
         color === "green"? greenClicks++ : redClicks++;
         lado === "left"? leftClicks++ :rightClicks++;
 
-        // Determinar el botón correcto
-        const correctButton = (correctColor === 'green') ? // ¿Es CEI (verde correcto)?
-            (buttonColorConfig === 0 ? 0 : 1) : // Si es CEI: ¿Verde está en izquierda (0)? Si sí, correcto = 0 (izquierda), si no correcto = 1(derecha)
-            (buttonColorConfig === 0 ? 1 : 0);  // Si es CED (rojo correcto): ¿Verde está en izquierda (0)? Si sí, correcto = 1 (derecha), si no correcto = 0 (izquierda) 
-
         // Determinar acierto o error
-        const isCorrect = selectedButton === correctButton;
+        const isCorrect = isCorrectResponse(selectedButton, correctColor, buttonColorConfig);
 
         // Sumar contados de aciertos o errores
         isCorrect ? successes++ : errors++;
@@ -209,6 +214,20 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 7. PANTALLAS Y UI
     // ==============================
 
+    function getResultText(isCorrect, average, score) {
+        if (average === 100 || average === 0) {
+            return `Tienes un ${average}% de aciertos`;
+        }
+
+        if (score >= 150) {
+            return `Tu porcentaje de aciertos total fue del ${average}%`;
+        }
+
+        return isCorrect ?
+            `Tu porcentaje de aciertos aumentó al ${average}%` :
+            `Tu porcentaje de aciertos bajó al ${average}%`;
+    }
+
     function showResultsScreen(isCorrect){
         //Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
@@ -219,14 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         document.getElementById("ResultsScreen").classList.add("ScreenOn");
 
         // Poner el texto del resultado
-        if (average === 100 || average === 0){
-            resultText = ("Tienes un " + average + "% de aciertos")
-        }
-        else{
-            resultText = isCorrect ? 
-            "Tu porcentaje de aciertos aumentó al "+ average + "% ":
-            "Tu porcentaje de aciertos bajó al "+ average + "% ";
-        }
+        resultText = getResultText(isCorrect, average, score);
 
         document.getElementById("resultsText").textContent = resultText;
 
@@ -234,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(showGameScreen, 2500);
         else{
             setTimeout(() => {
-                resultText = "Tu porcentaje de aciertos total fue del "+ average +"% "
+                 resultText = getResultText(isCorrect, average, score);
                 document.getElementById("resultsText").textContent = resultText;
                 document.getElementById("resultHead").textContent = "Gracias!!"
             }, 3500);

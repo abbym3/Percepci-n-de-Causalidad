@@ -3,8 +3,8 @@ import { db } from "./firebase-init.js";
 
 function saveInitialUserData(nombre, edad, grupo) {
   const timestamp = Math.floor(Date.now() / 1000); // Ej: 1755144881
-  const lastThree = timestamp % 1000;              // Ej: 881
-  const userKey = `${nombre}_${edad}_${lastThree}`;
+  const lastFour = timestamp % 10000;              // Ej: 4881
+  const userKey = `${nombre}_${edad}_${lastFour}`;
 
   const data = {
     0: [`${nombre}`,`${edad}`,`${grupo}`] // Primer renglón en la base
