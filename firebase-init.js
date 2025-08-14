@@ -12,6 +12,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+<<<<<<< HEAD
 const db = getDatabase(app);
 
 window.fb = { db, ref, push, set, serverTimestamp };
+=======
+export const db = getDatabase(app);
+>>>>>>> 6c69902
