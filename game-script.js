@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 1. CONFIGURACIÓN Y VARIABLES
     // ==============================
     
-    // ---- Worker ----
+    // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
     
-    // ---- Elementos DOM ----
+    // Elementos DOM
     const shootbutton = document.getElementById("shootButton"); 
     const weaponLeft = document.getElementById("weaponLeft");
     const weaponRight = document.getElementById("weaponRight");
@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
     let resultText = "";      // Texto mostrado en resultados
+
+    // Indice de almacenamiento 
+    let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -281,6 +284,19 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         return id;
     }
     //window.getCurrentUserId = getCurrentUserId;
+
+    function saveNextLine(contentArray) {
+        const userId = getCurrentUserId();
+        if (!userId) return;
+
+        const lineRef = ref(db, `participantes/${userId}/${currentLineNumber}`);
+        set(lineRef, contentArray)
+            .then(() => {
+                console.log(`Renglón ${currentLineNumber} guardado:`, contentArray);
+                currentLineNumber++; // Solo si se guarda correctamente
+            })
+            .catch((error) => console.error(`Error al guardar renglón ${currentLineNumber}:`, error));
+    }
 
     // ==============================
     // 9. EVENTOS DEL WORKER
