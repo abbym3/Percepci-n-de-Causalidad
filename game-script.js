@@ -1,4 +1,5 @@
-import { db, ref, set, push, serverTimestamp } from "./firebase-init.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 

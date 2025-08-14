@@ -1,4 +1,26 @@
-import { db, ref, set, push, serverTimestamp } from "./firebase-init.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { db } from "./firebase-init.js"; 
+
+function saveInitialUserData(nombre, edad, grupo) {
+  const timestamp = Math.floor(Date.now() / 1000); // Marca de tiempo en segundos (3 digitos)
+  const userKey = `${nombre}_${edad}_${timestamp}`; // Clave única del participante
+
+  const data = {
+    0: [`${nombre}`,`${edad}`,`${grupo}`] // Primer renglón en la base
+  };
+
+  const userRef = ref(db, `participantes/${userKey}`); // Ruta en Firebase
+  set(userRef, data)
+    .then(() => {
+      console.log("Datos guardados correctamente en Firebase.");
+      localStorage.setItem('currentUserId', userKey); // Guardamos para usar en game.html
+      window.location.href = "game.html"; // Redirigir al experimento
+    })
+    .catch((error) => {
+      console.error("Error al guardar en Firebase:", error);
+      alert("Hubo un problema al guardar tus datos. Intenta de nuevo.");
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function () { 
 //Esperar a que el DOM esté listo
@@ -33,23 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Selección de grupo
   
   startBtn?.addEventListener("click", function () {
-    const userId = `${nameInput.value}_${ageInput.value}_${Date.now() % 1000}`;  // Ej: "Erick_25_100"
-    localStorage.setItem('currentUserId', userId); // Guardamos para usarlo en game.html
-
-    // Primer registro: Inicio de sesión
-    const Record = {
-        "0": ["MIS", new Date().toISOString()]
-    };
-
-    // Guardar en Firebase
-    const userRef = ref(db, `usuarios/${userId}`);
-    set(userRef, Record)
-      .then(() => {
-        window.location.href = "game.html";
-      })
-      .catch((error) => {
-        console.error("Error guardando inicio en Firebase:", error);
-      });
+    const nombre = nameInput.value;
+    const edad = ageInput.value;
+    const grupo = selectedGroup;
+    saveInitialUserData(nombre, edad, grupo);
   });
   // Acción del botón
 });
