@@ -271,8 +271,19 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         }, 100); // Duración del retroceso
     }
 
+    
     // ==============================
-    // 8. EVENTOS DEL WORKER
+    // 8. ALMACENAMIENTO FB
+    // ==============================
+    function getCurrentUserId() {
+        const id = localStorage.getItem("currentUserId");
+        console.log("ID del participante encontrado:", id);
+        return id;
+    }
+    //window.getCurrentUserId = getCurrentUserId;
+
+    // ==============================
+    // 9. EVENTOS DEL WORKER
     // ==============================
 
     worker.onmessage = function (e) {
@@ -285,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     };
 
     // ==============================
-    // 9. EVENTOS DE USUARIO
+    // 10. EVENTOS DE USUARIO
     // ==============================
 
     shootbutton.addEventListener("click", function () {
