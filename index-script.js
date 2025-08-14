@@ -2,8 +2,9 @@ import { ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-dat
 import { db } from "./firebase-init.js"; 
 
 function saveInitialUserData(nombre, edad, grupo) {
-  const timestamp = Math.floor(Date.now() / 1000); // Marca de tiempo en segundos (3 digitos)
-  const userKey = `${nombre}_${edad}_${timestamp}`; // Clave única del participante
+  const timestamp = Math.floor(Date.now() / 1000); // Ej: 1755144881
+  const lastThree = timestamp % 1000;              // Ej: 881
+  const userKey = `${nombre}_${edad}_${lastThree}`;
 
   const data = {
     0: [`${nombre}`,`${edad}`,`${grupo}`] // Primer renglón en la base
