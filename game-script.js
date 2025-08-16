@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handle10sTick(){
-        // console.log(`-----------Intervalo ${i}: Disparos = ${shotCount}--------------`);
+        console.log(`-----------Intervalo ${i}: Disparos = ${shotCount}--------------`);
         //console.log('Han pasado 10s');
         shotsPer10sInterval[i] = shotCount; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shotsPer10sInterval[i]}`);
@@ -308,6 +308,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 if (e.data === "10 s") handle10sTick();
         } else if (typeof e.data === "object" && e.data.type === "time") {
             trainingTime = e.data.value;
+            console.log(trainingTime)
+            console.log(performance.now())
         }
     };
 
@@ -317,6 +319,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
+        worker.postMessage('get_time')
         guns_animation();
         handleTickClick();
     });
