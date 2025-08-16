@@ -308,8 +308,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 if (e.data === "10 s") handle10sTick();
         } else if (typeof e.data === "object" && e.data.type === "time") {
             trainingTime = e.data.value;
-            console.log(trainingTime)
-            console.log(performance.now())
+            console.log(`Worker: ${(trainingTime).toFixed(1)}`)
+            console.log(`Real: ${(performance.now()).toFixed(1)}`)
         }
     };
 
