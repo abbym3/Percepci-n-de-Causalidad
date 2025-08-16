@@ -8,7 +8,7 @@ let accumulated_time_ms = 0; // Tiempo total acumulado en bloques de 50 ms
 function simulate() {
 
   console.log("tick", performance.now());
-  
+
   if (!running) return; // Si no se esta ejecutando, no continuar
 
   const now = performance.now(); // Obtener el tiempo actual
@@ -31,7 +31,7 @@ function simulate() {
     }
     startTime += blocksPassed * 20; // Avanza startTime la cantidad de tiempo procesado
   }
-  setTimeout(simulate, 4); // Repetir la función cada 4 ms
+  setTimeout(simulate, 10); // Repetir la función cada 4 ms
 }
 
 simulate(); // Iniciar la simulación
