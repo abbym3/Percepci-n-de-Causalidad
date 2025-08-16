@@ -1,5 +1,5 @@
 
-let startTime = performance.now() - 120; // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js")) - un delay de arranque 
+let startTime = performance.now() - 60; // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js")) - un delay de arranque 
 let blockCounter = 0; // Contador de bloques de 50 ms (útil para contar los 100 ms y los 10 s)
 let running = true; // Control de pausa
 let pauseTime = null; // Almacena el momento en que se pausó
