@@ -50,6 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Indice de almacenamiento 
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
+    // Para calibrar el worker 
+    let desfases = [];           // Guarda diferencias entre Worker y hilo principal
+    let offset_calibrado = 0;    // Promedio del desfase
+
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
     // ==============================
@@ -309,8 +313,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 if (e.data === "10 s") handle10sTick();
         } else if (typeof e.data === "object" && e.data.type === "time") {
             trainingTime = e.data.value;
+            const tiempoReal = performance.now();
+            const desfase = tiempoReal - trainingTime;
+            if (performance.now() < 9000) { // Guardar el desfase si estamos en instrucciones
+                desfases.push(desfase);
+            }
             console.log(`Worker: ${(trainingTime).toFixed(1)}`)
-            console.log(`Real: ${(performance.now()-9000).toFixed(1)}`)
+            console.log(`Real: ${((performance.now()).toFixed(1))}`) // <-----------------------------------------------------
+
         }else   if (e.data.type === 'reset_ack') {
             console.log(' Worker reiniciado internamente');
         }
@@ -330,10 +340,31 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     leftButton.addEventListener("click", () => handleCEClick(0));
     rightButton.addEventListener("click", () => handleCEClick(1));
 
-    //Inicio 
+    // ==============================
+    // 11. CALIBRACIÓN
+    // ==============================
+
+    /*
+        1- Cada 100 ms (durante 8 segundos)se envia un get_time del worker
+        2- Cada respuesta del worker se usa para calcular un desfase y se guarda en la lista desfases
+        3- Luego de 8 segundos se deja de pedir el tiempo al worker se calcula offset calibrado
+    */
+    const intervaloCalibracion = setInterval(() => {
+        worker.postMessage('get_time');
+    }, 100); // cada 100 ms
+
     setTimeout(() => {
+        clearInterval(intervaloCalibracion); //Detiene el envio de get_time
+        if (desfases.length > 0) {
+            offset_calibrado = desfases.reduce((a, b) => a + b, 0) / desfases.length;
+            console.log("Offset calibrado:", offset_calibrado.toFixed(2), "ms");
+        }
+    }, 8000); // calibrar durante 8 segundos
+
+    setTimeout(() => {
+        worker.postMessage({ type: 'set_offset', value: offset_calibrado });
         worker.postMessage('reset');
         showGameScreen('GameScreen');
-    }, 9000); // 9 segundos de instrucciones
+    }, 9000); // 9 segundos de instrucciones  // <-----------------------------------------------------
 });
 

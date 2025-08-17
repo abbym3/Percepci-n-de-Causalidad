@@ -4,6 +4,7 @@ let blockCounter = 0; // Contador de bloques de 50 ms (útil para contar los 100
 let running = true; // Control de pausa
 let pauseTime = null; // Almacena el momento en que se pausó
 let accumulated_time_ms = 0; // Tiempo total acumulado en bloques de 50 ms
+let offset_calibrado = 0;
 
 function simulate() {
 
@@ -55,14 +56,18 @@ onmessage = function (e) {
       break;
 
     case 'get_time':
-      postMessage({type: 'time', value: accumulated_time_ms});
+      postMessage({ type: 'time', value: performance.now() - offset_calibrado });
       break;
 
     case 'reset':
-      startTime = performance.now() - 60; 
+      startTime = performance.now() - offset_calibrado;
       blockCounter = 0;
       accumulated_time_ms = 0;
       postMessage({ type: 'reset_ack' });
       break;
+  }
+  if (typeof e.data === 'object' && e.data.type === 'set_offset') {
+      offset_calibrado = e.data.value;
+      console.log("Offset recibido en Worker:", offset_calibrado.toFixed(2), "ms");
   }
 };
