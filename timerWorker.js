@@ -33,7 +33,7 @@ function simulate() {
     }
     startTime += blocksPassed * 20; // Avanza startTime la cantidad de tiempo procesado
   }
-  setTimeout(simulate, 10); // Repetir la función cada 4 ms
+  requestAnimationFrame(simulate); // Repetir la función cada 4 ms
 }
 
 simulate(); // Iniciar la simulación

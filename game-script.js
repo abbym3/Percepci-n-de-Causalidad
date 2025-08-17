@@ -51,9 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
     // Para calibrar el worker 
-    let desfases = [];           // Guarda diferencias entre Worker y hilo principal
+    let offsets = [];           // Guarda diferencias entre Worker y hilo principal
     let offset_calibrado = 0;    // Promedio del desfase
     let gameStartTime = null;
+    let dynamicOffset = 0 ;
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -308,25 +309,27 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 9. EVENTOS DEL WORKER
     // ==============================
 
+    function handleWorkerTimeMessage(e) {
+        const WorkerTime = e.data.value;
+        const RealTime = performance.now();
+        const offset = RealTime - WorkerTime;
+
+        if (RealTime < 9000) {
+            offsets.push(offset);
+            console.log(`Worker: ${WorkerTime.toFixed(1)} | Real: ${RealTime.toFixed(1)}`);
+        } else {
+            dynamicOffset = offset; // ← NUEVO: actualizamos offset dinámico
+            console.log(`Offset dinámico actualizado: ${dynamicOffset.toFixed(2)} ms`);
+            console.log(`Worker: ${WorkerTime.toFixed(1)} | Real: ${(RealTime - gameStartTime).toFixed(1)}`);
+        }
+    }
+
     worker.onmessage = function (e) {
         if (typeof e.data === "string") {
                 if (e.data === "100 ms") handle100msTick();
                 if (e.data === "10 s") handle10sTick();
         } else if (typeof e.data === "object" && e.data.type === "time") {
-            trainingTime = e.data.value;
-            const tiempoReal = performance.now();
-            const desfase = tiempoReal - trainingTime;
-            if (tiempoReal < 9000) { // Guardar el desfase si estamos en instrucciones
-                desfases.push(desfase);
-            }
-            if (tiempoReal < 9000) { 
-                console.log(`Worker: ${(trainingTime).toFixed(1)}`)
-                console.log(`Real: ${((performance.now()).toFixed(1))}`) 
-            }
-            if (tiempoReal > 9000) { 
-                console.log(`Worker: ${(trainingTime).toFixed(1)}`)
-                console.log(`Real: ${(((performance.now()).toFixed(1)))-9000}`) 
-            }
+            handleWorkerTimeMessage(e);
         }
     };
 
@@ -350,20 +353,25 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     /*
         1- Cada 100 ms (durante 8 segundos)se envia un get_time del worker
-        2- Cada respuesta del worker se usa para calcular un desfase y se guarda en la lista desfases
+        2- Cada respuesta del worker se usa para calcular un desfase y se guarda en la lista desfases (offsets)
         3- Luego de 8 segundos se deja de pedir el tiempo al worker se calcula offset calibrado
     */
+
+//    setInterval(() => {
+//         worker.postMessage('get_time');
+//     }, 5000); // Recalibrar cada 5 segundos
+
     const intervaloCalibracion = setInterval(() => {
         worker.postMessage('get_time');
-    }, 100); // cada 100 ms
+    }, 50); // cada 50 ms
 
     setTimeout(() => {
         clearInterval(intervaloCalibracion); //Detiene el envio de get_time
-        if (desfases.length > 0) {
-            offset_calibrado = desfases.reduce((a, b) => a + b, 0) / desfases.length;
+        if (offsets.length > 0) {
+            offset_calibrado = offsets.reduce((a, b) => a + b, 0) / offsets.length;
             console.log("Offset calibrado:", offset_calibrado.toFixed(2), "ms");
         }
-    }, 8000); // calibrar durante 8 segundos
+    }, 8000); // calibrar a los 8 segundos
 
     setTimeout(() => {
         worker.postMessage({ type: 'set_offset', value: offset_calibrado });
