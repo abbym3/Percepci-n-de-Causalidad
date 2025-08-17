@@ -257,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showGameScreen() {
+        document.getElementById("InstructionsScreen").classList.remove("ScreenOn")
         document.getElementById("ResultsScreen").classList.remove("ScreenOn");
         document.getElementById("GameScreen").classList.add("ScreenOn");
         correctColor = null;
@@ -309,7 +310,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         } else if (typeof e.data === "object" && e.data.type === "time") {
             trainingTime = e.data.value;
             console.log(`Worker: ${(trainingTime).toFixed(1)}`)
-            console.log(`Real: ${(performance.now()).toFixed(1)}`)
+            console.log(`Real: ${(performance.now()-9000).toFixed(1)}`)
+        }else   if (e.data.type === 'reset_ack') {
+            console.log(' Worker reiniciado internamente');
         }
     };
 
@@ -326,5 +329,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     leftButton.addEventListener("click", () => handleCEClick(0));
     rightButton.addEventListener("click", () => handleCEClick(1));
+
+    //Inicio 
+    setTimeout(() => {
+        worker.postMessage('reset');
+        showGameScreen('GameScreen');
+    }, 9000); // 9 segundos de instrucciones
 });
 

@@ -1,5 +1,5 @@
 
-let startTime = performance.now() - 60; // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js")) - un delay de arranque 
+let startTime = 0//performance.now() - 60; // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js")) - un delay de arranque 
 let blockCounter = 0; // Contador de bloques de 50 ms (útil para contar los 100 ms y los 10 s)
 let running = true; // Control de pausa
 let pauseTime = null; // Almacena el momento en que se pausó
@@ -56,6 +56,13 @@ onmessage = function (e) {
 
     case 'get_time':
       postMessage({type: 'time', value: accumulated_time_ms});
+      break;
+
+    case 'reset':
+      startTime = performance.now() - 60; 
+      blockCounter = 0;
+      accumulated_time_ms = 0;
+      postMessage({ type: 'reset_ack' });
       break;
   }
 };
