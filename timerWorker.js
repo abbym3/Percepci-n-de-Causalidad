@@ -5,6 +5,7 @@ let running = true; // Control de pausa
 let pauseTime = null; // Almacena el momento en que se pausó
 let accumulated_time_ms = 0; // Tiempo total acumulado en bloques de 50 ms
 let offset_calibrado = 0;
+let offset_aplicado = false;
 
 function simulate() {
 
@@ -56,14 +57,17 @@ onmessage = function (e) {
       break;
 
     case 'get_time':
-      postMessage({ type: 'time', value: performance.now() - offset_calibrado });
+      // Antes de calibrar, usamos performance.now() para medir desfase
+      // Después de calibrar, devolvemos accumulated_time_ms que ya está ajustado
+      const timeToSend = offset_aplicado ? accumulated_time_ms : performance.now();;
+      postMessage({ type: 'time', value: timeToSend });
       break;
 
     case 'reset':
       startTime = performance.now() - offset_calibrado;
+      offset_aplicado = true;
       blockCounter = 0;
       accumulated_time_ms = 0;
-      postMessage({ type: 'reset_ack' });
       break;
   }
   if (typeof e.data === 'object' && e.data.type === 'set_offset') {

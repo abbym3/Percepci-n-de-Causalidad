@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Para calibrar el worker 
     let desfases = [];           // Guarda diferencias entre Worker y hilo principal
     let offset_calibrado = 0;    // Promedio del desfase
+    let gameStartTime = null;
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -315,14 +316,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             trainingTime = e.data.value;
             const tiempoReal = performance.now();
             const desfase = tiempoReal - trainingTime;
-            if (performance.now() < 9000) { // Guardar el desfase si estamos en instrucciones
+            if (tiempoReal < 9000) { // Guardar el desfase si estamos en instrucciones
                 desfases.push(desfase);
             }
-            console.log(`Worker: ${(trainingTime).toFixed(1)}`)
-            console.log(`Real: ${((performance.now()).toFixed(1))}`) // <-----------------------------------------------------
-
-        }else   if (e.data.type === 'reset_ack') {
-            console.log(' Worker reiniciado internamente');
+            if (tiempoReal < 9000) { 
+                console.log(`Worker: ${(trainingTime).toFixed(1)}`)
+                console.log(`Real: ${((performance.now()).toFixed(1))}`) 
+            }
+            if (tiempoReal > 9000) { 
+                console.log(`Worker: ${(trainingTime).toFixed(1)}`)
+                console.log(`Real: ${(((performance.now()).toFixed(1)))-9000}`) 
+            }
         }
     };
 
@@ -364,6 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     setTimeout(() => {
         worker.postMessage({ type: 'set_offset', value: offset_calibrado });
         worker.postMessage('reset');
+        gameStartTime = performance.now();
         showGameScreen('GameScreen');
     }, 9000); // 9 segundos de instrucciones  // <-----------------------------------------------------
 });
