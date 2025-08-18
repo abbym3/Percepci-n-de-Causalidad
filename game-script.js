@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let gameStartTime = null;
     let dynamicOffset = 0 ;
     let intervaloCalibracion = null;
+    let calibrationStartTime = 0;
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -76,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_machine(){
         machineTryCount ++;
         const p = Math.floor(Math.random() * 18) + 1; // La probailidad de que la máquina haga un CEI es de 1/18
-        console.log(`Calculo p_machine: ${p}`)
+        // console.log(`Calculo p_machine: ${p}`)
         if (p === 2) { 
             CEI();
         }
@@ -85,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_human(){
         number_clicks ++;
         const p = Math.floor(Math.random() * 6) + 1; // La probailidad de que el humano provoque un CED de 1/6
-        console.log(`Calculo p_human: ${p}`)
+        // console.log(`Calculo p_human: ${p}`)
         if (p === 1) { 
             CED();
         }
@@ -315,7 +316,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const RealTime = performance.now();
         const offset = RealTime - WorkerTime;
 
-        if (RealTime < 9000) {
+        const elapsed = RealTime - calibrationStartTime;
+
+        if (elapsed < 8000) { //Tiempo de calibración
             offsets.push(offset);
             console.log(`Worker: ${WorkerTime.toFixed(1)} | Real: ${RealTime.toFixed(1)}`);
         } else {
@@ -359,6 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     */
     
     function iniciarCalibracion() {
+        calibrationStartTime = performance.now();
         offsets = []; // Reiniciar lista de desfases
         intervaloCalibracion = setInterval(() => {
             worker.postMessage('get_time');
