@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let offset_calibrado = 0;    // Promedio del desfase
     let gameStartTime = null;
     let dynamicOffset = 0 ;
+    let intervaloCalibracion = null;
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -356,28 +357,32 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         2- Cada respuesta del worker se usa para calcular un desfase y se guarda en la lista desfases (offsets)
         3- Luego de 8 segundos se deja de pedir el tiempo al worker se calcula offset calibrado
     */
+    
+    function iniciarCalibracion() {
+        offsets = []; // Reiniciar lista de desfases
+        intervaloCalibracion = setInterval(() => {
+            worker.postMessage('get_time');
+        }, 50); // Frecuencia de muestreo: cada 50 ms
+    }
 
-//    setInterval(() => {
-//         worker.postMessage('get_time');
-//     }, 5000); // Recalibrar cada 5 segundos
-
-    const intervaloCalibracion = setInterval(() => {
-        worker.postMessage('get_time');
-    }, 50); // cada 50 ms
-
-    setTimeout(() => {
-        clearInterval(intervaloCalibracion); //Detiene el envio de get_time
+    function finalizarCalibracion() {
+        clearInterval(intervaloCalibracion); // Detener muestreo
         if (offsets.length > 0) {
             offset_calibrado = offsets.reduce((a, b) => a + b, 0) / offsets.length;
             console.log("Offset calibrado:", offset_calibrado.toFixed(2), "ms");
-        }
-    }, 8000); // calibrar a los 8 segundos
+        } 
+    }
 
-    setTimeout(() => {
+    function iniciarJuego() {
         worker.postMessage({ type: 'set_offset', value: offset_calibrado });
         worker.postMessage('reset');
-        gameStartTime = performance.now();
+        gameStartTime = performance.now(); // Marca el inicio real del juego
         showGameScreen('GameScreen');
-    }, 9000); // 9 segundos de instrucciones  // <-----------------------------------------------------
-});
+    }
 
+    // Programar las fases
+    setTimeout(iniciarCalibracion, 0);       // Empieza de inmediato
+    setTimeout(finalizarCalibracion, 8000);  // Finaliza a los 8 segundos
+    setTimeout(iniciarJuego, 9000);          // Arranca el juego a los 9 segundos
+
+});

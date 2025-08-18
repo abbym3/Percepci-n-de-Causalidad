@@ -39,7 +39,7 @@ function simulate() {
 simulate(); // Iniciar la simulación
 
 onmessage = function (e) {
-  switch (e.data) {
+  switch (typeof e.data === "object" ? e.data.type : e.data) {
     case 'pause':
       running = false;
       pauseTime = performance.now(); // Guardar el momento en que se pausó
@@ -59,7 +59,7 @@ onmessage = function (e) {
     case 'get_time':
       // Antes de calibrar, usamos performance.now() para medir desfase
       // Después de calibrar, devolvemos accumulated_time_ms que ya está ajustado
-      const timeToSend = offset_aplicado ? accumulated_time_ms : performance.now();;
+      const timeToSend = offset_aplicado ? accumulated_time_ms : performance.now();
       postMessage({ type: 'time', value: timeToSend });
       break;
 
@@ -69,9 +69,11 @@ onmessage = function (e) {
       blockCounter = 0;
       accumulated_time_ms = 0;
       break;
-  }
-  if (typeof e.data === 'object' && e.data.type === 'set_offset') {
+    
+    case 'set_offset':
       offset_calibrado = e.data.value;
       console.log("Offset recibido en Worker:", offset_calibrado.toFixed(2), "ms");
+      break;
+
   }
 };
