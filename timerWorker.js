@@ -60,8 +60,7 @@ onmessage = function (e) {
       break;
 
     case 'reset':
-      startTime = performance.now() - offset_calibrado;
-      offset_aplicado = true;
+      startTime = performance.now();
       blockCounter = 0;
       accumulated_time_ms = 0;
       break;
