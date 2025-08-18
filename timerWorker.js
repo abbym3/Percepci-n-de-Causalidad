@@ -1,11 +1,8 @@
-
 let startTime = performance.now(); //- 60; // Guarda el tiempo actual en milisegundos con decimales (Cuando se ejecute new Worker("timerWorker.js")) - un delay de arranque 
 let blockCounter = 0; // Contador de bloques de 20 ms (útil para contar los 100 ms y los 10 s)
 let running = true; // Control de pausa
 let pauseTime = null; // Almacena el momento en que se pausó
 let accumulated_time_ms = 0; // Tiempo total acumulado en bloques de 20 ms
-let offset_calibrado = 0;
-let offset_aplicado = false;
 
 function simulate() {
 
@@ -58,9 +55,7 @@ onmessage = function (e) {
       break;
 
     case 'get_time':
-      // Antes de calibrar, usamos performance.now() para medir desfase
-      // Después de calibrar, devolvemos accumulated_time_ms que ya está ajustado
-      const timeToSend = offset_aplicado ? accumulated_time_ms : performance.now();
+      const timeToSend = accumulated_time_ms 
       postMessage({ type: 'time', value: timeToSend });
       break;
 
@@ -69,11 +64,6 @@ onmessage = function (e) {
       offset_aplicado = true;
       blockCounter = 0;
       accumulated_time_ms = 0;
-      break;
-    
-    case 'set_offset':
-      offset_calibrado = e.data.value;
-      console.log("Offset recibido en Worker:", offset_calibrado.toFixed(2), "ms");
       break;
   }
 };

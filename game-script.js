@@ -339,7 +339,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     rightButton.addEventListener("click", () => handleCEClick(1));
 
     // ==============================
-    // 11. CALIBRACIÓN
+    // 11. Sincronización de relojes
     // ==============================
 
     function iniciarJuego() {
@@ -349,6 +349,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     //
-    setTimeout(iniciarJuego, 9000);          // Arranca el juego a los 9 segundos
+    setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
 
 });
