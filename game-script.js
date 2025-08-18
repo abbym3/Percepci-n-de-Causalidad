@@ -50,13 +50,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Indice de almacenamiento 
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
-    // Para calibrar el worker 
-    let offsets = [];           // Guarda diferencias entre Worker y hilo principal
-    let offset_calibrado = 0;    // Promedio del desfase
+
     let gameStartTime = null;
-    let dynamicOffset = 0 ;
-    let intervaloCalibracion = null;
-    let calibrationStartTime = 0;
+
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -313,19 +309,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function handleWorkerTimeMessage(e) {
         const WorkerTime = e.data.value;
-        const RealTime = performance.now();
+        const RealTime = performance.now() - gameStartTime;
         const offset = RealTime - WorkerTime;
 
-        const elapsed = RealTime - calibrationStartTime;
-
-        if (elapsed < 8000) { //Tiempo de calibración
-            offsets.push(offset);
-            console.log(`Worker: ${WorkerTime.toFixed(1)} | Real: ${RealTime.toFixed(1)}`);
-        } else {
-            dynamicOffset = offset; // ← NUEVO: actualizamos offset dinámico
-            console.log(`Offset dinámico actualizado: ${dynamicOffset.toFixed(2)} ms`);
-            console.log(`Worker: ${WorkerTime.toFixed(1)} | Real: ${(RealTime - gameStartTime).toFixed(1)}`);
-        }
+        console.log(`W: ${WorkerTime.toFixed(1)} | R: ${(RealTime).toFixed(1)}`);
     }
 
     worker.onmessage = function (e) {
@@ -355,38 +342,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 11. CALIBRACIÓN
     // ==============================
 
-    /*
-        1- Cada 100 ms (durante 8 segundos)se envia un get_time del worker
-        2- Cada respuesta del worker se usa para calcular un desfase y se guarda en la lista desfases (offsets)
-        3- Luego de 8 segundos se deja de pedir el tiempo al worker se calcula offset calibrado
-    */
-    
-    function iniciarCalibracion() {
-        calibrationStartTime = performance.now();
-        offsets = []; // Reiniciar lista de desfases
-        intervaloCalibracion = setInterval(() => {
-            worker.postMessage('get_time');
-        }, 50); // Frecuencia de muestreo: cada 50 ms
-    }
-
-    function finalizarCalibracion() {
-        clearInterval(intervaloCalibracion); // Detener muestreo
-        if (offsets.length > 0) {
-            offset_calibrado = offsets.reduce((a, b) => a + b, 0) / offsets.length;
-            console.log("Offset calibrado:", offset_calibrado.toFixed(2), "ms");
-        } 
-    }
-
     function iniciarJuego() {
-        worker.postMessage({ type: 'set_offset', value: offset_calibrado });
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
         showGameScreen('GameScreen');
     }
 
-    // Programar las fases
-    setTimeout(iniciarCalibracion, 0);       // Empieza de inmediato
-    setTimeout(finalizarCalibracion, 8000);  // Finaliza a los 8 segundos
+    //
     setTimeout(iniciarJuego, 9000);          // Arranca el juego a los 9 segundos
 
 });
