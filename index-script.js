@@ -59,8 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const nombre = nameInput.value;
     const edad = ageInput.value;
     const grupo = selectedGroup;
-    //saveInitialUserData(nombre, edad, grupo);
-    window.location.href = "game.html"; // Redirigir al experimento
+    saveInitialUserData(nombre, edad, grupo);
+    //window.location.href = "game.html"; // Redirigir al experimento
   });
   // Acción del botón
 });

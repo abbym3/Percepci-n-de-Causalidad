@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
 
     let gameStartTime = null;
-
+    let shootingTime = [];
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -260,12 +260,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showGameScreen() {
+        worker.postMessage("resume")
         document.getElementById("InstructionsScreen").classList.remove("ScreenOn")
         document.getElementById("ResultsScreen").classList.remove("ScreenOn");
         document.getElementById("GameScreen").classList.add("ScreenOn");
         correctColor = null;
         buttonColorConfig = null;
-        worker.postMessage("resume")
     }
 
     function guns_animation(){
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
     function getCurrentUserId() {
         const id = localStorage.getItem("currentUserId");
-        console.log("ID del participante encontrado:", id);
+        //console.log("ID del participante encontrado:", id);
         return id;
     }
     //window.getCurrentUserId = getCurrentUserId;
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const lineRef = ref(db, `participantes/${userId}/${currentLineNumber}`);
         set(lineRef, contentArray)
             .then(() => {
-                console.log(`Renglón ${currentLineNumber} guardado:`, contentArray);
+                //console.log(`Renglón ${currentLineNumber} guardado:`, contentArray);
                 currentLineNumber++; // Solo si se guarda correctamente
             })
             .catch((error) => console.error(`Error al guardar renglón ${currentLineNumber}:`, error));
@@ -337,6 +337,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         shotCount ++;
         waitUpdatedTime((trainingTime) => {
             console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            shootingTime.push((trainingTime/1000).toFixed(1))
+            if(shootingTime.length === 10){ //Cada 10 disparos guardamos los tiempos
+                saveNextLine(shootingTime);
+                shootingTime = [];
+            }
         });
         guns_animation();
         handleTickClick();
