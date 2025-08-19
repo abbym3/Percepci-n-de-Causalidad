@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function activateCE(){
         worker.postMessage("pause")
-        worker.postMessage('get_time'); // Solicitar al Worker el tiempo de entrenamiento
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
 
@@ -307,20 +306,26 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 9. EVENTOS DEL WORKER
     // ==============================
 
-    function handleWorkerTimeMessage(e) {
-        const WorkerTime = e.data.value;
-        const RealTime = performance.now() - gameStartTime;
-        const offset = RealTime - WorkerTime;
-
-        console.log(`W: ${WorkerTime.toFixed(1)} | R: ${(RealTime).toFixed(1)}`);
+    function waitUpdatedTime(callback) {
+        const handler = (e) => {
+            if (e.data.type === 'time') {
+                trainingTime = e.data.value;
+                worker.removeEventListener('message', handler);
+                callback(trainingTime);
+            }
+        };
+        worker.addEventListener('message', handler);
+        worker.postMessage('get_time');
     }
 
     worker.onmessage = function (e) {
-        if (typeof e.data === "string") {
-                if (e.data === "100 ms") handle100msTick();
-                if (e.data === "10 s") handle10sTick();
-        } else if (typeof e.data === "object" && e.data.type === "time") {
-            handleWorkerTimeMessage(e);
+        switch (typeof e.data === "object" ? e.data.type : e.data){
+            case '100 ms':
+                handle100msTick();
+                break;
+            case '10 s':
+                handle10sTick();
+                break;
         }
     };
 
@@ -330,7 +335,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
-        worker.postMessage('get_time')
+        waitUpdatedTime((trainingTime) => {
+            console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        });
         guns_animation();
         handleTickClick();
     });
