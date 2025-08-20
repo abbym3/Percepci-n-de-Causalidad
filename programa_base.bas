@@ -94,7 +94,7 @@
     'End Sub
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click 'Cuando se le da click a button 1
-        TXT.WriteLine(tiempo_entrenamiento & ";Centro") 'Se registra el tiempo de entrenamiento (Desde el inicio) y el evento centro
+        'TXT.WriteLine(tiempo_entrenamiento & ";Centro") 'Se registra el tiempo de entrenamiento (Desde el inicio) y el evento centro
         'tr = tr + 1 'tr: total de toques al botón central.
         'contador = contador + 1 'clics acumulados en el bloque actual (se reinicia cada 100 ciclos en timer 3 (cada 10,000 ms o 10 segundos)).
         Label2.Text = contador 'contador es igual a tr ambos guardad cuantos clicks se dan?,no?

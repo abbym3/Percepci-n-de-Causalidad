@@ -52,7 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
 
     let gameStartTime = null;
-    let shootingTime = [];
+    let shootingTime = ['Centro'];
+    let CEDTime = ['CED'];
+    let CEITime = ['CEI'];
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -96,17 +98,34 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         countCEI++;
         console.log("¡Cambio de estímulo independiente activado!");
         correctColor = 'green';
-        activateCE();
+        activateCE(1);
     }
 
     function CED() {
         countCED++;
         console.log("¡Cambio de estímulo dependiente activado!");
         correctColor = 'red';
-        activateCE();
+        activateCE(0);
     }
 
-    function activateCE(){
+    function activateCE(CE){
+        waitUpdatedTime((trainingTime) => {
+            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            if (CE === 0){
+                CEDTime.push((trainingTime/1000).toFixed(1))
+                if(CEDTime.length === 6){
+                    saveNextLine(CEDTime);
+                    CEDTime = ['CED']
+                }else console.log(CEDTime)
+            }
+            if (CE === 1){
+                CEITime.push((trainingTime/1000).toFixed(1))
+                if(CEITime.length === 6){
+                    saveNextLine(CEITime);
+                    CEITime = ['CEI']
+                }else console.log(CEITime)
+            }
+        });
         worker.postMessage("pause")
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
@@ -336,11 +355,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     shootbutton.addEventListener("click", function () {
         shotCount ++;
         waitUpdatedTime((trainingTime) => {
-            console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
             shootingTime.push((trainingTime/1000).toFixed(1))
-            if(shootingTime.length === 10){ //Cada 10 disparos guardamos los tiempos
+            if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
                 saveNextLine(shootingTime);
-                shootingTime = [];
+                shootingTime = ['Centro'];
             }
         });
         guns_animation();
