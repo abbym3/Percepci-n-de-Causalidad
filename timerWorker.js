@@ -32,7 +32,7 @@ function simulate() {
     }
     startTime += blocksPassed * 20; // Avanza startTime la cantidad de tiempo procesado
   }
-  setTimeout(simulate, 4); // Repetir la función cada 4 ms
+  setTimeout(simulate, 10); // Repetir la función cada 10 ms
 }
 
 simulate(); // Iniciar la simulación
@@ -55,7 +55,10 @@ onmessage = function (e) {
       break;
 
     case 'get_time':
-      const timeToSend = accumulated_time_ms 
+      let timeToSend = accumulated_time_ms 
+      if (running) {
+        timeToSend += performance.now() - startTime;
+      }
       postMessage({ type: 'time', value: timeToSend });
       break;
 

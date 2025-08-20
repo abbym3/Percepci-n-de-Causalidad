@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         shotCount ++;
         number_clicks ++;
         waitUpdatedTime((trainingTime) => {
-            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
             shootingTime.push((trainingTime/1000).toFixed(1))
             if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
                 saveNextLine(shootingTime);
