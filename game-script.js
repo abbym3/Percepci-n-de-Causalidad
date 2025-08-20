@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let shootingTime = ['Centro'];
     let CEDTime = ['CED'];
     let CEITime = ['CEI'];
+    let answerTime = [];
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -214,6 +215,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         // Determinar acierto o error
         const isCorrect = isCorrectResponse(selectedButton, correctColor, buttonColorConfig);
+
+        waitUpdatedTime((trainingTime) => {
+            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            answerTime = [(trainingTime/1000).toFixed(1), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
+            saveNextLine(answerTime);
+            answerTime = []
+        });
 
         // Sumar contados de aciertos o errores
         isCorrect ? successes++ : errors++;

@@ -59,7 +59,7 @@
     'Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
         'TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
         TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
-        TXT.WriteLine("Subject: ")
+        'TXT.WriteLine("Subject: ")
         'TXT.WriteLine()
     'End Sub
 
@@ -116,10 +116,10 @@
         'End If
     End Sub
 
-    Sub Cambio_estimuloH()
+    'Sub Cambio_estimuloH()
         'CEH = CEH + 1 'cambios de estímulo han sido provocados por el comportamiento del usuario
 
-        TXT.WriteLine(tiempo_entrenamiento & ";CE DEP;" & ListBox3.SelectedItem.ToString) 'Se guarda el número de CE DEP y el tiempo en milisegundos en que ocurrió'
+        'TXT.WriteLine(tiempo_entrenamiento & ";CE DEP;" & ListBox3.SelectedItem.ToString) 'Se guarda el número de CE DEP y el tiempo en milisegundos en que ocurrió'
         'Timer3.Stop() 'Timer3.Stop() pausa timer3 (posible pulso de la maquina)
         'Randomize()
         'dcolor = Int(2 * Rnd()) + 1 'Lanza un dado de 2 caras para decidir el paquete de botones
@@ -147,11 +147,11 @@
     '     Return dado1
     ' End Function
 
-    Sub Cambio_estimuloR()
+    'Sub Cambio_estimuloR()
         'CER = CER + 1 'cambios de estímulo han sido provocados por el comportamiento de la maquina
         'Button1.Enabled = False 'Desactiva el boton central (eso no ocurre con el cambio_estimulo H osi ?)
         'Try
-            TXT.Writeline(tiempo_entrenamiento & ";CE INDEP") 'Guarda el tiempo de netrenamiento y el CEI 
+            'TXT.Writeline(tiempo_entrenamiento & ";CE INDEP") 'Guarda el tiempo de netrenamiento y el CEI 
         'Catch
         'End Try
         'permiso = False 'deshabilita los permisos de timer_3
@@ -183,19 +183,19 @@
     '     BtnIzqOff.Visible = False
     ' End Sub
 
-    Private Sub BtnDerVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerVer.Click
+    'Private Sub BtnDerVer_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerVer.Click
         'verde = verde + 1
         'derecha = derecha + 1
         'If dado_rob = 2 Then ' Si el cambio fue generado por la máquina
             'Errores = Errores + 1 '' Se considera error
-            TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Error") ' Se registra como error en el archivo
-            Blackout() '' Se aplica castigo visual
-        Else
+            'TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Error") ' Se registra como error en el archivo
+            'Blackout() '' Se aplica castigo visual
+        'Else
             'Aciertos = Aciertos + 1 ' Se considera acierto
-            TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Acierto") '' Se registra como acierto
-            Reforzar()  ' Se aplica reforzamiento visual
-        End If
-    End Sub
+            'TXT.WriteLine(tiempo_entrenamiento & ";derecha" & ";verde" & ";Acierto") '' Se registra como acierto
+            'Reforzar()  ' Se aplica reforzamiento visual
+        'End If
+    'End Sub
 
     ' Private Sub BtnDerRoj_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BtnDerRoj.Click
     '     rojo = rojo + 1
