@@ -58,7 +58,7 @@
 
     'Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load  'se ejecuta cuando se abre la ventana
         'TXT = File.CreateText("C:\Causalidad\Experimentos\Probabilidades\P.75\" & "experimento" & ".txt") 'se puede sobreescribir
-        TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
+        'TXT.WriteLine("Momento de inicio de sesión: " & DateTime.Now)
         'TXT.WriteLine("Subject: ")
         'TXT.WriteLine()
     'End Sub
@@ -240,8 +240,8 @@
     '     End If
     ' End Sub
 
-    Sub Reforzar() 'Se ejecurta cuando el sujero acierta
-        TXT.WriteLine(tiempo_entrenamiento & ";R+") ' Registra reforzamiento
+    'Sub Reforzar() 'Se ejecurta cuando el sujero acierta
+        'TXT.WriteLine(tiempo_entrenamiento & ";R+") ' Registra reforzamiento
 
         'score = (CEH + CER) 'Total de oportunidades
         'promedio = Math.Round((Aciertos / score) * 100)  ' Calcula porcentaje de aciertos
@@ -285,43 +285,43 @@
         ' Button1.Visible = True
         ' Button1.Enabled = True
 
-        If score = 150 Then
+        ' If score = 150 Then
 
-            Me.BackColor = Color.White
-            gpp.Visible = True
+        '     Me.BackColor = Color.White
+        '     gpp.Visible = True
 
-            Labelscore.Visible = True
-            Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "% ")
+        '     Labelscore.Visible = True
+        '     Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "% ")
 
-            ' BtnDerOff.Visible = False
-            ' BtnIzqOff.Visible = False
-            ' Button1.Visible = False
-            ' BotonIzqRoj.Visible = False
-            ' BotonVer.Visible = False
-            ' BtnDerVer.Visible = False
-            ' BtnDerRoj.Visible = False
+        '     ' BtnDerOff.Visible = False
+        '     ' BtnIzqOff.Visible = False
+        '     ' Button1.Visible = False
+        '     ' BotonIzqRoj.Visible = False
+        '     ' BotonVer.Visible = False
+        '     ' BtnDerVer.Visible = False
+        '     ' BtnDerRoj.Visible = False
 
-            TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
-            TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
-            TXT.WriteLine("Aciertos:" & ";" & Aciertos)
-            TXT.WriteLine("Errores:" & ";" & Errores)
-            TXT.WriteLine("Cambios de Estimulo Dependientes:" & ";" & CEH)
-            TXT.WriteLine("Cambios de Estimulo Independientes:" & ";" & CER)
-            TXT.WriteLine("Veces que eligió izquierda:" & ";" & izquierda)
-            TXT.WriteLine("Veces que eligió derecha:" & "," & derecha)
-            TXT.WriteLine("Veces que eligió verde:" & "," & verde)
-            TXT.WriteLine("Veces que eligió rojo:" & "," & rojo)
-            TXT.WriteLine("Pulsos totales máquina" & "," & pr)
-            TXT.Close()
-            Me.Close()
-        End If
+        '     TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
+        '     TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
+        '     TXT.WriteLine("Aciertos:" & ";" & Aciertos)
+        '     TXT.WriteLine("Errores:" & ";" & Errores)
+        '     TXT.WriteLine("Cambios de Estimulo Dependientes:" & ";" & CEH)
+        '     TXT.WriteLine("Cambios de Estimulo Independientes:" & ";" & CER)
+        '     TXT.WriteLine("Veces que eligió izquierda:" & ";" & izquierda)
+        '     TXT.WriteLine("Veces que eligió derecha:" & "," & derecha)
+        '     TXT.WriteLine("Veces que eligió verde:" & "," & verde)
+        '     TXT.WriteLine("Veces que eligió rojo:" & "," & rojo)
+        '     TXT.WriteLine("Pulsos totales máquina" & "," & pr)
+        '     TXT.Close()
+        '     Me.Close()
+        ' End If
 
-        Timer3.Start()
-        permiso = True
-    End Sub
+    '     Timer3.Start()
+    '     permiso = True
+    ' End Sub
 
-    Sub Blackout()
-        TXT.WriteLine(tiempo_entrenamiento & ";BO")
+    ' Sub Blackout()
+        'TXT.WriteLine(tiempo_entrenamiento & ";BO")
         'score = (CEH + CER)
         'promedio = Math.Round((Aciertos / score) * 100)
 
@@ -354,13 +354,13 @@
         ' BtnDerOff.Visible = True
         ' Button1.Enabled = True
 
-        If score = 150 Then
+        'If score = 150 Then
             ' Me.BackColor = Color.WhiteSmoke
             ' gpp.Visible = True
   
 
             ' Labelscore.Visible = True
-            Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "%")
+            'Labelscore.Text = ("Tu porcentaje de aciertos total fue del " & " " & promedio & "%")
 
             ' BtnDerOff.Visible = False
             ' BtnIzqOff.Visible = False
@@ -370,24 +370,23 @@
             ' BtnDerVer.Visible = False
             ' BtnDerRoj.Visible = False
 
-            TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
-            TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
-            TXT.WriteLine("Aciertos:" & ";" & Aciertos)
-            TXT.WriteLine("Errores:" & ";" & Errores)
-            TXT.WriteLine("Cambios de Estimulo Dependientes:" & ";" & CEH)
-            TXT.WriteLine("Cambios de Estimulo Independientes:" & ";" & CER)
-            TXT.WriteLine("Veces que eligió izquierda:" & ";" & izquierda)
-            TXT.WriteLine("Veces que eligió derecha:" & ";" & derecha)
-            TXT.WriteLine("Veces que eligió verde:" & ";" & verde)
-            TXT.WriteLine("Veces que eligió rojo:" & ";" & rojo)
-            XT.WriteLine("Pulsos totales máquina" & "," & pr)
-            TXT.Close()
-            'Me.Close()
-        End If
+            ' TXT.WriteLine("Respuestas totales al boton central:" & ";" & tr)
+            ' TXT.WriteLine("Pulsos totales máquina" & ";" & pr)
+            ' TXT.WriteLine("Aciertos:" & ";" & Aciertos)
+            ' TXT.WriteLine("Errores:" & ";" & Errores)
+            ' TXT.WriteLine("Cambios de Estimulo Dependientes:" & ";" & CEH)
+            ' TXT.WriteLine("Cambios de Estimulo Independientes:" & ";" & CER)
+            ' TXT.WriteLine("Veces que eligió izquierda:" & ";" & izquierda)
+            ' TXT.WriteLine("Veces que eligió derecha:" & ";" & derecha)
+            ' TXT.WriteLine("Veces que eligió verde:" & ";" & verde)
+            ' TXT.WriteLine("Veces que eligió rojo:" & ";" & rojo)
+            ' TXT.Close()
+            ' 'Me.Close()
+        'End If
         
-        Timer3.Start()
-        permiso = True
-    End Sub
+        'Timer3.Start()
+        'permiso = True
+    'End Sub
 
   
 

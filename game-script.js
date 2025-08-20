@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
-    let number_clicks = 0;    // Total de clics que evaluaron probabilidad CED
+    let number_clicks = 0;    // Total de clics al boton central
     let greenClicks = 0;      // Respuestas verdes totales
     let redClicks = 0;        // Respuestas rojas totales
     let leftClicks = 0;       // Respuestas izquierda totales
@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let CEDTime = ['CED'];
     let CEITime = ['CEI'];
     let answerTime = [];
+    let punishReinforceTime = [];
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -83,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_human(){
-        number_clicks ++;
         const p = Math.floor(Math.random() * 6) + 1; // La probailidad de que el humano provoque un CED de 1/6
         // console.log(`Calculo p_human: ${p}`)
         if (p === 1) { 
@@ -117,14 +117,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 if(CEDTime.length === 6){
                     saveNextLine(CEDTime);
                     CEDTime = ['CED']
-                }else console.log(CEDTime)
+                }//else console.log(CEDTime)
             }
             if (CE === 1){
                 CEITime.push((trainingTime/1000).toFixed(1))
                 if(CEITime.length === 6){
                     saveNextLine(CEITime);
                     CEITime = ['CEI']
-                }else console.log(CEITime)
+                }//else console.log(CEITime)
             }
         });
         worker.postMessage("pause")
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function handleTickClick(){
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar p_tick_human se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
-             p_tick_human();
+            p_tick_human();
         }
     }
 
@@ -262,6 +262,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showResultsScreen(isCorrect){
+
+        waitUpdatedTime((trainingTime) => {
+            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+            punishReinforceTime = [isCorrect?";R+":";BO",(trainingTime/1000).toFixed(1)]
+            saveNextLine(punishReinforceTime);
+            punishReinforceTime = []
+        });
+
         //Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
         pato.classList.remove("fall-back");
@@ -279,7 +287,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(showGameScreen, 2500);
         else{
             setTimeout(() => {
-                 resultText = getResultText(isCorrect, average, score);
+                saveNextLine(['Respuestas totales al boton central', number_clicks]);
+                saveNextLine(['Pulsos totales máquina', machineTryCount]);        
+                saveNextLine(['Aciertos', successes]);
+                saveNextLine(['Errores', errors]);
+                saveNextLine(['Total CED', countCED]);
+                saveNextLine(['Total CEI', countCEI]);
+                saveNextLine(['Veces que eligio izquierda', leftClicks]);
+                saveNextLine(['Veces que eligio derecha', rightClicks]);
+                saveNextLine(['Veces que eligio verde', greenClicks]);
+                saveNextLine(['Veces que eligio izquierda', redClicks]);
+                resultText = getResultText(isCorrect, average, score);
                 document.getElementById("resultsText").textContent = resultText;
                 document.getElementById("resultHead").textContent = "Gracias!!"
             }, 3500);
@@ -362,6 +380,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
+        number_clicks ++;
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
             shootingTime.push((trainingTime/1000).toFixed(1))
@@ -384,6 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
+        saveNextLine(['Inicio del juego', Date().toString()]);
         showGameScreen('GameScreen');
     }
 
