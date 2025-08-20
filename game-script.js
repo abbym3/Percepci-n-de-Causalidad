@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
-        saveNextLine(['Inicio del juego', Date().toString()]);
+        saveNextLine(['Inicio del juego', new Date().toLocaleString()]);
         showGameScreen('GameScreen');
     }
 
