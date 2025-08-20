@@ -113,14 +113,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
             if (CE === 0){
-                CEDTime.push((trainingTime/1000).toFixed(1))
+                CEDTime.push((trainingTime/1000).toFixed(2))
                 if(CEDTime.length === 6){
                     saveNextLine(CEDTime);
                     CEDTime = ['CED']
                 }//else console.log(CEDTime)
             }
             if (CE === 1){
-                CEITime.push((trainingTime/1000).toFixed(1))
+                CEITime.push((trainingTime/1000).toFixed(2))
                 if(CEITime.length === 6){
                     saveNextLine(CEITime);
                     CEITime = ['CEI']
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            answerTime = [(trainingTime/1000).toFixed(1), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
+            answerTime = [(trainingTime/1000).toFixed(2), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
             saveNextLine(answerTime);
             answerTime = []
         });
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function calculate_average(){
         score = countCED + countCEI
-        average = Math.round((successes/score)*100)
+        average = score > 0 ? Math.round((successes/score) * 100) : 0;
     }
 
     function reinforce() {
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            punishReinforceTime = [isCorrect?";R+":";BO",(trainingTime/1000).toFixed(1)]
+            punishReinforceTime = [isCorrect?";R+":";BO",(trainingTime/1000).toFixed(2)]
             saveNextLine(punishReinforceTime);
             punishReinforceTime = []
         });
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 saveNextLine(['Veces que eligio izquierda', leftClicks]);
                 saveNextLine(['Veces que eligio derecha', rightClicks]);
                 saveNextLine(['Veces que eligio verde', greenClicks]);
-                saveNextLine(['Veces que eligio izquierda', redClicks]);
+                saveNextLine(['Veces que eligio rojo', redClicks]);
                 resultText = getResultText(isCorrect, average, score);
                 document.getElementById("resultsText").textContent = resultText;
                 document.getElementById("resultHead").textContent = "Gracias!!"
@@ -383,7 +383,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         number_clicks ++;
         waitUpdatedTime((trainingTime) => {
             console.log(`W:${trainingTime.toFixed(1)}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            shootingTime.push((trainingTime/1000).toFixed(1))
+            shootingTime.push((trainingTime/1000).toFixed(2))
             if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
                 saveNextLine(shootingTime);
                 shootingTime = ['Centro'];
