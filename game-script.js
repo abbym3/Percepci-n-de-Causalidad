@@ -58,6 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let answerTime = [];
     let punishReinforceTime = [];
 
+    //Solo para pruebas de tiempo
+    let stopWorker = 0, resumeWorker = 0;
+
+
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
     // ==============================
@@ -127,7 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 }//else console.log(CEITime)
             }
         });
-        worker.postMessage("pause")
+        worker.postMessage("pause");
+        //stopWorker = performance.now();
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
 
@@ -305,6 +310,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showGameScreen() {
+        //resumeWorker = performance.now();
+        //console.log(`Tiempo que el worker se pauso: ${stopWorker-resumeWorker}`)
         worker.postMessage("resume")
         document.getElementById("InstructionsScreen").classList.remove("ScreenOn")
         document.getElementById("ResultsScreen").classList.remove("ScreenOn");
