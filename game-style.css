@@ -47,6 +47,7 @@ h1 {
   position: relative;
   z-index: 10;
   overflow: visible;
+  margin-bottom: 100px;
 }
 
 .pato {
@@ -94,7 +95,7 @@ h1 {
 }
 
 #shootButton {
-  margin-top: 2rem;
+  margin-top: 4rem;
   padding: 1rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
@@ -120,30 +121,30 @@ h1 {
 }
 
 .arma {
+  margin-bottom: 3rem;
   position: absolute;
-  width: 30vw;
-  max-width: 220px;
+  width: 20vw;
+  max-width: 150px;
   height: auto;
   transition: transform 0.1s ease;
 }
 
-#weaponLeft {
+/* #weaponLeft {
   bottom: -13vh;
   left: 1vh;
   transform-origin: 80% center;
-}
+} */
 
 #weaponRight {
-  bottom: -13vh;
-  right: 1vh;
+  bottom: -25%; 
   transform-origin: 20% center;
 }
 
-.retroceso_izquierda {
+/* .retroceso_izquierda {
   animation: 
     sacudida 0.1s ease,
     retrocesoArma_izquierda 0.3s ease-out;
-}
+} */
 
 .retroceso_derecha {
   animation: 
@@ -151,11 +152,11 @@ h1 {
     retrocesoArma_derecha 0.3s ease-out;
 }
 
-@keyframes retrocesoArma_izquierda {
+/* @keyframes retrocesoArma_izquierda {
   0% { transform: translateX(0) rotate(0deg); } 
   20% { transform: translateX(-12px) rotate(-8deg); } 
   100% { transform: translateX(0) rotate(0deg); } 
-}
+} */
 @keyframes retrocesoArma_derecha {
   0% { transform: translateX(0) rotate(0deg); } 
   20% { transform: translateX(12px) rotate(8deg); } 

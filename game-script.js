@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     
     // Elementos DOM
     const shootbutton = document.getElementById("shootButton"); 
-    const weaponLeft = document.getElementById("weaponLeft");
+    //const weaponLeft = document.getElementById("weaponLeft");
     const weaponRight = document.getElementById("weaponRight");
     const leftButton = document.getElementById("ceButtonLeft");
     const rightButton = document.getElementById("ceButtonRight");
@@ -321,11 +321,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function guns_animation(){
-        weaponLeft.classList.add("retroceso_izquierda");
+        //weaponLeft.classList.add("retroceso_izquierda");
         weaponRight.classList.add("retroceso_derecha");
 
         setTimeout(() => {
-            weaponLeft.classList.remove("retroceso_izquierda");
+            //weaponLeft.classList.remove("retroceso_izquierda");
             weaponRight.classList.remove("retroceso_derecha");
         }, 100); // Duración del retroceso
     }
