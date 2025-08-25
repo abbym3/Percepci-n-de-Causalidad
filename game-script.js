@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let answerTime = [];
     let punishReinforceTime = [];
 
-    //Solo para pruebas de tiempo
-    let stopWorker = 0, resumeWorker = 0;
+    //Para compensar tiempo del worker despues de la pausa
+    let stopWorkerTime = 0, resumeWorker = 0, clickTestAnswerTime = 0, compensatedTime1 = 0, showResultsTime = 0, compensatedTime2 = 0;
 
 
     // ==============================
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             }
         });
         worker.postMessage("pause");
-        //stopWorker = performance.now();
+        stopWorkerTime = performance.now(); // Stop Worker debe ser unado como referencia para registrar el tiempo de respuesta en TEST Y el registro de tiempo de R+ o BO+ dado que el worker esta en off
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
 
@@ -210,6 +210,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handleCEClick(selectedButton) {
+        //Tiempo en el que se respondio 
+        clickTestAnswerTime = performance.now();
+        compensatedTime1 = clickTestAnswerTime-stopWorkerTime; //Este tiempo es el que corre desde que se pauso el worker hasta que se dio click en respuesta
+
         // Lado y color que el jugador pulsó
         const lado = selectedButton === 0 ? "left" : "right";
         const color = getSelectedColor(selectedButton, buttonColorConfig)
@@ -223,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            answerTime = [(trainingTime/1000).toFixed(2), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
+            answerTime = [((trainingTime+compensatedTime1)/1000).toFixed(2), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
             saveNextLine(answerTime);
             answerTime = []
         });
@@ -267,10 +271,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showResultsScreen(isCorrect){
-
+        showResultsTime = performance.now();
+        compensatedTime2 = showResultsTime-stopWorkerTime; //Este es el tiempo que corre desde que se pauso el worker hasta que se mustran los resultados
         waitUpdatedTime((trainingTime) => {
             //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            punishReinforceTime = [isCorrect?";R+":";BO",(trainingTime/1000).toFixed(2)]
+            punishReinforceTime = [isCorrect?";R+":";BO",((trainingTime+compensatedTime2)/1000).toFixed(2)]
             saveNextLine(punishReinforceTime);
             punishReinforceTime = []
         });
@@ -317,8 +322,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showGameScreen() {
-        //resumeWorker = performance.now();
-        //console.log(`Tiempo que el worker se pauso: ${stopWorker-resumeWorker}`)
+        //resumeWorkerTime = performance.now();
+        //console.log(`Tiempo que el worker se pauso: ${stopWorkerTime-resumeWorkerTime}`)
         worker.postMessage("resume")
         document.getElementById("InstructionsScreen").classList.remove("ScreenOn")
         document.getElementById("ResultsScreen").classList.remove("ScreenOn");
