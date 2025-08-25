@@ -102,14 +102,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function CEI() {
         countCEI++;
         console.log("¡Cambio de estímulo independiente activado!");
-        correctColor = 'green';
+        correctColor = 'red';
         activateCE(1);
     }
 
     function CED() {
         countCED++;
         console.log("¡Cambio de estímulo dependiente activado!");
-        correctColor = 'red';
+        correctColor = 'green';
         activateCE(0);
     }
 
@@ -153,11 +153,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         buttonColorConfig = Math.random() > 0.5 ? 1 : 0;
 
         if (buttonColorConfig === 0) {
-            leftButton.classList.add("green"); leftButton.textContent = "Maquina";
-            rightButton.classList.add("red"); rightButton.textContent = "Yo";
+            leftButton.classList.add("green"); leftButton.textContent = "Yo";
+            rightButton.classList.add("red"); rightButton.textContent = "Maquina";
         } else {
-            leftButton.classList.add("red"); leftButton.textContent = "Yo";
-            rightButton.classList.add("green"); rightButton.textContent = "Maquina";
+            leftButton.classList.add("red"); leftButton.textContent = "Maquina";
+            rightButton.classList.add("green"); rightButton.textContent = "Yo";
         }
     }
 
@@ -203,9 +203,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function isCorrectResponse(selectedButton, correctColor, buttonColorConfig) {
-        const correctButton = (correctColor === 'green') ?  // ¿Es CEI (verde correcto)?
-            (buttonColorConfig === 0 ? 0 : 1) : // Si es CEI: ¿Verde está en izquierda (0)? Si sí, correcto = 0 (izquierda), si no correcto = 1(derecha)
-            (buttonColorConfig === 0 ? 1 : 0); // Si es CED (rojo correcto): ¿Verde está en izquierda (0)? Si sí, correcto = 1 (derecha), si no correcto = 0 (izquierda) 
+        const correctButton = (correctColor === 'green') ?  // ¿Es CED (verde correcto)?
+            (buttonColorConfig === 0 ? 0 : 1) : // Si es CED: ¿Verde está en izquierda (0)? Si sí, correcto = 0 (izquierda), si no correcto = 1(derecha)
+            (buttonColorConfig === 0 ? 1 : 0); // Si es CEI (rojo correcto): ¿Verde está en izquierda (0)? Si sí, correcto = 1 (derecha), si no correcto = 0 (izquierda) 
         return selectedButton === correctButton;
     }
 
@@ -283,13 +283,20 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         document.getElementById("TestScreen").classList.remove("ScreenOn");
         document.getElementById("ResultsScreen").classList.add("ScreenOn");
 
-        // Poner el texto del resultado
-        resultText = getResultText(isCorrect, average, score);
+        // Poner el texto de si es acierto o error
+        document.getElementById("resultsHead").textContent = isCorrect? "CORRECTO!":"INCORRECTO!";
+        document.getElementById("resultsHead").style.color = isCorrect? "green":"red";
+        document.getElementById("resultsText").textContent =  "";
 
-        document.getElementById("resultsText").textContent = resultText;
+        setTimeout(() => {
+            document.getElementById("resultsHead").textContent = "RESULTADOS";
+            document.getElementById("resultsHead").style.color = "Blue";
+            const resultText = getResultText(isCorrect, average, score);
+            document.getElementById("resultsText").textContent = resultText;
+        }, 2000)
 
         if(score < 150)
-            setTimeout(showGameScreen, 2500);
+            setTimeout(showGameScreen, 4500);
         else{
             setTimeout(() => {
                 saveNextLine(['Respuestas totales al boton central', number_clicks]);
