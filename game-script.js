@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const resultsText = document.getElementById("resultsText");
     const instructionsScreen = document.getElementById("InstructionsScreen");
     
-
     // Estado del experimento
     let trainingTime = 0;     // Tiempo total de entrenamiento (ms)
     let i = 0;                // Índice del bloque de 10s actual
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
-    let numberClicks = 0;    // Total de clics al boton central
+    let numberClicks = 0;     // Total de clics al boton central
     let greenClicks = 0;      // Respuestas verdes totales
     let redClicks = 0;        // Respuestas rojas totales
     let leftClicks = 0;       // Respuestas izquierda totales
@@ -138,8 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         setTimeout(() => {
             // Desactivar pantalla de juego y pasar a la pantalla de test
-            gameScreen.classList.remove("ScreenOn");
-            testScreen.classList.add("ScreenOn");
+            showScreen(testScreen);
 
             assignRandomColors(); //Asignar colores aleatorios
         }, 2000);
@@ -282,9 +280,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         pato.classList.remove("fall-back");
 
         // Ocultar la pantalla de test y mostrar la de resultados
-        testScreen.classList.remove("ScreenOn");
-        resultsScreen.classList.add("ScreenOn");
-
+        showScreen(resultsScreen);
+        
         // Poner el texto de si es acierto o error
         resultsHead.textContent = isCorrect? "CORRECTO!":"INCORRECTO!";
         resultsHead.style.color = isCorrect? "green":"red";
@@ -296,9 +293,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             resultsText.textContent = getResultText(isCorrect, average, score);
         }, 2000)
 
-        if(score < 150)
-            setTimeout(showGameScreen, 4500);
-        else{
+        if(score < 150){
+            setTimeout(() => {
+            worker.postMessage("resume");
+            showScreen(gameScreen);
+            }, 4500);
+        } else{
             setTimeout(() => {
                 saveNextLine(['Respuestas totales al boton central', numberClicks]);
                 saveNextLine(['Pulsos totales máquina', machineTryCount]);        
@@ -316,15 +316,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         }    
     }
 
-    function showGameScreen() {
-        //resumeWorkerTime = performance.now();
-        //console.log(`Tiempo que el worker se pauso: ${stopWorkerTime-resumeWorkerTime}`)
-        worker.postMessage("resume")
-        instructionsScreen.classList.remove("ScreenOn")
+    function showScreen(pantalla) {
+        instructionsScreen.classList.remove("ScreenOn");
         resultsScreen.classList.remove("ScreenOn");
-        gameScreen.classList.add("ScreenOn");
-        correctColor = null;
-        buttonColorConfig = null;
+        gameScreen.classList.remove("ScreenOn");
+        testScreen.classList.remove("ScreenOn");
+        pantalla.classList.add("ScreenOn");
     }
 
     function guns_animation(){
@@ -397,14 +394,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     rightButton.addEventListener("click", () => handleCEClick(1));
 
     // ==============================
-    // 11. Sincronización de relojes
+    // SINCRONIZACIÓN DE RELOJES
     // ==============================
 
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
         saveNextLine(['Inicio del juego', new Date().toLocaleString()]);
-        showGameScreen('GameScreen');
+        showScreen(gameScreen);
     }
 
     setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
