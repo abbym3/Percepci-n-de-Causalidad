@@ -4,8 +4,12 @@ import { db } from "./firebase-init.js";
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
     // ==============================
-    // 1. CONFIGURACIÓN Y VARIABLES
+    // CONFIGURACIÓN Y VARIABLES
     // ==============================
+
+    // Dados 
+    HUMANDIE = 6;
+    MACHINEDIE = 18;
 
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
@@ -51,11 +55,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
 
-    // Indice de almacenamiento 
+    // Indice de almacenamiento para Firebase
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
 
     let gameStartTime = null;
+    let animationTime = null;
     let shootingTime = ['Centro'];
     let CEDTime = ['CED'];
     let CEITime = ['CEI'];
@@ -64,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
 
     // ==============================
-    // 2. FUNCIONES DE PROBABILIDAD
+    // FUNCIONES DE PROBABILIDAD
     // ==============================
 
     function adjustP1BasedOnClicks(prevShots) {
@@ -81,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function p_tick_machine(){
         machineTryCount ++;
-        const p = Math.floor(Math.random() * 18) + 1; // La probailidad de que la máquina haga un CEI es de 1/18
+        const p = Math.floor(Math.random() * MACHINEDIE) + 1; // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE
         // console.log(`Calculo p_machine: ${p}`)
         if (p === 2) { 
             CEI();
@@ -89,15 +94,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_human(){
-        const p = Math.floor(Math.random() * 6) + 1; // La probailidad de que el humano provoque un CED de 1/6
-        // console.log(`Calculo p_human: ${p}`)
+        const p = Math.floor(Math.random() * HUMANDIE) + 1; // La probailidad de que el humano provoque un CED de 1/HUMANDIE
         if (p === 1) { 
             CED();
         }
     }
 
     // ==============================
-    // 3. LÓGICA CEI/CED
+    // LÓGICA CEI/CED
     // ==============================
 
     function CEI() {
@@ -115,31 +119,33 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function activateCE(CE){
-        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+        trainingTime = getTrainingTime();
         if (CE === 0){
             CEDTime.push(trainingTime)
             if(CEDTime.length === 6){
                 saveNextLine(CEDTime);
                 CEDTime = ['CED']
-            }//else console.log(CEDTime)
+            }
         }
         if (CE === 1){
             CEITime.push(trainingTime)
             if(CEITime.length === 6){
                 saveNextLine(CEITime);
                 CEITime = ['CEI']
-            }//else console.log(CEITime)
+            }
         }
         worker.postMessage("pause");
         shootbutton.disabled = true;
-        pato.classList.add("fall-back");
+        pato.classList.add("fall-back"); 
+        
+        //Verifica la duración de la animación y descuentala al tiempo de entrenameinto
+        const startAnimation = Performance.now(); 
 
         setTimeout(() => {
-            // Desactivar pantalla de juego y pasar a la pantalla de test
+            const endAnimation = Performance.now();
+            animationTime += endAnimation-startAnimation;
             showScreen(testScreen);
-
-            assignRandomColors(); //Asignar colores aleatorios
+            assignRandomColors();
         }, 2000);
     }
 
@@ -160,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ================================
-    // 4. LÓGICA DE TICKS DEL WORKER
+    // LÓGICA DE TICKS DEL WORKER
     // ================================
 
     function handle100msTick(){
@@ -181,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ================================
-    // 5. LÓGICA DE TICKS DEL USUARIO
+    // LÓGICA DE TICKS DEL USUARIO
     // ================================
 
     function handleTickClick(){
@@ -191,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ==============================
-    // 6. GESTIÓN DE CLIC EN TEST
+    // GESTIÓN DE CLIC EN TEST
     // ==============================
 
     function getSelectedColor(selectedButton, buttonColorConfig) { 
@@ -220,8 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         // Determinar acierto o error
         const isCorrect = isCorrectResponse(selectedButton, correctColor, buttonColorConfig);
 
-        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
-        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        trainingTime = getTrainingTime();
+
         answerTime = [trainingTime, lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
         saveNextLine(answerTime);
         answerTime = []
@@ -232,22 +238,22 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function calculate_average(){
-        score = countCED + countCEI
+        score = countCED + countCEI;
         average = score > 0 ? Math.round((successes/score) * 100) : 0;
     }
 
     function reinforce() {
         calculate_average();
-        showResultsScreen(true);
+        showResults(true);
     }
 
     function punish() {
         calculate_average();
-        showResultsScreen(false);
+        showResults(false);
     }
 
     // ==============================
-    // 7. PANTALLAS Y UI
+    // PANTALLAS Y UI
     // ==============================
 
     function getResultText(isCorrect, average, score) {
@@ -264,16 +270,15 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             `Tu porcentaje de aciertos bajó al ${average}%`;
     }
 
-    function showResultsScreen(isCorrect){
+    function showResults(isCorrect){
         
-        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
-
-        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        // Guardado de datos
+        trainingTime = getTrainingTime();
         punishReinforceTime = [isCorrect?";R+":";BO",trainingTime]
         saveNextLine(punishReinforceTime);
         punishReinforceTime = []
 
-        //Preparar el botón y el pato para cuando se muestre la pantalla de juego
+        // Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
         pato.classList.remove("fall-back");
 
@@ -310,7 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 saveNextLine(['Veces que eligio rojo', redClicks]);
                 resultsText.textContent = getResultText(isCorrect, average, score);
                 resultsHead.textContent = "Gracias!!"
-            }, 3500);
+            }, 4500);
         }    
     }
 
@@ -323,25 +328,21 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function guns_animation(){
-        //weaponLeft.classList.add("retroceso_izquierda");
         weaponRight.classList.add("retroceso_derecha");
 
         setTimeout(() => {
-            //weaponLeft.classList.remove("retroceso_izquierda");
             weaponRight.classList.remove("retroceso_derecha");
         }, 100); // Duración del retroceso
     }
 
     
     // ==============================
-    // 8. ALMACENAMIENTO FB
+    // ALMACENAMIENTO FB
     // ==============================
     function getCurrentUserId() {
         const id = localStorage.getItem("currentUserId");
-        //console.log("ID del participante encontrado:", id);
         return id;
     }
-    //window.getCurrentUserId = getCurrentUserId;
 
     function saveNextLine(contentArray) {
         const userId = getCurrentUserId();
@@ -357,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ==============================
-    // 9. EVENTOS DEL WORKER
+    // EVENTOS DEL WORKER
     // ==============================
 
     worker.onmessage = function (e) {
@@ -372,13 +373,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     };
 
     // ==============================
-    // 10. EVENTOS DE USUARIO
+    // EVENTOS DE USUARIO
     // ==============================
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
         numberClicks ++;
-        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+        trainingTime = getTrainingTime();
         shootingTime.push(trainingTime)
         if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
             saveNextLine(shootingTime);
@@ -394,6 +395,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
     // SINCRONIZACIÓN DE RELOJES
     // ==============================
+
+    function getTrainingTime(){
+        trainingTime = (((performance.now() - gameStartTime)-animationTime)/1000).toFixed(2);
+        return trainingTime;
+    }
 
     function iniciarJuego() {
         worker.postMessage('reset');
