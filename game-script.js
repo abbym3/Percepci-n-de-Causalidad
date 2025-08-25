@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
 
     // Dados 
-    HUMANDIE = 6;
-    MACHINEDIE = 18;
+    let HUMANDIE = 6;
+    let MACHINEDIE = 18;
 
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
