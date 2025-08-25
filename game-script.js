@@ -208,8 +208,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handleCEClick(selectedButton) {
-        //Tiempo en el que se respondio 
-        clickTestAnswerTime = performance.now();
 
         // Lado y color que el jugador pulsó
         const lado = selectedButton === 0 ? "left" : "right";
