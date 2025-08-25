@@ -6,17 +6,23 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
     // 1. CONFIGURACIÓN Y VARIABLES
     // ==============================
-    
+
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
     
     // Elementos DOM
+    const gameScreen = document.getElementById("GameScreen");
     const shootbutton = document.getElementById("shootButton"); 
-    //const weaponLeft = document.getElementById("weaponLeft");
     const weaponRight = document.getElementById("weaponRight");
     const leftButton = document.getElementById("ceButtonLeft");
     const rightButton = document.getElementById("ceButtonRight");
     const pato = document.getElementById("pato");
+    const testScreen = document.getElementById("TestScreen");
+    const resultsScreen = document.getElementById("ResultsScreen");
+    const resultsHead = document.getElementById("resultsHead");
+    const resultsText = document.getElementById("resultsText");
+    const instructionsScreen = document.getElementById("InstructionsScreen");
+    
 
     // Estado del experimento
     let trainingTime = 0;     // Tiempo total de entrenamiento (ms)
@@ -25,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
-    let number_clicks = 0;    // Total de clics al boton central
+    let numberClicks = 0;    // Total de clics al boton central
     let greenClicks = 0;      // Respuestas verdes totales
     let redClicks = 0;        // Respuestas rojas totales
     let leftClicks = 0;       // Respuestas izquierda totales
@@ -45,7 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Métricas globales
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
-    let resultText = "";      // Texto mostrado en resultados
 
     // Indice de almacenamiento 
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
@@ -133,8 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         setTimeout(() => {
             // Desactivar pantalla de juego y pasar a la pantalla de test
-            document.getElementById("GameScreen").classList.remove("ScreenOn");
-            document.getElementById("TestScreen").classList.add("ScreenOn");
+            gameScreen.classList.remove("ScreenOn");
+            testScreen.classList.add("ScreenOn");
 
             assignRandomColors(); //Asignar colores aleatorios
         }, 2000);
@@ -169,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handle10sTick(){
-        console.log(`-----------Intervalo ${i}: Disparos = ${shotCount}--------------`);
+        console.log(`---Intervalo ${i}: Disparos = ${shotCount}---`);
         //console.log('Han pasado 10s');
         shotsPer10sInterval[i] = shotCount; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shotsPer10sInterval[i]}`);
@@ -277,26 +282,25 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         pato.classList.remove("fall-back");
 
         // Ocultar la pantalla de test y mostrar la de resultados
-        document.getElementById("TestScreen").classList.remove("ScreenOn");
-        document.getElementById("ResultsScreen").classList.add("ScreenOn");
+        testScreen.classList.remove("ScreenOn");
+        resultsScreen.classList.add("ScreenOn");
 
         // Poner el texto de si es acierto o error
-        document.getElementById("resultsHead").textContent = isCorrect? "CORRECTO!":"INCORRECTO!";
-        document.getElementById("resultsHead").style.color = isCorrect? "green":"red";
-        document.getElementById("resultsText").textContent =  "";
+        resultsHead.textContent = isCorrect? "CORRECTO!":"INCORRECTO!";
+        resultsHead.style.color = isCorrect? "green":"red";
+        resultsText.textContent =  "";
 
         setTimeout(() => {
-            document.getElementById("resultsHead").textContent = "RESULTADOS";
-            document.getElementById("resultsHead").style.color = "Blue";
-            const resultText = getResultText(isCorrect, average, score);
-            document.getElementById("resultsText").textContent = resultText;
+            resultsHead.textContent = "RESULTADOS";
+            resultsHead.style.color = "Blue";
+            resultsText.textContent = getResultText(isCorrect, average, score);
         }, 2000)
 
         if(score < 150)
             setTimeout(showGameScreen, 4500);
         else{
             setTimeout(() => {
-                saveNextLine(['Respuestas totales al boton central', number_clicks]);
+                saveNextLine(['Respuestas totales al boton central', numberClicks]);
                 saveNextLine(['Pulsos totales máquina', machineTryCount]);        
                 saveNextLine(['Aciertos', successes]);
                 saveNextLine(['Errores', errors]);
@@ -306,9 +310,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 saveNextLine(['Veces que eligio derecha', rightClicks]);
                 saveNextLine(['Veces que eligio verde', greenClicks]);
                 saveNextLine(['Veces que eligio rojo', redClicks]);
-                resultText = getResultText(isCorrect, average, score);
-                document.getElementById("resultsText").textContent = resultText;
-                document.getElementById("resultHead").textContent = "Gracias!!"
+                resultsText.textContent = getResultText(isCorrect, average, score);
+                resultsHead.textContent = "Gracias!!"
             }, 3500);
         }    
     }
@@ -317,9 +320,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         //resumeWorkerTime = performance.now();
         //console.log(`Tiempo que el worker se pauso: ${stopWorkerTime-resumeWorkerTime}`)
         worker.postMessage("resume")
-        document.getElementById("InstructionsScreen").classList.remove("ScreenOn")
-        document.getElementById("ResultsScreen").classList.remove("ScreenOn");
-        document.getElementById("GameScreen").classList.add("ScreenOn");
+        instructionsScreen.classList.remove("ScreenOn")
+        resultsScreen.classList.remove("ScreenOn");
+        gameScreen.classList.add("ScreenOn");
         correctColor = null;
         buttonColorConfig = null;
     }
@@ -379,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
-        number_clicks ++;
+        numberClicks ++;
         trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
         shootingTime.push(trainingTime)
         if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
@@ -404,7 +407,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         showGameScreen('GameScreen');
     }
 
-    //
     setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
 
 });
