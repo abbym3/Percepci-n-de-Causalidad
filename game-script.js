@@ -313,6 +313,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 saveNextLine(['Veces que eligio derecha', rightClicks]);
                 saveNextLine(['Veces que eligio verde', greenClicks]);
                 saveNextLine(['Veces que eligio rojo', redClicks]);
+                if(shootingTime.length>1) saveNextLine(shootingTime);
+                if(CEDTime.length>1) saveNextLine(CEDTime);
+                if(CEITime.length>1) saveNextLine(CEITime);
                 resultsText.textContent = getResultText(isCorrect, average, score);
                 resultsHead.textContent = "Gracias!!"
             }, 4500);
