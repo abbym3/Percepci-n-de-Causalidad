@@ -59,8 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
 
 
-    let gameStartTime = null;
-    let animationTime = null;
+    let gameStartTime = 0;
+    let animationTime = 0;
     let shootingTime = ['Centro'];
     let CEDTime = ['CED'];
     let CEITime = ['CEI'];
@@ -139,10 +139,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         pato.classList.add("fall-back"); 
         
         //Verifica la duración de la animación y descuentala al tiempo de entrenameinto
-        const startAnimation = Performance.now(); 
+        const startAnimation = performance.now(); 
 
         setTimeout(() => {
-            const endAnimation = Performance.now();
+            const endAnimation = performance.now();
             animationTime += endAnimation-startAnimation;
             showScreen(testScreen);
             assignRandomColors();
