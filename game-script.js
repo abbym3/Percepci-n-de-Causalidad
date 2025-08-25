@@ -58,9 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let answerTime = [];
     let punishReinforceTime = [];
 
-    //Para compensar tiempo del worker despues de la pausa
-    let stopWorkerTime = 0, resumeWorker = 0, clickTestAnswerTime = 0, compensatedTime1 = 0, showResultsTime = 0, compensatedTime2 = 0;
-
 
     // ==============================
     // 2. FUNCIONES DE PROBABILIDAD
@@ -114,25 +111,23 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function activateCE(CE){
-        waitUpdatedTime((trainingTime) => {
-            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            if (CE === 0){
-                CEDTime.push((trainingTime/1000).toFixed(2))
-                if(CEDTime.length === 6){
-                    saveNextLine(CEDTime);
-                    CEDTime = ['CED']
-                }//else console.log(CEDTime)
-            }
-            if (CE === 1){
-                CEITime.push((trainingTime/1000).toFixed(2))
-                if(CEITime.length === 6){
-                    saveNextLine(CEITime);
-                    CEITime = ['CEI']
-                }//else console.log(CEITime)
-            }
-        });
+        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+        if (CE === 0){
+            CEDTime.push(trainingTime)
+            if(CEDTime.length === 6){
+                saveNextLine(CEDTime);
+                CEDTime = ['CED']
+            }//else console.log(CEDTime)
+        }
+        if (CE === 1){
+            CEITime.push(trainingTime)
+            if(CEITime.length === 6){
+                saveNextLine(CEITime);
+                CEITime = ['CEI']
+            }//else console.log(CEITime)
+        }
         worker.postMessage("pause");
-        stopWorkerTime = performance.now(); // Stop Worker debe ser unado como referencia para registrar el tiempo de respuesta en TEST Y el registro de tiempo de R+ o BO+ dado que el worker esta en off
         shootbutton.disabled = true;
         pato.classList.add("fall-back");
 
@@ -212,7 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function handleCEClick(selectedButton) {
         //Tiempo en el que se respondio 
         clickTestAnswerTime = performance.now();
-        compensatedTime1 = clickTestAnswerTime-stopWorkerTime; //Este tiempo es el que corre desde que se pauso el worker hasta que se dio click en respuesta
 
         // Lado y color que el jugador pulsó
         const lado = selectedButton === 0 ? "left" : "right";
@@ -225,12 +219,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         // Determinar acierto o error
         const isCorrect = isCorrectResponse(selectedButton, correctColor, buttonColorConfig);
 
-        waitUpdatedTime((trainingTime) => {
-            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            answerTime = [((trainingTime+compensatedTime1)/1000).toFixed(2), lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
-            saveNextLine(answerTime);
-            answerTime = []
-        });
+        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        answerTime = [trainingTime, lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
+        saveNextLine(answerTime);
+        answerTime = []
 
         // Sumar contados de aciertos o errores
         isCorrect ? successes++ : errors++;
@@ -271,14 +264,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function showResultsScreen(isCorrect){
-        showResultsTime = performance.now();
-        compensatedTime2 = showResultsTime-stopWorkerTime; //Este es el tiempo que corre desde que se pauso el worker hasta que se mustran los resultados
-        waitUpdatedTime((trainingTime) => {
-            //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            punishReinforceTime = [isCorrect?";R+":";BO",((trainingTime+compensatedTime2)/1000).toFixed(2)]
-            saveNextLine(punishReinforceTime);
-            punishReinforceTime = []
-        });
+        
+        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+
+        //console.log(`W:${trainingTime}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
+        punishReinforceTime = [isCorrect?";R+":";BO",trainingTime]
+        saveNextLine(punishReinforceTime);
+        punishReinforceTime = []
 
         //Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
@@ -370,18 +362,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // 9. EVENTOS DEL WORKER
     // ==============================
 
-    function waitUpdatedTime(callback) {
-        const handler = (e) => {
-            if (e.data.type === 'time') {
-                trainingTime = e.data.value;
-                worker.removeEventListener('message', handler);
-                callback(trainingTime);
-            }
-        };
-        worker.addEventListener('message', handler);
-        worker.postMessage('get_time');
-    }
-
     worker.onmessage = function (e) {
         switch (typeof e.data === "object" ? e.data.type : e.data){
             case '100 ms':
@@ -400,14 +380,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     shootbutton.addEventListener("click", function () {
         shotCount ++;
         number_clicks ++;
-        waitUpdatedTime((trainingTime) => {
-            console.log(`W:${trainingTime.toFixed(1)}|R:${(performance.now()-gameStartTime).toFixed(1)}`);
-            shootingTime.push((trainingTime/1000).toFixed(2))
-            if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
-                saveNextLine(shootingTime);
-                shootingTime = ['Centro'];
-            }
-        });
+        trainingTime = ((performance.now() - gameStartTime)/1000).toFixed(2);
+        shootingTime.push(trainingTime)
+        if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
+            saveNextLine(shootingTime);
+            shootingTime = ['Centro'];
+        }
         guns_animation();
         handleTickClick();
     });
