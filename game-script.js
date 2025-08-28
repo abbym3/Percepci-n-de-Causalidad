@@ -303,16 +303,16 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             }, 4500);
         } else{
             setTimeout(() => {
-                saveNextLine(['Respuestas totales al boton central', numberClicks]);
-                saveNextLine(['Pulsos totales máquina', machineTryCount]);        
-                saveNextLine(['Aciertos', successes]);
-                saveNextLine(['Errores', errors]);
-                saveNextLine(['Total CED', countCED]);
-                saveNextLine(['Total CEI', countCEI]);
-                saveNextLine(['Veces que eligio izquierda', leftClicks]);
-                saveNextLine(['Veces que eligio derecha', rightClicks]);
-                saveNextLine(['Veces que eligio verde', greenClicks]);
-                saveNextLine(['Veces que eligio rojo', redClicks]);
+                saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
+                saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
+                saveNextLine(['A', successes]); // Aciertos
+                saveNextLine(['E', errors]); // Errores
+                saveNextLine(['TCED', countCED]); // Total CED
+                saveNextLine(['TCEI', countCEI]); // Total CEI
+                saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
+                saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
+                saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
+                saveNextLine(['VR', redClicks]); // Veces que eligio rojo
                 if(shootingTime.length>1) saveNextLine(shootingTime);
                 if(CEDTime.length>1) saveNextLine(CEDTime);
                 if(CEITime.length>1) saveNextLine(CEITime);
@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
-        saveNextLine(['Inicio del juego', new Date().toLocaleString()]);
+        saveNextLine(['IDJ', new Date().toLocaleString()]);
         showScreen(gameScreen);
     }
 
