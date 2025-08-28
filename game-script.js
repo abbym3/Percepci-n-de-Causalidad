@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 if(shootingTime.length>1) saveNextLine(shootingTime);
                 if(CEDTime.length>1) saveNextLine(CEDTime);
                 if(CEITime.length>1) saveNextLine(CEITime);
-                resultsText.textContent = getResultText(isCorrect, average, score);
+                resultsText.textContent = "";
                 resultsHead.textContent = "Gracias!!"
             }, 4500);
         }    
