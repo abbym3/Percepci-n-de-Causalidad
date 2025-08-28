@@ -1,4 +1,4 @@
-import { ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { ref, push } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
@@ -55,17 +55,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
 
-    // Indice de almacenamiento para Firebase
-    let currentLineNumber = 1; // Empieza en 1 porque el 0 ya está ocupado
-
-
     let gameStartTime = 0;
     let animationTime = 0;
-    let shootingTime = ['Centro'];
+    let shootingTime = ['CTR'];
     let CEDTime = ['CED'];
     let CEITime = ['CEI'];
-    let answerTime = [];
-    let punishReinforceTime = [];
+    let answerTime = ['ANS'];
+    let punishReinforceTime = ['RB'];
 
 
     // ==============================
@@ -228,9 +224,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         trainingTime = getTrainingTime();
 
-        answerTime = [trainingTime, lado === "left" ? "Izquierda":"Derecha" , color === "red"? "Rojo":"Verde", isCorrect? "Acierto": "Error"]
+        answerTime.push(trainingTime);
+        answerTime.push(lado === "left" ? "Izquierda":"Derecha");
+        answerTime.push(color === "red"? "Rojo":"Verde")
+        answerTime.push(isCorrect? "Acierto": "Error")
         saveNextLine(answerTime);
-        answerTime = []
+        answerTime = ['ANS'];
 
         // Sumar contados de aciertos o errores
         isCorrect ? successes++ : errors++;
@@ -274,9 +273,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         
         // Guardado de datos
         trainingTime = getTrainingTime();
-        punishReinforceTime = [isCorrect?";R+":";BO",trainingTime]
+        punishReinforceTime.push(isCorrect?";R+":";BO");
+        punishReinforceTime.push(trainingTime);
         saveNextLine(punishReinforceTime);
-        punishReinforceTime = []
+        punishReinforceTime = ['RB']
 
         // Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
@@ -350,14 +350,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function saveNextLine(contentArray) {
         const userId = getCurrentUserId();
         if (!userId) return;
-
-        const lineRef = ref(db, `participantes/${userId}/${currentLineNumber}`);
-        set(lineRef, contentArray)
-            .then(() => {
-                //console.log(`Renglón ${currentLineNumber} guardado:`, contentArray);
-                currentLineNumber++; // Solo si se guarda correctamente
-            })
-            .catch((error) => console.error(`Error al guardar renglón ${currentLineNumber}:`, error));
+        const listRef = ref(db, `participantes/${userId}`);
+        push(listRef, contentArray)
+            //.then(() => console.log("Guardado con push:", contentArray))
+            .catch((error) => console.error("Error al guardar:", error));
     }
 
     // ==============================
@@ -386,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         shootingTime.push(trainingTime)
         if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
             saveNextLine(shootingTime);
-            shootingTime = ['Centro'];
+            shootingTime = ['CTR'];
         }
         guns_animation();
         handleTickClick();
