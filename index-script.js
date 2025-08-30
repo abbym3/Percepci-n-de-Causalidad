@@ -1,27 +1,37 @@
 import { ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-import { db } from "./firebase-init.js"; 
+import { db, auth } from "./firebase-init.js"; 
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 function saveInitialUserData(nombre, edad, grupo) {
-  const timestamp = Math.floor(Date.now() / 1000); // Ej: 1755144881
-  const lastFour = timestamp % 10000;              // Ej: 4881
-  const userKey = `${nombre}_${edad}_${lastFour}`;
+  // Esperamos a que el estado de autenticación esté disponible
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid; // ID único del usuario autenticado
+      const userKey = uid;  // Lo usamos como clave en la base
 
-  const data = {
-    0: [`${nombre}`,`${edad}`,`${grupo}`] // Primer renglón en la base
-  };
+      const data = {
+        0: [`${nombre}`, `${edad}`, `${grupo}`] // Primer renglón en la base
+      };
 
-  const userRef = ref(db, `participantes/${userKey}`); // Ruta en Firebase
-  set(userRef, data)
-    .then(() => {
-      console.log("Datos guardados correctamente en Firebase.");
-      localStorage.setItem('currentUserId', userKey); // Guardamos para usar en game.html
-      window.location.href = "game.html"; // Redirigir al experimento
-    })
-    .catch((error) => {
-      console.error("Error al guardar en Firebase:", error);
-      alert("Hubo un problema al guardar tus datos. Intenta de nuevo.");
-    });
+      const userRef = ref(db, `participantes/${userKey}`); // Ruta en Firebase
+
+      set(userRef, data)
+        .then(() => {
+          console.log("Datos guardados correctamente en Firebase.");
+          localStorage.setItem('currentUserId', uid); // Guardamos para usar en game.html
+          window.location.href = "game.html"; // Redirigir al experimento
+        })
+        .catch((error) => {
+          console.error("Error al guardar en Firebase:", error);
+          alert("Hubo un problema al guardar tus datos. Intenta de nuevo.");
+        });
+    } else {
+      console.error("Usuario no autenticado.");
+      alert("No se pudo autenticar al usuario.");
+    }
+  });
 }
+
 
 document.addEventListener("DOMContentLoaded", function () { 
 //Esperar a que el DOM esté listo
