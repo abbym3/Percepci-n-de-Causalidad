@@ -118,17 +118,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         trainingTime = getTrainingTime();
         if (CE === 0){
             CEDTime.push(trainingTime)
-            if(CEDTime.length === 6){
-                saveNextLine(CEDTime);
-                CEDTime = ['CED']
-            }
+            saveNextLine(CEDTime);
+            CEDTime = ['CED']
         }
         if (CE === 1){
             CEITime.push(trainingTime)
-            if(CEITime.length === 6){
-                saveNextLine(CEITime);
-                CEITime = ['CEI']
-            }
+            saveNextLine(CEITime);
+            CEITime = ['CEI']
         }
         worker.postMessage("pause");
         shootbutton.disabled = true;
@@ -303,23 +299,25 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             }, 4500);
         } else{
             setTimeout(() => {
-                saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
-                saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
-                saveNextLine(['A', successes]); // Aciertos
-                saveNextLine(['E', errors]); // Errores
-                saveNextLine(['TCED', countCED]); // Total CED
-                saveNextLine(['TCEI', countCEI]); // Total CEI
-                saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
-                saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
-                saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
-                saveNextLine(['VR', redClicks]); // Veces que eligio rojo
-                if(shootingTime.length>1) saveNextLine(shootingTime);
-                if(CEDTime.length>1) saveNextLine(CEDTime);
-                if(CEITime.length>1) saveNextLine(CEITime);
+                saveFinalData();
                 resultsText.textContent = "";
                 resultsHead.textContent = "Gracias!!"
             }, 4500);
         }    
+    }
+
+    function saveFinalData(){
+        saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
+        saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
+        saveNextLine(['A', successes]); // Aciertos
+        saveNextLine(['E', errors]); // Errores
+        saveNextLine(['TCED', countCED]); // Total CED
+        saveNextLine(['TCEI', countCEI]); // Total CEI
+        saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
+        saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
+        saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
+        saveNextLine(['VR', redClicks]); // Veces que eligio rojo
+        syncLocalBackups();
     }
 
     function showScreen(pantalla) {
@@ -342,6 +340,35 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
     // ALMACENAMIENTO FB
     // ==============================
+
+    //////////////////////////////
+    function backupLocally(contentArray) {
+        const backups = JSON.parse(localStorage.getItem("localBackups") || "[]");
+        backups.push(contentArray);
+        localStorage.setItem("localBackups", JSON.stringify(backups));
+    }
+
+    function syncLocalBackups() {
+        const userId = getCurrentUserId();
+        if (!userId) return;
+
+        const listRef = ref(db, `participantes/${userId}`);
+        const backups = JSON.parse(localStorage.getItem("localBackups") || "[]");
+
+        backups.forEach((entry) => {
+            push(listRef, entry)
+            .then(() => {
+                console.log("Backup sincronizado:", entry);
+            })
+            .catch((error) => {
+                console.error("Error al sincronizar backup:", error);
+            });
+        });
+
+        localStorage.removeItem("localBackups"); // Limpiar después de sincronizar
+    }
+    //////////////////////////////
+
     function getCurrentUserId() {
         const id = localStorage.getItem("currentUserId");
         return id;
@@ -353,7 +380,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const listRef = ref(db, `participantes/${userId}`);
         push(listRef, contentArray)
             //.then(() => console.log("Guardado con push:", contentArray))
-            .catch((error) => console.error("Error al guardar:", error));
+            .catch((error) => {
+                console.error("Error al guardar en Firebase:", error);
+                backupLocally(contentArray); // Guardar localmente si falla
+            });
     }
 
     // ==============================
@@ -380,10 +410,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         numberClicks ++;
         trainingTime = getTrainingTime();
         shootingTime.push(trainingTime)
-        if(shootingTime.length === 11){ //Cada 10 disparos guardamos los tiempos
-            saveNextLine(shootingTime);
-            shootingTime = ['CTR'];
-        }
+        saveNextLine(shootingTime);
+        shootingTime = ['CTR'];
         guns_animation();
         handleTickClick();
     });
