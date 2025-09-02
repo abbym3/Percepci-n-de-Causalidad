@@ -307,6 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function saveFinalData(){
+        saveNextLine(['FDJ', new Date().toLocaleString()]);
         saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
         saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
         saveNextLine(['A', successes]); // Aciertos
