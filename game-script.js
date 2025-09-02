@@ -424,7 +424,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
 
     function getTrainingTime(){
-        trainingTime = (((performance.now() - gameStartTime)-animationTime)/1000).toFixed(2);
+        trainingTime = (((performance.now() - gameStartTime)-animationTime)/1000).toFixed(3);
         return trainingTime;
     }
 
