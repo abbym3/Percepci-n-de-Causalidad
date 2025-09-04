@@ -131,14 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         pato.classList.add("fall-back"); 
         
         //Verifica la duración de la animación y descuentala al tiempo de entrenameinto
-        const startAnimation = performance.now(); 
-
-        setTimeout(() => {
-            const endAnimation = performance.now();
-            animationTime += endAnimation-startAnimation;
-            showScreen(testScreen);
-            assignRandomColors();
-        }, 2000);
+        const onAnimEnd = (ev) => { 
+            if (ev.animationName !== 'duckImpactAnimation') return;
+            animationTime += ev.elapsedTime * 1000; 
+            showScreen(testScreen); 
+            assignRandomColors(); 
+        };
+        pato.addEventListener('animationend', onAnimEnd, { once: true });
     }
 
     function assignRandomColors() {
