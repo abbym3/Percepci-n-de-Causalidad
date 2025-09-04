@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let HUMANDIE = 6;
     let MACHINEDIE = 18;
 
+    // Demora
+    let demora = [0];
+    let j = 0; // Índice de la demora actual
+
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
     
@@ -28,9 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const instructionsScreen = document.getElementById("InstructionsScreen");
     
     // Estado del experimento
-    let trainingTime = 0;     // Tiempo total de entrenamiento (s, con 3 decimales)
-    let i = 0;                // Índice del bloque de 10s actual
-    let shotsPer10sInterval = []; // Disparos por cada bloque de 10s
+    let trainingTime = 0;           // Tiempo total de entrenamiento (s, con 3 decimales)
+    let i = 0;                      // Índice del bloque de 10s actual
+    let shotsPer10sInterval = [];   // Disparos por cada bloque de 10s
+    let canTriggerCE = true;        // Solo si es true se pueden disparar CEI/CED nuevos
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
@@ -63,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let CEITime = ['CEI'];
     let answerTime = ['ANS'];
     let punishReinforceTime = ['RB'];
-
 
     // ==============================
     // TIEMPO
@@ -99,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_machine(){
+        if (!canTriggerCE) return;
         machineTryCount ++;
         const p = Math.floor(Math.random() * MACHINEDIE) + 1; // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE
         // console.log(`Calculo p_machine: ${p}`)
@@ -108,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function p_tick_human(){
+        if (!canTriggerCE) return;
         const p = Math.floor(Math.random() * HUMANDIE) + 1; // La probailidad de que el humano provoque un CED de 1/HUMANDIE
         if (p === 1) { 
             CED();
@@ -145,8 +151,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             CEITime = ['CEI']
         }
         worker.postMessage("pause");
-        shootbutton.disabled = true;
-        pato.classList.add("fall-back"); 
+        canTriggerCE = false;
+
+        setTimeout(() => {
+            shootbutton.disabled = true;
+            pato.classList.add("fall-back"); 
+         }, demora[j])
         
         //Verifica la duración de la animación y descuentala al tiempo de entrenameinto
         const onAnimEnd = (ev) => { 
@@ -311,8 +321,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         if(score < 150){
             setTimeout(() => {
-            worker.postMessage("resume");
-            showScreen(gameScreen);
+                canTriggerCE = true;
+                worker.postMessage("resume");
+                showScreen(gameScreen);
             }, 4500);
         } else{
             setTimeout(() => {
