@@ -9,7 +9,6 @@ function simulate() {
   //console.log("tick", performance.now());
 
   if (!running) {
-    setTimeout(simulate, 4); //El loop se mantiene activo sin calculos
     return;
   }
   const now = performance.now(); // Obtener el tiempo actual
@@ -50,8 +49,9 @@ onmessage = function (e) {
         const pausedDuration = now - pauseTime; // Cuánto tiempo estuvo en pausa
         startTime += pausedDuration; // Ajusta el reloj para ignorar el tiempo en pausa y mantener continuidad
         pauseTime = null;
+        running = true;
+        simulate();
       }
-      running = true;
       break;
 
     case 'get_time':
