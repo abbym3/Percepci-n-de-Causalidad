@@ -19,7 +19,7 @@ function saveInitialUserData(nombre, edad, grupo) {
         .then(() => {
           console.log("Datos guardados correctamente en Firebase.");
           localStorage.setItem('currentUserId', uid); // Guardamos para usar en game.html
-          window.location.href = "game.html"; // Redirigir al experimento
+          location.assign('game.html'); // Redirigir al experimento
         })
         .catch((error) => {
           console.error("Error al guardar en Firebase:", error);
@@ -35,6 +35,8 @@ function saveInitialUserData(nombre, edad, grupo) {
 
 document.addEventListener("DOMContentLoaded", function () { 
 //Esperar a que el DOM esté listo
+
+  localStorage.removeItem('currentUserId');
 
   const nameInput = document.getElementById('name');
   const ageInput = document.getElementById('age');

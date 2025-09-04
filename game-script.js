@@ -3,6 +3,8 @@ import { db } from "./firebase-init.js";
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
+    if (!localStorage.getItem('currentUserId')) { location.replace('index.html'); return; }
+    
     // ==============================
     // CONFIGURACIÓN Y VARIABLES
     // ==============================
