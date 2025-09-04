@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
+        console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['IDJ', new Date().toLocaleString()]);
         showScreen(gameScreen);
     }
@@ -191,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ================================
 
     function handle100msTick(){
-        //console.log('Han pasado 100 ms');
+        console.log(`W:100ms`);//(`W:100ms|P:${getTrainingTime()}`);
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
         }
@@ -392,10 +393,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         backups.forEach((entry) => {
             push(listRef, entry)
             .then(() => {
-                console.log("Backup sincronizado:", entry);
+                //console.log("Backup sincronizado:", entry);
             })
             .catch((error) => {
-                console.error("Error al sincronizar backup:", error);
+                //console.error("Error al sincronizar backup:", error);
             });
         });
 
