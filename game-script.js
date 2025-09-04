@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // CONFIGURACIÓN Y VARIABLES
     // ==============================
 
-    // Dados 
+    // Constantes de probabilidad
     let HUMANDIE = 6;
     let MACHINEDIE = 18;
 
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const instructionsScreen = document.getElementById("InstructionsScreen");
     
     // Estado del experimento
-    let trainingTime = 0;     // Tiempo total de entrenamiento (ms)
+    let trainingTime = 0;     // Tiempo total de entrenamiento (s, con 3 decimales)
     let i = 0;                // Índice del bloque de 10s actual
     let shotsPer10sInterval = []; // Disparos por cada bloque de 10s
 
@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
 
+    // Marcas de tiempo / filas de guardado
     let gameStartTime = 0;
     let animationTime = 0;
     let shootingTime = ['CTR'];
@@ -65,7 +66,24 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
 
     // ==============================
-    // FUNCIONES DE PROBABILIDAD
+    // TIEMPO
+    // ==============================
+    function getTrainingTime(){
+        trainingTime = (((performance.now() - gameStartTime)-animationTime)/1000).toFixed(3);
+        return trainingTime;
+    }
+    
+    function iniciarJuego() {
+        worker.postMessage('reset');
+        gameStartTime = performance.now(); // Marca el inicio real del juego
+        saveNextLine(['IDJ', new Date().toLocaleString()]);
+        showScreen(gameScreen);
+    }
+
+    setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
+
+    // ==============================
+    // PROBABILIDAD
     // ==============================
 
     function adjustP1BasedOnClicks(prevShots) {
@@ -157,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     // ================================
-    // LÓGICA DE TICKS DEL WORKER
+    // TICKS DEL WORKER
     // ================================
 
     function handle100msTick(){
@@ -231,6 +249,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         isCorrect ? reinforce() : punish();
     }
 
+    // ==============================
+    // RESULTADOS
+    // ==============================
+
     function calculate_average(){
         score = countCED + countCEI;
         average = score > 0 ? Math.round((successes/score) * 100) : 0;
@@ -245,10 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         calculate_average();
         showResults(false);
     }
-
-    // ==============================
-    // PANTALLAS Y UI
-    // ==============================
 
     function getResultText(isCorrect, average, score) {
         if (average === 100 || average === 0) {
@@ -305,6 +323,31 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         }    
     }
 
+    // ==============================
+    // PANTALLAS Y UI
+    // ==============================
+    
+    function guns_animation(){
+        weaponRight.classList.add("retroceso_derecha");
+
+        setTimeout(() => {
+            weaponRight.classList.remove("retroceso_derecha");
+        }, 100); // Duración del retroceso
+    }
+
+    function showScreen(pantalla) {
+        instructionsScreen.classList.remove("ScreenOn");
+        resultsScreen.classList.remove("ScreenOn");
+        gameScreen.classList.remove("ScreenOn");
+        testScreen.classList.remove("ScreenOn");
+        pantalla.classList.add("ScreenOn");
+    }
+
+    
+    // ==============================
+    // ALMACENAMIENTO FB
+    // ==============================
+
     function saveFinalData(){
         saveNextLine(['FDJ', new Date().toLocaleString()]);
         saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
@@ -320,28 +363,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         syncLocalBackups();
     }
 
-    function showScreen(pantalla) {
-        instructionsScreen.classList.remove("ScreenOn");
-        resultsScreen.classList.remove("ScreenOn");
-        gameScreen.classList.remove("ScreenOn");
-        testScreen.classList.remove("ScreenOn");
-        pantalla.classList.add("ScreenOn");
-    }
-
-    function guns_animation(){
-        weaponRight.classList.add("retroceso_derecha");
-
-        setTimeout(() => {
-            weaponRight.classList.remove("retroceso_derecha");
-        }, 100); // Duración del retroceso
-    }
-
-    
-    // ==============================
-    // ALMACENAMIENTO FB
-    // ==============================
-
-    //////////////////////////////
     function backupLocally(contentArray) {
         const backups = JSON.parse(localStorage.getItem("localBackups") || "[]");
         backups.push(contentArray);
@@ -367,7 +388,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         localStorage.removeItem("localBackups"); // Limpiar después de sincronizar
     }
-    //////////////////////////////
 
     function getCurrentUserId() {
         const id = localStorage.getItem("currentUserId");
@@ -418,23 +438,5 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     leftButton.addEventListener("click", () => handleCEClick(0));
     rightButton.addEventListener("click", () => handleCEClick(1));
-
-    // ==============================
-    // SINCRONIZACIÓN DE RELOJES
-    // ==============================
-
-    function getTrainingTime(){
-        trainingTime = (((performance.now() - gameStartTime)-animationTime)/1000).toFixed(3);
-        return trainingTime;
-    }
-
-    function iniciarJuego() {
-        worker.postMessage('reset');
-        gameStartTime = performance.now(); // Marca el inicio real del juego
-        saveNextLine(['IDJ', new Date().toLocaleString()]);
-        showScreen(gameScreen);
-    }
-
-    setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
 
 });
