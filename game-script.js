@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             animationTime += ev.elapsedTime * 1000; 
             showScreen(testScreen); 
             assignRandomColors(); 
-            console.log(`Tiempo animación: ${animationTime}ms`);
+            //console.log(`Tiempo animación: ${animationTime}ms`);
         };
         pato.addEventListener('animationend', onAnimEnd, { once: true });
     }
@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(() => {
                 canTriggerCE = true;
                 worker.postMessage("resume");
+                console.log(`Tiempo de reanudación: ${getTrainingTime()}`)
                 showScreen(gameScreen);
             }, 4500);
         } else{
