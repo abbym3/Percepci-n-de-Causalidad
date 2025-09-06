@@ -31,7 +31,12 @@ function simulate() {
     }
     startTime += blocksPassed * 20; // Avanza startTime la cantidad de tiempo procesado
   }
-  setTimeout(simulate, 10); // Repetir la función cada 10 ms
+  const now2 = performance.now();
+  const elapsed2 = now2 - startTime;
+  let remainder = 20 - (elapsed2 % 20);
+  if (remainder < 0) remainder += 20;
+  const delay = Math.max(1, Math.min(remainder, 10));
+  setTimeout(simulate, delay); // <<-- "apunto" a la próxima marca de 20 ms
 }
 
 simulate(); // Iniciar la simulación
