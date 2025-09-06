@@ -36,7 +36,7 @@ function simulate() {
   let remainder = 20 - (elapsed2 % 20);
   if (remainder < 0) remainder += 20;
   const delay = Math.max(1, Math.min(remainder, 10));
-  setTimeout(simulate, delay); // <<-- "apunto" a la próxima marca de 20 ms
+  setTimeout(simulate, delay); // "Apunto" a la próxima marca de 20 ms
 }
 
 simulate(); // Iniciar la simulación
