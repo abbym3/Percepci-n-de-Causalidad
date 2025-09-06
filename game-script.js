@@ -167,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             animationTime += ev.elapsedTime * 1000; 
             showScreen(testScreen); 
             assignRandomColors(); 
+            console.log(`Tiempo animación: ${animationTime}ms`);
         };
         pato.addEventListener('animationend', onAnimEnd, { once: true });
     }
