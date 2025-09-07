@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         // Aplicar demora solo en CED
         const d = demora[j % demora.length];
         j++;
-
+        canTriggerCE = false; //Se dehabilita cualquier nuevo intento de CE
         setTimeout(() => {
             activateCE(0);
         }, d);
@@ -160,8 +160,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             CEITime = ['CEI']
         }
         worker.postMessage("pause");
-        canTriggerCE = false;
-
         shootbutton.disabled = true;
         pato.classList.add("fall-back"); 
         
