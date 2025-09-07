@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let MACHINEDIE = 18;
 
     // Demora
-    let demora = [0];
+    let demora = [0,0,0];
     let j = 0; // Índice de la demora actual
 
     // Worker
@@ -138,7 +138,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         countCED++;
         console.log("¡Cambio de estímulo dependiente activado!");
         correctColor = 'green';
-        activateCE(0);
+        // Aplicar demora solo en CED
+        const d = demora[j % demora.length];
+        j++;
+
+        setTimeout(() => {
+            activateCE(0);
+        }, d);
     }
 
     function activateCE(CE){
@@ -156,10 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage("pause");
         canTriggerCE = false;
 
-        setTimeout(() => {
-            shootbutton.disabled = true;
-            pato.classList.add("fall-back"); 
-         }, demora[j])
+        shootbutton.disabled = true;
+        pato.classList.add("fall-back"); 
         
         //Verifica la duración de la animación y descuentala al tiempo de entrenameinto
         const onAnimEnd = (ev) => { 
