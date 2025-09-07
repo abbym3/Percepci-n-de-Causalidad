@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let i = 0;                      // Índice del bloque de 10s actual
     let shotsPer10sInterval = [];   // Disparos por cada bloque de 10s
     let canTriggerCE = true;        // Solo si es true se pueden disparar CEI/CED nuevos
+    let answerLocked = false;       // Bloquea los botones de respuesta después de un click
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
@@ -167,6 +168,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const onAnimEnd = (ev) => { 
             if (ev.animationName !== 'duckImpactAnimation') return;
             animationTime += ev.elapsedTime * 1000; 
+            answerLocked = false;                 // desbloquear botones de respuesta 
+            leftButton.disabled = false;          // habilitar boton izquierdo 
+            rightButton.disabled = false;         // habilitar boton derecho
             showScreen(testScreen); 
             assignRandomColors(); 
             //console.log(`Tiempo animación: ${animationTime}ms`);
@@ -239,6 +243,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handleCEClick(selectedButton) {
+        if (answerLocked) return;               // evita reentradas
+        answerLocked = true;                    
+        leftButton.disabled = true;             
+        rightButton.disabled = true; 
 
         // Lado y color que el jugador pulsó
         const lado = selectedButton === 0 ? "left" : "right";
@@ -305,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         punishReinforceTime.push(isCorrect?";R+":";BO");
         punishReinforceTime.push(trainingTime);
         saveNextLine(punishReinforceTime);
-        punishReinforceTime = ['RB']
+        punishReinforceTime = ['RB'];
 
         // Preparar el botón y el pato para cuando se muestre la pantalla de juego
         shootbutton.disabled = false;
