@@ -4,18 +4,21 @@ import { db } from "./firebase-init.js";
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
     if (!localStorage.getItem('currentUserId')) { location.replace('index.html'); return; }
-    
-    // ==============================
-    // CONFIGURACIÓN Y VARIABLES
-    // ==============================
 
+    //===============================  CONFIGURACIÓN DEL EXPERIMENTO  ===============================
     // Constantes de probabilidad
-    let HUMANDIE = 6;
-    let MACHINEDIE = 18;
+    let HUMANDIE = 6;       // La probailidad de que el humano provoque un CED de 1/HUMANDIE
+    let MACHINEDIE = 18;    // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE (Sujeto a número de disparos en el intervalo anterior)
 
     // Demora
     let demora = [0,0,0];
     let j = 0; // Índice de la demora actual
+    //===============================================================================================
+
+    
+    // ==============================
+    // CONFIGURACIÓN Y VARIABLES
+    // ==============================
 
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
@@ -83,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         gameStartTime = performance.now(); // Marca el inicio real del juego
-        console.log("Inicio de juego:", gameStartTime)
+        //console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['IDJ', new Date().toLocaleString()]);
         showScreen(gameScreen);
     }
@@ -130,14 +133,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function CEI() {
         countCEI++;
-        console.log("¡Cambio de estímulo independiente activado!");
+        //console.log("¡Cambio de estímulo independiente activado!");
         correctColor = 'red';
         activateCE(1);
     }
 
     function CED() {
         countCED++;
-        console.log("¡Cambio de estímulo dependiente activado!");
+        //console.log("¡Cambio de estímulo dependiente activado!");
         correctColor = 'green';
         // Aplicar demora solo en CED
         const d = demora[j % demora.length];
@@ -149,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function activateCE(CE){
+        //console.log("Activación CE");
         trainingTime = getTrainingTime();
         if (CE === 0){
             CEDTime.push(trainingTime)
@@ -199,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ================================
 
     function handle100msTick(){
-        console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
+        //console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
         }
@@ -207,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function handle10sTick(){
-        console.log(`---Intervalo ${i}: Disparos = ${shotCount}---`);
+        //console.log(`---Intervalo ${i}: Disparos = ${shotCount}---`);
         //console.log('Han pasado 10s');
         shotsPer10sInterval[i] = shotCount; //Se guarda el número de disparos del intarvalo de 10 segundos en el indice i        
         //console.log(`Número de clics en intervalo anterior: ${shotsPer10sInterval[i]}`);
@@ -325,27 +329,21 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         // Poner el texto de si es acierto o error
         resultsHead.textContent = isCorrect? "CORRECTO!":"INCORRECTO!";
         resultsHead.style.color = isCorrect? "green":"red";
-        resultsText.textContent =  "";
-
-        setTimeout(() => {
-            resultsHead.textContent = "RESULTADOS";
-            resultsHead.style.color = "Blue";
-            resultsText.textContent = getResultText(isCorrect, average, score);
-        }, 2000)
+        resultsText.textContent = getResultText(isCorrect, average, score);
 
         if(score < 150){
             setTimeout(() => {
                 canTriggerCE = true;
                 worker.postMessage("resume");
-                console.log(`Tiempo de reanudación: ${getTrainingTime()}`)
+                //console.log(`Tiempo de reanudación: ${getTrainingTime()}`)
                 showScreen(gameScreen);
-            }, 4500);
+            }, 2500);
         } else{
             setTimeout(() => {
                 saveFinalData();
                 resultsText.textContent = "";
                 resultsHead.textContent = "Gracias!!"
-            }, 4500);
+            }, 2500);
         }    
     }
 
@@ -427,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         push(listRef, contentArray)
             //.then(() => console.log("Guardado con push:", contentArray))
             .catch((error) => {
-                console.error("Error al guardar en Firebase:", error);
+                //console.error("Error al guardar en Firebase:", error);
                 backupLocally(contentArray); // Guardar localmente si falla
             });
     }
