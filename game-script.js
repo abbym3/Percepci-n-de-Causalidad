@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['IDJ', new Date().toLocaleString()]);
+        saveNextLine(['DEM', JSON.stringify(demora)]);
         showScreen(gameScreen);
     }
 
