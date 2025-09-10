@@ -373,18 +373,22 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ALMACENAMIENTO FB
     // ==============================
 
+    window.addEventListener('beforeunload', () => {
+        saveNextLine(['PTM', machineTryCount]);
+    });
+    
     function saveFinalData(){
         saveNextLine(['FDJ', new Date().toLocaleString()]);
-        saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
+        //saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
         saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
-        saveNextLine(['A', successes]); // Aciertos
-        saveNextLine(['E', errors]); // Errores
-        saveNextLine(['TCED', countCED]); // Total CED
-        saveNextLine(['TCEI', countCEI]); // Total CEI
-        saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
-        saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
-        saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
-        saveNextLine(['VR', redClicks]); // Veces que eligio rojo
+        //saveNextLine(['A', successes]); // Aciertos
+        //saveNextLine(['E', errors]); // Errores
+        //saveNextLine(['TCED', countCED]); // Total CED
+        //saveNextLine(['TCEI', countCEI]); // Total CEI
+        //saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
+        //saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
+        //saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
+        //saveNextLine(['VR', redClicks]); // Veces que eligio rojo
         syncLocalBackups();
     }
 
