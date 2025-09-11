@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let MACHINEDIE = 18;    // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE (Sujeto a número de disparos en el intervalo anterior)
 
     // Demora
-    let demora = [0,0,0];
+    let demora = [100,200,300];
     let j = 0; // Índice de la demora actual
     //===============================================================================================
 
