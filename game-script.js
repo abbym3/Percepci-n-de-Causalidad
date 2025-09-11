@@ -141,9 +141,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const d = demora[j % demora.length];
         j++;
         canTriggerCE = false; //Se dehabilita cualquier nuevo intento de CE
-        setTimeout(() => {
+        if (d > 0) {
+            setTimeout(() => activateCE(0), d);
+        } else {
             activateCE(0);
-        }, d);
+        }
     }
 
     function activateCE(CE){
