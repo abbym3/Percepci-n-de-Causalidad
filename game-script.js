@@ -45,13 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
-    let numberClicks = 0;     // Total de clics al boton central
-    let greenClicks = 0;      // Respuestas verdes totales
-    let redClicks = 0;        // Respuestas rojas totales
-    let leftClicks = 0;       // Respuestas izquierda totales
-    let rightClicks = 0;      // Respuestas derecha totales
     let successes = 0;        // Respuestas correctas totales
-    let errors = 0;           // Respuestas incorrectas totales
 
     // Contadores de CE
     let countCED = 0;         // Cambios de estímulo dependientes (humano)
@@ -257,10 +251,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         const lado = selectedButton === 0 ? "left" : "right";
         const color = getSelectedColor(selectedButton, buttonColorConfig)
 
-        // Sumar contadores de color y lado
-        color === "green"? greenClicks++ : redClicks++;
-        lado === "left"? leftClicks++ :rightClicks++;
-
         // Determinar acierto o error
         const isCorrect = isCorrectResponse(selectedButton, correctColor, buttonColorConfig);
 
@@ -273,8 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         saveNextLine(answerTime);
         answerTime = ['ANS'];
 
-        // Sumar contados de aciertos o errores
-        isCorrect ? successes++ : errors++;
+        // Sumar contador de aciertos
+        if (isCorrect) successes++;
         isCorrect ? reinforce() : punish();
     }
 
@@ -380,16 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     
     function saveFinalData(){
         saveNextLine(['FDJ', new Date().toLocaleString()]);
-        //saveNextLine(['RTBC', numberClicks]); // Respuestas totales al boton central
         saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
-        //saveNextLine(['A', successes]); // Aciertos
-        //saveNextLine(['E', errors]); // Errores
-        //saveNextLine(['TCED', countCED]); // Total CED
-        //saveNextLine(['TCEI', countCEI]); // Total CEI
-        //saveNextLine(['VI', leftClicks]); // Veces que eligio izquierda
-        //saveNextLine(['VD', rightClicks]); // Veces que eligio derecha
-        //saveNextLine(['VV', greenClicks]);  // Veces que eligio verde
-        //saveNextLine(['VR', redClicks]); // Veces que eligio rojo
         syncLocalBackups();
     }
 
@@ -457,7 +438,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     shootbutton.addEventListener("click", function () {
         shotCount ++;
-        numberClicks ++;
         trainingTime = getTrainingTime();
         shootingTime.push(trainingTime)
         saveNextLine(shootingTime);
