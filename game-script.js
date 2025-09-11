@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Worker
     const worker = new Worker("timerWorker.js"); // Crear un Web Worker para ejecutar tareas en segundo plano sin bloquear la interfaz
-    
+    const CEDWorker = new Worker('timerWorker_CED.js');
+
     // Elementos DOM
     const gameScreen = document.getElementById("GameScreen");
     const shootbutton = document.getElementById("shootButton"); 
@@ -142,10 +143,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         j++;
         canTriggerCE = false; //Se dehabilita cualquier nuevo intento de CE
         if (d > 0) {
-            setTimeout(() => activateCE(0), d);
+            delayTime(d);
         } else {
             activateCE(0);
         }
+    }
+
+    function delayTime(d) {
+        CEDWorker.postMessage({ ms: d });
     }
 
     function activateCE(CE){
@@ -431,6 +436,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             case '10 s':
                 handle10sTick();
                 break;
+        }
+    };
+    CEDWorker.onmessage = (e) => {
+        if (e.data && e.data.type === 'done') {
+            activateCE(0);
         }
     };
 
