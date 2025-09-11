@@ -375,6 +375,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     window.addEventListener('beforeunload', () => {
         saveNextLine(['PTM', machineTryCount]);
+        saveNextLine(['NFDJ', new Date().toLocaleString()]);
     });
     
     function saveFinalData(){
