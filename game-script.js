@@ -84,6 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         //console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['IDJ', new Date().toLocaleString()]);
         saveNextLine(['DEM', JSON.stringify(demora)]);
+        saveNextLine(['HD', HUMANDIE]);
+        saveNextLine(['MD', MACHINEDIE]);
         showScreen(gameScreen);
     }
 
