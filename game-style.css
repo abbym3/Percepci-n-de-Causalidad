@@ -249,3 +249,12 @@ h1 {
   text-align: center;
   margin-top: 10%;
 }
+
+@media (max-width: 380px) {
+  :root{
+    --gun-size: clamp(120px, 36vw, 160px);
+    --gun-overlap: clamp(46px, 10vw, 70px);
+    --weapon-to-button-gap: clamp(32px, 7vw, 56px);
+  }
+  #shootButton { font-size: 1rem; padding: .85rem 1.5rem; }
+}
