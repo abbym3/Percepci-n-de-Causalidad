@@ -18,13 +18,23 @@
 
   <div id="GameScreen" class="Screen">
     <h1>¡Dispara al Pato!</h1>
+
+    <!-- envolvente para maquetar en columna -->
+    <div class="game-area">
+      <!-- cuadro azul -->
       <div class="pato-container">
+        <!-- círculo blanco con el pato centrado matemáticamente -->
         <div class="pato-wrapper">
           <img src="img/pato.png" alt="Pato arcade" class="pato" id="pato">
         </div>
-        <!-- <img src="img/arma1.png" alt="Arma izquierda" class="arma" id="weaponLeft"> -->
+      </div>
+
+      <!-- arma, fuera del cuadro azul y centrada debajo -->
+      <div class="weapon-container">
         <img src="img/arma2.png" alt="Arma derecha" class="arma" id="weaponRight">
       </div>
+    </div>
+
     <button id="shootButton">DISPARAR</button>
   </div>
 

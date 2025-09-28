@@ -1,3 +1,10 @@
+:root{
+  --gun-size: clamp(150px, 14vw, 220px);
+  --gun-overlap: clamp(60px,8vw, 90px);
+  --btn-gap: clamp(22px, 3.2vw, 40px);
+  --weapon-to-button-gap: clamp(40px, 5vw, 68px);
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: white;
@@ -20,6 +27,13 @@ h1 {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
+.game-area{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+}
+
 .pato-container {
   width: 100%;
   max-width: 700px;
@@ -29,25 +43,22 @@ h1 {
   border-radius: 16px;
   position: relative;
   overflow: visible;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
 }
 
-
 .pato-wrapper {
-  width: min(32%, 180px); 
-  margin-bottom: 10%;
+  width: min(32%, 180px);
   background: white;
   padding: min(1.5vw, 12px);
   border-radius: 50%;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  display: inline-block;
-  position: relative;
-  z-index: 10;
-  overflow: visible;
-  margin-bottom: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  margin: 0;
 }
 
 .pato {
@@ -57,45 +68,47 @@ h1 {
   transform-origin: center bottom;
   will-change: transform;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-  perspective: 800px; 
+  perspective: 800px;
 }
+
 .pato:hover {
   transform: scale(1.03);
   filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2));
 }
+
 .pato.fall-back {
   animation: duckImpactAnimation 2s ease-out forwards;
 }
 
 @keyframes duckImpactAnimation {
-  0% {
-    transform: perspective(800px) rotateX(0deg) translateZ(0);
-  }
-  15% {
-    transform: perspective(800px) rotateX(-35deg) translateZ(10px); 
-  }
-  30% {
-    transform: perspective(800px) rotateX(18deg) translateZ(6px); 
-  }
-  45% {
-    transform: perspective(800px) rotateX(-12deg) translateZ(8px); 
-  }
-  60% {
-    transform: perspective(800px) rotateX(6deg) translateZ(5px);   
-  }
-  75% {
-    transform: perspective(800px) rotateX(-50deg) translateZ(-5px); 
-  }
-  90% {
-    transform: perspective(800px) rotateX(-80deg) translateZ(-10px); 
-  }
-  100% {
-    transform: perspective(800px) rotateX(-90deg) translateZ(-15px);
-  }
+  0% { transform: perspective(800px) rotateX(0deg) translateZ(0); }
+  15% { transform: perspective(800px) rotateX(-35deg) translateZ(10px); }
+  30% { transform: perspective(800px) rotateX(18deg) translateZ(6px); }
+  45% { transform: perspective(800px) rotateX(-12deg) translateZ(8px); }
+  60% { transform: perspective(800px) rotateX(6deg) translateZ(5px); }
+  75% { transform: perspective(800px) rotateX(-50deg) translateZ(-5px); }
+  90% { transform: perspective(800px) rotateX(-80deg) translateZ(-10px); }
+  100% { transform: perspective(800px) rotateX(-90deg) translateZ(-15px); }
+}
+
+.weapon-container{
+  display:flex;
+  justify-content:center;
+  width:100%;
+  margin-top: calc(-1 * var(--gun-overlap));
+  margin-bottom: var(--weapon-to-button-gap);
+}
+
+.arma{
+  position: static;
+  width: var(--gun-size);
+  height: auto;
+  pointer-events: none;
+  z-index: 3;
 }
 
 #shootButton {
-  margin-top: 4rem;
+  margin-top: 0;
   padding: 1rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
@@ -120,51 +133,21 @@ h1 {
   cursor: not-allowed;
 }
 
-.arma {
-  margin-bottom: 3rem;
-  position: absolute;
-  width: 20vw;
-  max-width: 150px;
-  height: auto;
-  transition: transform 0.1s ease;
-}
-
-/* #weaponLeft {
-  bottom: -13vh;
-  left: 1vh;
-  transform-origin: 80% center;
-} */
-
-#weaponRight {
-  bottom: -25%; 
-  transform-origin: 20% center;
-}
-
-/* .retroceso_izquierda {
-  animation: 
-    sacudida 0.1s ease,
-    retrocesoArma_izquierda 0.3s ease-out;
-} */
-
 .retroceso_derecha {
   transform-origin: center;
   animation: sacudida 0.1s ease, retrocesoVertical 0.3s ease-out;
   will-change: transform;
 }
 
-/* @keyframes retrocesoArma_izquierda {
-  0% { transform: translateX(0) rotate(0deg); } 
-  20% { transform: translateX(-12px) rotate(-8deg); } 
-  100% { transform: translateX(0) rotate(0deg); } 
-} */
 @keyframes retrocesoVertical {
   0%   { transform: translateY(0) scale(1); }
-  20%  { transform: translateY(-10px) scale(1.2); }  /* salta hacia arriba */
-  40%  { transform: translateY(20px) scale(0.85); }  /* rebota hacia abajo */
-  60%  { transform: translateY(-15px) scale(1.1); }  /* rebote intermedio */
-  80%  { transform: translateY(10px) scale(0.95); }  /* segundo rebote */
-  100% { transform: translateY(0) scale(1); }        /* vuelve al centro */
+  20%  { transform: translateY(-10px) scale(1.2); }
+  40%  { transform: translateY(20px) scale(0.85); }
+  60%  { transform: translateY(-15px) scale(1.1); }
+  80%  { transform: translateY(10px) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
 }
+
 @keyframes sacudida {
   0%, 100% { transform: translate(0); }
   25% { transform: translate(-2px, -3px); }
@@ -206,30 +189,27 @@ h1 {
   to { transform: scale(1); opacity: 1; }
 }
 
-/* Contenedor principal de la pantalla CEI */
 .TestScreen-content {
   text-align: center;
   width: 100%;
-  max-width: 600px; /* Ancho máximo para mejor legibilidad */
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Contenedor de los botones circulares */
 .ce-buttons-container {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  gap: 20%; /* Espacio entre botones */
+  justify-content: center;
+  align-items: center;
+  gap: 20%;
   margin: 15%;
 }
 
-/* Estilo base de los botones */
 .ce-button {
-  aspect-ratio: 1 / 1;             
-  width: min(40vw, 160px);          
-  border-radius: 50%;              
-  border: 4px solid #fff;          
+  aspect-ratio: 1 / 1;
+  width: min(40vw, 160px);
+  border-radius: 50%;
+  border: 4px solid #fff;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -242,19 +222,15 @@ h1 {
   text-align: center;
 }
 
-
-/* Efecto hover */
 .ce-button:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Efecto active (al hacer clic) */
 .ce-button:active {
   transform: scale(0.98);
 }
 
-/* Colores */
 .ce-button.red {
   background-color: #ff4444;
   background-image: linear-gradient(to bottom right, #ff6666, #cc0000);
@@ -266,10 +242,10 @@ h1 {
 }
 
 #resultsText {
-    font-size: 1rem;          
-    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; 
-    color: #080808;         
-    font-weight: bold;         
-    text-align: center;        
-    margin-top:  10%;
+  font-size: 1rem;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  color: #080808;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10%;
 }
