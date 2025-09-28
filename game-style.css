@@ -278,3 +278,18 @@ h1 {
   }
   #shootButton { font-size: 1rem; padding: .85rem 1.5rem; }
 }
+
+#TestScreen .TestScreen-content{
+  width: min(92vw, 600px);
+  margin-inline: auto;
+  padding-inline: 0;
+  display: grid;
+  justify-items: center;
+}
+
+#TestScreen .ce-buttons-container{
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
