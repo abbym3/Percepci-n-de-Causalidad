@@ -1,143 +1,193 @@
 let running = false;
 let toId = null;
+
+const CONFIG = {
+  maxCalibrationSamples: 15,
+  calibrationRange: { min: 10, max: 1000 },
+  maxOverhead: 3,
+  smoothingFactor: 0.15,
+  baseSpinThreshold: 1.0,
+  pureSpinThreshold: 0.5,
+  yieldInterval: 0.1,
+  guards: {
+    short:  { max: 50,  percent: 0.10, min: 3 },
+    medium: { max: 200, percent: 0.05, min: 8 },
+    long:   { percent: 0.02, min: 12, max: 15 }
+  }
+};
+
 let calibration = {
   overhead: 0,
   samples: [],
-  maxSamples: 10
+  posRuns: 0,
+  negRuns: 0,
+  totalRuns: 0,
+  reset() {
+    if (this.overhead > CONFIG.maxOverhead * 0.9) {
+      this.overhead *= 0.5;
+      this.samples = this.samples.slice(-5);
+      this.posRuns = Math.floor(this.posRuns * 0.5);
+      this.negRuns = Math.floor(this.negRuns * 0.5);
+    }
+  },
+  getBias() {
+    const total = this.posRuns + this.negRuns;
+    return total === 0 ? 0 : (this.posRuns - this.negRuns) / total;
+  }
 };
 
 self.onmessage = (e) => {
   const { type, ms: inputMs } = e.data || {};
-  
-  if (type === 'cancel') {
-    cancelTimer();
-    return;
-  }
-  
+  if (type === 'cancel') { cancelTimer(); return; }
+
   const ms = Math.max(0, +(inputMs || 0));
   if (running) return;
   running = true;
 
   if (ms === 0) {
     running = false;
-    self.postMessage({ type: 'done', ms, drift: 0, overhead: calibration.overhead });
+    self.postMessage({ type: 'done', ms, drift: 0, overhead: calibration.overhead, actualMs: 0 });
     return;
   }
 
-  const target = performance.now() + ms;
-  
-  // Ajustes adaptativos basados en calibración
+  const startTime = performance.now();
+  const target = startTime + ms;
+
   const adaptiveGuard = getAdaptiveGuard(ms);
   const spinThreshold = getSpinThreshold();
-  
+
   function fire() {
+    if (!running) return;
     running = false;
     const fired = performance.now();
     const drift = fired - target;
-    
-    // Actualizar calibración
     updateCalibration(drift, ms);
-    
-    self.postMessage({ 
-      type: 'done', 
-      ms, 
-      drift,
-      overhead: calibration.overhead,
-      actualMs: fired - (target - ms)
-    });
+    self.postMessage({ type: 'done', ms, drift, overhead: calibration.overhead, actualMs: fired - startTime });
   }
 
   function precisionLoop() {
+    if (!running) return;
+
     const now = performance.now();
     const remaining = target - now;
 
-    if (remaining <= 0) { 
-      fire(); 
-      return; 
-    }
+    if (remaining <= 0) { fire(); return; }
 
-    // Spin de alta precisión para los últimos microsegundos
     if (remaining <= spinThreshold) {
-      const spinStart = performance.now();
-      
-      // Spin híbrido: yield ocasionalmente para no bloquear completamente
-      while (performance.now() < target) {
-        const elapsed = performance.now() - spinStart;
-        // Yield cada ~100 microsegundos en spins muy largos
-        if (elapsed > 0.1 && (performance.now() - spinStart) % 0.1 < 0.05) {
-          setTimeout(precisionLoop, 0);
-          return;
+      if (remaining <= CONFIG.pureSpinThreshold) {
+        while (running && performance.now() < target) {}
+        if (!running) return;
+        fire();
+        return;
+      }
+
+      let lastYield = performance.now();
+
+      function hybridSpin() {
+        while (running) {
+          const t = performance.now();
+          if (t >= target) { fire(); return; }
+          const rem = target - t;
+          if (rem <= CONFIG.pureSpinThreshold) {
+            while (running && performance.now() < target) {}
+            if (!running) return;
+            fire();
+            return;
+          }
+          if (t - lastYield >= CONFIG.yieldInterval) {
+            lastYield = t;
+            if (toId) clearTimeout(toId);
+            toId = setTimeout(hybridSpin, 0);
+            return;
+          }
         }
       }
-      fire();
+
+      hybridSpin();
       return;
     }
 
-    // Scheduling adaptativo
     const nextDelay = calculateNextDelay(remaining, adaptiveGuard);
+    if (toId) clearTimeout(toId);
     toId = setTimeout(precisionLoop, nextDelay);
   }
 
-  // Inicio con compensación de overhead
-  const initialDelay = Math.max(1, ms - adaptiveGuard - calibration.overhead);
-  toId = setTimeout(precisionLoop, initialDelay);
+  const initialDelayRaw = ms - adaptiveGuard - calibration.overhead;
+  const initialDelay = initialDelayRaw <= 0.5 ? 0 : Math.max(1, Math.floor(initialDelayRaw));
+
+  if (initialDelay === 0) {
+    precisionLoop();
+  } else {
+    if (toId) clearTimeout(toId);
+    toId = setTimeout(precisionLoop, initialDelay);
+  }
 };
 
 function cancelTimer() {
-  if (toId) {
-    clearTimeout(toId);
-    toId = null;
-  }
+  if (toId) { clearTimeout(toId); toId = null; }
   running = false;
   self.postMessage({ type: 'cancelled' });
 }
 
 function getAdaptiveGuard(targetMs) {
-  // Guard más agresivo para timers cortos, más relajado para largos
-  if (targetMs < 50) return Math.max(3, targetMs * 0.1);
-  if (targetMs < 200) return Math.max(8, targetMs * 0.05);
-  return Math.min(15, targetMs * 0.02);
+  const { guards } = CONFIG;
+  const bias = calibration.getBias();
+
+  let baseGuard;
+  if (targetMs < guards.short.max) {
+    baseGuard = Math.max(guards.short.min, targetMs * guards.short.percent);
+  } else if (targetMs < guards.medium.max) {
+    baseGuard = Math.max(guards.medium.min, targetMs * guards.medium.percent);
+  } else {
+    baseGuard = Math.max(guards.long.min, Math.min(guards.long.max, targetMs * guards.long.percent));
+  }
+
+  const biasAdjust = bias > 0.2 ? 0.3 : (bias < -0.2 ? -0.2 : 0);
+  return Math.max(0, baseGuard + biasAdjust);
 }
 
 function getSpinThreshold() {
-  // Threshold adaptativo basado en el overhead promedio
-  const baseThreshold = 0.5;
+  const { baseSpinThreshold } = CONFIG;
   const overhead = calibration.overhead || 0;
-  return Math.max(0.3, Math.min(2, baseThreshold + overhead * 0.5));
+  const bias = calibration.getBias();
+
+  let thr = baseSpinThreshold + (overhead * 0.4);
+  if (bias > 0.2) thr += 0.2;
+  else if (bias < -0.2) thr -= 0.1;
+
+  return Math.max(0.4, Math.min(2, thr));
 }
 
 function calculateNextDelay(remaining, guard) {
-  // Usar scheduling exponencial para aproximarse gradualmente
-  const safeRemaining = remaining - guard;
-  
-  if (safeRemaining <= 1) return 1;
-  if (safeRemaining <= 5) return Math.max(1, safeRemaining * 0.5);
-  if (safeRemaining <= 16) return Math.max(1, safeRemaining * 0.7);
-  
-  // Para delays largos, usar chunks de máximo 16ms (60fps)
-  return Math.min(16, safeRemaining * 0.8);
+  const safe = remaining - guard;
+  if (safe <= 2)  return 0;
+  if (safe <= 6)  return Math.max(0, Math.floor(safe * 0.4));
+  if (safe <= 12) return Math.max(1, Math.floor(safe * 0.55));
+  return Math.min(12, Math.floor(safe * 0.75));
 }
 
 function updateCalibration(drift, targetMs) {
-  // Solo calibrar con timers de duración media (más estables)
-  if (targetMs < 10 || targetMs > 1000) return;
-  
+  const { calibrationRange, maxCalibrationSamples, smoothingFactor, maxOverhead } = CONFIG;
+  if (targetMs < calibrationRange.min || targetMs > calibrationRange.max) return;
+
+  calibration.totalRuns++;
+  if (drift > 0.4) calibration.posRuns++;
+  else if (drift < -0.3) calibration.negRuns++;
+
   calibration.samples.push(Math.abs(drift));
-  
-  if (calibration.samples.length > calibration.maxSamples) {
-    calibration.samples.shift();
+  if (calibration.samples.length > maxCalibrationSamples) calibration.samples.shift();
+
+  if (calibration.samples.length >= 5) {
+    const sorted = [...calibration.samples].sort((a, b) => a - b);
+    const p75 = sorted[Math.floor(sorted.length * 0.75)];
+    const newOverhead = p75 * 0.55;
+
+    calibration.overhead = calibration.overhead === 0
+      ? newOverhead
+      : (1 - smoothingFactor) * calibration.overhead + smoothingFactor * newOverhead;
+
+    calibration.overhead = Math.max(0, Math.min(maxOverhead, calibration.overhead));
   }
-  
-  // Calcular overhead promedio (usando mediana para reducir outliers)
-  const sorted = [...calibration.samples].sort((a, b) => a - b);
-  const median = sorted[Math.floor(sorted.length / 2)];
-  
-  // Ajustar overhead gradualmente
-  const newOverhead = median * 0.5;
-  calibration.overhead = calibration.overhead 
-    ? (calibration.overhead * 0.8 + newOverhead * 0.2)
-    : newOverhead;
-    
-  // Limitar overhead a valores razonables
-  calibration.overhead = Math.max(0, Math.min(5, calibration.overhead));
+
+  if (calibration.totalRuns % 25 === 0) calibration.reset();
 }
