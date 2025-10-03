@@ -39,5 +39,5 @@
   font-weight: 600;
   font-size: clamp(1rem, 2.2vw, 1.25rem); 
   color: #212529;
-  margin: 12px 0 6px;
+  margin-bottom: clamp(6px, 1.5vw, 15px);
 }
