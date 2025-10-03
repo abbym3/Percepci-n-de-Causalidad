@@ -32,3 +32,12 @@
 .grupo-container {
   max-width: 40em;
 }
+
+.section-title {
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  font-size: clamp(1rem, 2.2vw, 1.25rem); 
+  color: #212529;
+  margin: 12px 0 6px;
+}
