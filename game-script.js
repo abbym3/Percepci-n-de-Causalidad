@@ -81,13 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     
     function iniciarJuego() {
         worker.postMessage('reset');
-        gameStartTime = performance.now(); // Marca el inicio real del juego
+        //gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
-        saveNextLine(['IDJ', new Date().toLocaleString()]);
         saveNextLine(['DEM', JSON.stringify(demora)]);
         saveNextLine(['HD', HUMANDIE]);
         saveNextLine(['MD', MACHINEDIE]);
-        showScreen(gameScreen);
+        //showScreen(gameScreen);
     }
 
     setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
@@ -214,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ================================
 
     function handle100msTick(){
-        console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
+        //console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
         if (!canTriggerCE) return;
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
@@ -441,6 +440,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     worker.onmessage = function (e) {
         switch (typeof e.data === "object" ? e.data.type : e.data){
+            case 'reset_done':
+                gameStartTime = performance.now();
+                showScreen(gameScreen);
+                saveNextLine(['IDJ', new Date().toLocaleString()]);
+                break;
             case '100 ms':
                 handle100msTick();
                 break;

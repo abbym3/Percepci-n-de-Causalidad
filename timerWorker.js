@@ -71,6 +71,7 @@ onmessage = function (e) {
       startTime = performance.now();
       blockCounter = 0;
       accumulated_time_ms = 0;
+      postMessage('reset_done');
       break;
   }
 };
