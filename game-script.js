@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     // Demora
     let demora = [100,200,300];
-    let j = 0; // Índice de la demora actual
     //===============================================================================================
 
     
@@ -40,9 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Estado del experimento
     let trainingTime = 0;           // Tiempo total de entrenamiento (s, con 3 decimales)
     let i = 0;                      // Índice del bloque de 10s actual
+    let j = 0;                      // Índice de la demora actual
     let shotsPer10sInterval = [];   // Disparos por cada bloque de 10s
     let canTriggerCE = true;        // Solo si es true se pueden disparar CEI/CED nuevos
     let answerLocked = false;       // Bloquea los botones de respuesta después de un click
+    let acceptingClicks = true;     // Solo si es true se consideran los clics al botón central
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
@@ -133,6 +134,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         countCEI++;
         //console.log("¡Cambio de estímulo independiente activado!");
         correctColor = 'red';
+        canTriggerCE = false; 
+        acceptingClicks = false;
+        worker.postMessage("pause");
         activateCE(1);
     }
 
@@ -140,10 +144,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         countCED++;
         //console.log("¡Cambio de estímulo dependiente activado!");
         correctColor = 'green';
+        canTriggerCE = false; 
+        acceptingClicks = false;
+        worker.postMessage("pause");
+
         // Aplicar demora solo en CED
         const d = demora[j % demora.length];
         j++;
-        canTriggerCE = false; //Se dehabilita cualquier nuevo intento de CE
+
         if (d > 0) {
             delayTime(d);
         } else {
@@ -168,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             saveNextLine(CEITime);
             CEITime = ['CEI']
         }
-        worker.postMessage("pause");
         shootbutton.disabled = true;
         pato.classList.add("fall-back"); 
         
@@ -208,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     function handle100msTick(){
         console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
+        if (!canTriggerCE) return;
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
         }
@@ -334,6 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         if(score < 150){
             setTimeout(() => {
                 canTriggerCE = true;
+                acceptingClicks = true;
                 worker.postMessage("resume");
                 //console.log(`Tiempo de reanudación: ${getTrainingTime()}`)
                 showScreen(gameScreen);
@@ -451,6 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
 
     shootbutton.addEventListener("click", function () {
+        if (!acceptingClicks) return; //Ignora clicks durante demora
         shotCount ++;
         trainingTime = getTrainingTime();
         shootingTime.push(trainingTime)
