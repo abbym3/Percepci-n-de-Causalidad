@@ -48,13 +48,13 @@ h1 {
 }
 
 .pato-wrapper {
-  width: min(32%, 180px);
+  width: min(38%, 220px);
   background: white;
   padding: min(1.5vw, 12px);
   border-radius: 50%;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -292,4 +292,62 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
+}
+
+/* --- Desktop boost --- */
+@media (min-width: 1024px) {
+  #TestScreen h1 {
+    /* Subimos el techo del clamp */
+    font-size: clamp(2rem, 2.5vw, 3rem);
+    margin-bottom: 76px; /* más aire arriba de los botones */
+  }
+
+  .TestScreen-content {
+    max-width: 800px;   /* antes 600px */
+    padding: 32px 24px;
+  }
+
+  .ce-buttons-container {
+    gap: 48px;          /* antes topaba en 28px */
+    margin: 24px 0 8px;
+  }
+
+  .ce-button {
+    /* Botón más grande en desktop */
+    width: clamp(180px, 14vw, 240px);
+    border-width: 6px;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+}
+
+/* Si quieres aún más grande en pantallas muy anchas */
+@media (min-width: 1440px) {
+  .TestScreen-content { max-width: 920px; }
+  .ce-buttons-container { gap: 76px; }
+  .ce-button { width: clamp(200px, 12vw, 280px); }
+}
+
+/* Boost de pantallas de texto en Desktop */
+@media (min-width: 1024px) {
+  .Screen h1 {
+    font-size: clamp(2rem, 2.6vw, 3rem);
+    margin-bottom: 2rem;
+  }
+
+  .Screen p, 
+  .Screen #resultsText {
+    font-size: clamp(1.2rem, 1.5vw, 1.6rem);
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+  }
+}
+
+.Screen p,
+.Screen #resultsText {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 90%; /* evita que se estire demasiado en desktop */
 }
