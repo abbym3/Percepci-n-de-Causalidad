@@ -350,7 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(() => {
                 saveFinalData();
                 resultsText.textContent = "";
-                resultsHead.textContent = "Gracias!!"
+                resultsHead.textContent = "Gracias!! ❤️"
+                resultsHead.style.color = "purple";
             }, 2500);
         }    
     }
