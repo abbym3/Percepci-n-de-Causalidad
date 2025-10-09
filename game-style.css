@@ -2,7 +2,7 @@
   --gun-size: clamp(150px, 14vw, 220px);
   --gun-overlap: clamp(60px,8vw, 90px);
   --btn-gap: clamp(22px, 3.2vw, 40px);
-  --weapon-to-button-gap: clamp(40px, 5vw, 68px);
+  --weapon-to-button-gap: clamp(30px, 4vw, 55px); 
 }
 
 /* ============ BODY ============ */
