@@ -522,3 +522,39 @@ h1 {
     width: clamp(200px, 12vw, 280px); 
   }
 }
+
+/* ============ EFECTO DE DISPARO ============ */
+
+.weapon-container {
+  position: relative;
+}
+
+.muzzle-flash {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.muzzle-flash.active {
+  animation: flashBurst 0.1s ease-out; /* Súper rápido, igual que sacudida */
+}
+
+@keyframes flashBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}

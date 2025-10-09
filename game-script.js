@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const resultsHead = document.getElementById("resultsHead");
     const resultsText = document.getElementById("resultsText");
     const instructionsScreen = document.getElementById("InstructionsScreen");
+    const muzzleFlash = document.getElementById("muzzleFlash");
     
     // Estado del experimento
     let trainingTime = 0;           // Tiempo total de entrenamiento (s, con 3 decimales)
@@ -365,9 +366,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     
     function guns_animation(){
         weaponRight.classList.add("retroceso_derecha");
+        muzzleFlash.classList.add("active");
 
         setTimeout(() => {
             weaponRight.classList.remove("retroceso_derecha");
+            muzzleFlash.classList.remove("active");
         }, 100); // Duración del retroceso
     }
 
