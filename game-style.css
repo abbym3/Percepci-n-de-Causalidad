@@ -398,7 +398,8 @@ h1 {
   box-shadow: 0 8px 20px rgba(252, 165, 165, 0.3);
 }
 
-#resultsHead[style*="purple"] ~ #resultsText {
+#resultsHead[style*="#e74998ff"] ~ #resultsText,
+#resultsHead[style*="rgb(231, 73, 152)"] ~ #resultsText {
   background: none;
   border: none;
   box-shadow: none;
