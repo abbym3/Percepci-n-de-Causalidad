@@ -442,7 +442,7 @@ h1 {
 
 @media (max-width: 430px) {
   :root{
-    --gun-size: clamp(160px, 28vw, 170px);
+    --gun-size: clamp(150px, 27vw, 160px);
     --gun-overlap: clamp(35px, 7vw, 55px);
     --btn-gap: clamp(18px, 3vw, 32px);
     --weapon-to-button-gap: clamp(32px, 6vw, 55px);
