@@ -390,11 +390,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     window.addEventListener('beforeunload', () => {
         saveNextLine(['PTM', machineTryCount]);
         saveNextLine(['NFDJ', new Date().toLocaleString()]);
+        localStorage.removeItem('currentUserId');
     });
     
     function saveFinalData(){
         saveNextLine(['FDJ', new Date().toLocaleString()]);
-        saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
+        saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquinaus
         syncLocalBackups();
     }
 
