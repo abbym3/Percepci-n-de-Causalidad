@@ -354,8 +354,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 resultsHead.innerHTML = "<br>Gracias!! ❤️";
                 resultsHead.style.color = "#e74998ff";
                 setTimeout(() => {
-                    window.close();
-                }, 2000);
+                    window.location.href = "index.html";
+                }, 900);
             }, 2500);
         }    
     }
