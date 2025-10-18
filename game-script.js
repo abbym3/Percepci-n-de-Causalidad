@@ -355,6 +355,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 resultsHead.innerHTML = "<br>Gracias!! ❤️";
                 resultsHead.style.color = "#e74998ff";
                 setTimeout(() => {
+                    localStorage.removeItem('currentUserId');
                     window.location.href = "index.html";
                 }, 4000);
             }, 2500);
