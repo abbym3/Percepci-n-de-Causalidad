@@ -396,7 +396,22 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         syncLocalBackups();
         localStorage.removeItem('currentUserId');
     });
-    
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            setTimeout(() => {
+                if (document.hidden && !gameFinished) {
+                    // Si sigue oculto después de 30s, terminar juego
+                    saveNextLine(['NFDJ', new Date().toLocaleString()]);
+                    saveNextLine(['PTM', machineTryCount]);
+                    syncLocalBackups();
+                    localStorage.removeItem('currentUserId');
+                    window.location.href = 'index.html';
+                }
+            }, 30000);
+        } 
+    });
+
     function saveFinalData(){
         gameFinished = true;
         saveNextLine(['FDJ', new Date().toLocaleString()]);
