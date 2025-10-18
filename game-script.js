@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 resultsHead.style.color = "#e74998ff";
                 setTimeout(() => {
                     window.location.href = "index.html";
-                }, 2000);
+                }, 4000);
             }, 2500);
         }    
     }
