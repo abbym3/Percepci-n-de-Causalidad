@@ -8,8 +8,23 @@
   <script type="module" src="firebase-init.js"></script>
   <script type="module" src="index-script.js" defer></script>
   <link rel="stylesheet" href="index-style.css">
+  <link rel="preload" as="image" href="img/logo.png">
+  <link rel="preload" as="image" href="img/unam.png">
+  <link rel="preload" as="image" href="img/paloma.png">
+  <link rel="preload" as="image" href="img/poli.png">
 </head>
-<body>
+<body class="loading">
+  <div id="loadingScreen">
+    <div class="loader-wave">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+    <div class="loading-text">CARGANDO</div>
+  </div>
+
   <div class="container">
     <div class="logo">
       <img src="img/logo.png" alt="Logo">
@@ -45,5 +60,14 @@
       <button type="button" id="startBtn" disabled>INICIAR</button>
     </form>
   </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.body.classList.remove('loading');
+      }, 500);
+    });
+  </script>
 </body>
 </html>
