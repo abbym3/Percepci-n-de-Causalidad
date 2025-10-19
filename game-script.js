@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let canTriggerCE = true;        // Solo si es true se pueden disparar CEI/CED nuevos
     let answerLocked = false;       // Bloquea los botones de respuesta después de un click
     let acceptingClicks = true;     // Solo si es true se consideran los clics al botón central
+    let gameFinished = false;       // Juego finalizado indica si se guarda FDJ o NFDJ
 
     // Contadores de interacción
     let shotCount = 0;        // Disparos en el bloque actual
@@ -354,8 +355,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 resultsHead.innerHTML = "<br>Gracias!! ❤️";
                 resultsHead.style.color = "#e74998ff";
                 setTimeout(() => {
-                    window.close();
-                }, 2000);
+                    window.location.href = "index.html";
+                }, 4000);
             }, 2500);
         }    
     }
@@ -388,14 +389,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ==============================
 
     window.addEventListener('beforeunload', () => {
-        saveNextLine(['PTM', machineTryCount]);
+        if (gameFinished) return; //Si el participante finalizo el juego no sé ejecuta el guardado de NFDJ aunque cierre la ventana
         saveNextLine(['NFDJ', new Date().toLocaleString()]);
+        saveNextLine(['PTM', machineTryCount]);
+        syncLocalBackups();
         localStorage.removeItem('currentUserId');
     });
     
     function saveFinalData(){
+        gameFinished = true;
         saveNextLine(['FDJ', new Date().toLocaleString()]);
-        saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquinaus
+        saveNextLine(['PTM', machineTryCount]); // Pulsos totales máquina
         syncLocalBackups();
     }
 
