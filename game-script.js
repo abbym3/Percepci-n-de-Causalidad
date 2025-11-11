@@ -315,8 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         }
 
         return isCorrect ?
-            `Tu porcentaje de aciertos aumentó al ${average}%` :
-            `Tu porcentaje de aciertos bajó al ${average}%`;
+            `Tu porcentaje de aciertos es de ${average}%` :
+            `Tu porcentaje de aciertos es de ${average}%`;
     }
 
     function showResults(isCorrect){
