@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         //showScreen(gameScreen);
     }
 
-    setTimeout(iniciarJuego, 9000); // Arranca el juego a los 9 segundos
+    setTimeout(iniciarJuego, 30000); // Arranca el juego a los 30 segundos
 
     // ==============================
     // PROBABILIDAD
