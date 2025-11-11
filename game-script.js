@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             setTimeout(() => {
                 saveFinalData();
                 resultsText.textContent = "";
-                resultsHead.innerHTML = "<br>Gracias!! ❤️";
+                resultsHead.innerHTML = "<br>¡¡Gracias por participar!! Por favor espera a que la pagina cierre ❤️";
                 resultsHead.style.color = "#e74998ff";
                 setTimeout(() => {
                     window.location.href = "index.html";
