@@ -203,9 +203,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
         if (buttonColorConfig === 0) {
             leftButton.classList.add("green"); leftButton.textContent = "Yo";
-            rightButton.classList.add("red"); rightButton.textContent = "Máquina";
+            rightButton.classList.add("red"); rightButton.textContent = "El otro";
         } else {
-            leftButton.classList.add("red"); leftButton.textContent = "Máquina";
+            leftButton.classList.add("red"); leftButton.textContent = "El otro";
             rightButton.classList.add("green"); rightButton.textContent = "Yo";
         }
     }
