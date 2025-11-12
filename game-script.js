@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             return `Tienes un ${average}% de aciertos`;
         }
 
-        if (score >= 150) {
+        if (countCED >= 100) {
             return `Tu porcentaje de aciertos total fue del ${average}%`;
         }
 
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         resultsHead.style.color = isCorrect? "green":"red";
         resultsText.textContent = getResultText(isCorrect, average, score);
 
-        if(score < 150){
+        if(countCED < 100){
             setTimeout(() => {
                 canTriggerCE = true;
                 acceptingClicks = true;
