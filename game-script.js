@@ -454,6 +454,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         switch (typeof e.data === "object" ? e.data.type : e.data){
             case 'reset_done':
                 gameStartTime = performance.now();
+                i = 0; //Reiniciar el índice de intervalos de 10s, asi se evita que se occuarran CE antes de tiempo
                 showScreen(gameScreen);
                 saveNextLine(['IDJ', new Date().toLocaleString()]);
                 break;
