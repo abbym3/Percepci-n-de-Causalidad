@@ -40,37 +40,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const nameInput = document.getElementById('name');
   const ageInput = document.getElementById('age');
+  const universidadInput = document.getElementById('universidad');
   const startBtn = document.getElementById('startBtn');
-  const groupCards = document.querySelectorAll('.group-card'); //Es un array con todas las tarjetas (Cada tarjeta (imagen) es un grupo)
-  let selectedGroup = null;
 
   function validateForm() {
     const nameFilled = nameInput.value.trim() !== '';
     const ageFilled = ageInput.value.trim() !== '' && !isNaN(ageInput.value);
-    // Si alguno está vacío, también limpiamos la selección
-    if (!nameFilled || !ageFilled) {
-      groupCards.forEach(c => c.classList.remove('selected'));
-      selectedGroup = null;
-    }
-    const groupSelected = selectedGroup !== null;
-    startBtn.disabled = !(nameFilled && ageFilled && groupSelected);
+    const universidadFilled = universidadInput.value.trim() !== '';
+    startBtn.disabled = !(nameFilled && ageFilled && universidadFilled);
   }
   //Funcion de validación
 
-  groupCards.forEach(card => { //Esto recorre cada tarjeta ...
-    card.addEventListener('click', () => { // y le pone un event listenner (función que se ejecuta al hacer un click)
-      groupCards.forEach(c => c.classList.remove('selected')); // Le quita a todas las tarjetas la clase selected (borde azul)
-      card.classList.add('selected'); //Le pone la clase selected a la tarjeta que se clickeó
-      selectedGroup = card.getAttribute('data-group'); //Guarda el valor del atributo data-group (nombre de imagen) de esa tarjeta
-      validateForm();
-    });
-  });
-  // Selección de grupo
-  
+  // Event listeners para validación en tiempo real
+  nameInput.addEventListener('input', validateForm);
+  ageInput.addEventListener('input', validateForm);
+  universidadInput.addEventListener('input', validateForm);
+
   startBtn?.addEventListener("click", function () {
     const nombre = nameInput.value;
     const edad = ageInput.value;
-    const grupo = selectedGroup;
+    const grupo = universidadInput.value; // El dato de universidad se guarda en la variable 'grupo'
     saveInitialUserData(nombre, edad, grupo);
     //window.location.href = "game.html"; // Redirigir al experimento
   });
