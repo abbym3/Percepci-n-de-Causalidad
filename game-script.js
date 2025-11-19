@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             localStorage.removeItem('currentUserId');
         } else if (!document.hidden && invalidated){
             // Usuario regresó después de salir
-            alert("Saliste del experimento. Tu sesión fue invalidada.");
+            alert("Saliste del experimen. Tu sesión fue invalidada.");
             window.location.href = "index.html"; // Redirigir
         }
     });
