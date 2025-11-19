@@ -74,6 +74,25 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let punishReinforceTime = ['RB'];
 
     // ==============================
+    // 0 TOLERANCIA A CAMBIOS DE PESTAÑA
+    // ==============================
+    let invalidated = false;
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !invalidated) {
+            invalidated = true;
+            saveNextLine(['NFDJ', new Date().toLocaleString()]);
+            saveNextLine(['PTM', machineTryCount]);
+            syncLocalBackups();
+            localStorage.removeItem('currentUserId');
+        } else if (!document.hidden && invalidated){
+            // Usuario regresó después de salir
+            alert("Saliste del experimento. Tu sesión fue invalidada.");
+            window.location.href = "index.html"; // Redirigir
+        }
+    });
+
+    // ==============================
     // TIEMPO
     // ==============================
     function getTrainingTime(){

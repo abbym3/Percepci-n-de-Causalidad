@@ -44,7 +44,53 @@ h1 {
   color: #2d3748;
   font-size: 32px;
   font-weight: 600;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+}
+
+.warning-box {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe5a1 100%);
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+  text-align: center;
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.4);
+  }
+}
+
+.warning-icon {
+  font-size: 40px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.warning-box h3 {
+  color: #856404;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.warning-box p {
+  color: #856404;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+.warning-box strong {
+  font-weight: 700;
+  color: #664d03;
 }
 
 .form-group {
@@ -53,9 +99,9 @@ h1 {
 
 .section-title {
   display: block;
-  color: #4a5568;
-  font-size: 14px;
-  font-weight: 500;
+  color: #2d3748;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 8px;
 }
 
