@@ -6,19 +6,19 @@ function saveInitialUserData(nombre, edad, grupo) {
   // Esperamos a que el estado de autenticación esté disponible
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid; // ID único del usuario autenticado
-      const userKey = uid;  // Lo usamos como clave en la base
+      // Generar ID único para esta sesión (combinación de UID + timestamp)
+      const sessionId = `${user.uid}_${Date.now()}`;
 
       const data = {
         0: [`${nombre}`, `${edad}`, `${grupo}`] // Primer renglón en la base
       };
 
-      const userRef = ref(db, `participantes/${userKey}`); // Ruta en Firebase
+      const userRef = ref(db, `participantes/${sessionId}`); // Ruta en Firebase con ID único de sesión
 
       set(userRef, data)
         .then(() => {
           console.log("Datos guardados correctamente en Firebase.");
-          localStorage.setItem('currentUserId', uid); // Guardamos para usar en game.html
+          localStorage.setItem('currentUserId', sessionId); // Guardamos el sessionId para usar en game.html
           location.assign('game.html'); // Redirigir al experimento
         })
         .catch((error) => {
