@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     //===============================  CONFIGURACIÓN DEL EXPERIMENTO  ===============================
     // Constantes de probabilidad
-    let HUMANDIE = 10;       // La probailidad de que el humano provoque un CED de 1/HUMANDIE
-    let MACHINEDIE = 10;    // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE (Sujeto a número de disparos en el intervalo anterior)
+    let HUMANDIE = 20;       // La probailidad de que el humano provoque un CED de 1/HUMANDIE
+    let MACHINEDIE = 6.6666666667;    // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE (Sujeto a número de disparos en el intervalo anterior)
 
     // Demora
     let demora = [0];
