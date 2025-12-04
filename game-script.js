@@ -329,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             return `Tienes un ${average}% de aciertos`;
         }
 
-        if (countCED >= 100) {
+        if (score >= 100) {
             return `Tu porcentaje de aciertos total fue del ${average}%`;
         }
 
