@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         resultsHead.style.color = isCorrect? "green":"red";
         resultsText.textContent = getResultText(isCorrect, average, score);
 
-        if(countCED < 100){
+        if(score < 100){
             setTimeout(() => {
                 canTriggerCE = true;
                 acceptingClicks = true;
