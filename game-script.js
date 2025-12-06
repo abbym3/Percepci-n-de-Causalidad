@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let invalidated = false;
 
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden && !invalidated) {
+        if (document.hidden && !invalidated && !gameFinished) {
             invalidated = true;
             saveNextLine(['NFDJ', new Date().toLocaleString()]);
             saveNextLine(['PTM', machineTryCount]);
