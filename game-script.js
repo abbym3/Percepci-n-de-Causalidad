@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         machineTryCount ++;
         const p = Math.floor(Math.random() * MACHINEDIE) + 1; // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE
         // console.log(`Calculo p_machine: ${p}`)
-        if (p === 1||p===5||p===8) { 
+        if (p === 1) { 
             CEI();
         }
     }
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_human(){
         if (!canTriggerCE) return;
         const p = Math.floor(Math.random() * HUMANDIE) + 1; // La probailidad de que el humano provoque un CED de 1/HUMANDIE
-        if (p === 1) { 
+        if (p === 1||p===5||p===8) { 
             CED();
         }
     }
