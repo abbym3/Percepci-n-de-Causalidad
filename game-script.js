@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     //===============================  CONFIGURACIÓN DEL EXPERIMENTO  ===============================
     // Constantes de probabilidad
-    let HUMANDIE = 20;       // La probailidad de que el humano provoque un CED de 1/HUMANDIE
-    let MACHINEDIE = 20;    // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE (Sujeto a número de disparos en el intervalo anterior)
+    let HUMANDIE = 500;       //
+    let MACHINEDIE = 500;    // 
 
     // Demora
     let demora = [0];
@@ -131,17 +131,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_machine(){
         if (!canTriggerCE) return;
         machineTryCount ++;
-        const p = Math.floor(Math.random() * MACHINEDIE) + 1; // La probailidad de que la máquina haga un CEI es de 1/MACHINDIE
+        const p = Math.floor(Math.random() * MACHINEDIE) + 1; // Genera un número de 1 a MACHINEDIE
         // console.log(`Calculo p_machine: ${p}`)
-        if (p === 1) { 
+        if (p <= 67) { 
             CEI();
         }
     }
 
     function p_tick_human(){
         if (!canTriggerCE) return;
-        const p = Math.floor(Math.random() * HUMANDIE) + 1; // La probailidad de que el humano provoque un CED de 1/HUMANDIE
-        if (p === 1||p===5||p===8) { 
+        const p = Math.floor(Math.random() * HUMANDIE) + 1; // Genera un número de 1 a MACHINEDIE
+        if (p <= 33) { 
             CED();
         }
     }
