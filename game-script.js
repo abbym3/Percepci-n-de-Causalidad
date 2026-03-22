@@ -12,31 +12,37 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     const C = {};
 
     const configRef = ref(db, 'Configuración');
+    let configuracionCargada = false;  // Variable separada
 
     get(configRef).then((snapshot) => {
         if (snapshot.exists()) {
             const config = snapshot.val();
 
-            if (config.C1 <= 100) { // Si C1 es 100 o menos, se carga la configuración y se incrementa C1
+            if (config.C1 <= 100) {
                 C.HUMAN_WIN_RANGE = 33;
                 C.HUMANDIE = 500;
-                
                 C.MACHINE_WIN_RANGE = 67;
                 C.MACHINEDIE = 500;
-
                 C.DEMORA = [0];
+                configuracionCargada = true;  
 
                 update(configRef, { C1: config.C1 + 1 })
                 .then(() => {
                     console.log("C1 incrementado a:", config.C1 + 1);
                 });
-            }else {
-                console.error("La configuración no se ha cargado correctamente.");
-                location.replace('index.html'); return; 
             }
-        }else {
+            
+            if (configuracionCargada) {  
+                console.log("Configuración cargada. El juego iniciará en 30s.");
+                setTimeout(iniciarJuego, 30000);
+            } else {
+                console.error("La configuración no se ha cargado correctamente.");
+                location.replace('index.html');
+            }
+            
+        } else {
             console.error("No se pudo cargar la configuración.");
-            location.replace('index.html'); return; 
+            location.replace('index.html');
         }
     });
 
