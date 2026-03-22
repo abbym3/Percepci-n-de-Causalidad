@@ -1,22 +1,47 @@
-import { ref, push } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { ref, push, get, update} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
     if (!localStorage.getItem('currentUserId')) { location.replace('index.html'); return; }
 
-    //===============================  CONFIGURACIÓN DEL EXPERIMENTO  ===============================
-    // Constantes de probabilidad
-    let HUMANDIE = 500;       //
-    let MACHINEDIE = 500;    // 
+    // ===============================  
+    // CONFIGURACIÓN DEL EXPERIMENTO 
+    // ===============================
 
-    // Demora
-    let demora = [0];
-    //===============================================================================================
+    const C = {};
 
-    
+    const configRef = ref(db, 'Configuración');
+
+    get(configRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const config = snapshot.val();
+
+            if (config.C1 <= 100) { // Si C1 es 100 o menos, se carga la configuración y se incrementa C1
+                C.HUMAN_WIN_RANGE = 33;
+                C.HUMANDIE = 500;
+                
+                C.MACHINE_WIN_RANGE = 67;
+                C.MACHINEDIE = 500;
+
+                C.DEMORA = [0];
+
+                update(configRef, { C1: config.C1 + 1 })
+                .then(() => {
+                    console.log("C1 incrementado a:", config.C1 + 1);
+                });
+            }else {
+                console.error("La configuración no se ha cargado correctamente.");
+                location.replace('index.html'); return; 
+            }
+        }else {
+            console.error("No se pudo cargar la configuración.");
+            location.replace('index.html'); return; 
+        }
+    });
+
     // ==============================
-    // CONFIGURACIÓN Y VARIABLES
+    // VARIABLES
     // ==============================
 
     // Worker
@@ -104,13 +129,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage('reset');
         //gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
-        saveNextLine(['DEM', JSON.stringify(demora)]);
-        saveNextLine(['HD', HUMANDIE]);
-        saveNextLine(['MD', MACHINEDIE]);
+        saveNextLine(['DEM', JSON.stringify(C.DEMORA)]);
+        saveNextLine(['HD', C.HUMANDIE]);
+        saveNextLine(['MD', C.MACHINEDIE]);
         //showScreen(gameScreen);
     }
-
-    setTimeout(iniciarJuego, 30000); // Arranca el juego a los 30 segundos
 
     // ==============================
     // PROBABILIDAD
@@ -131,17 +154,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_machine(){
         if (!canTriggerCE) return;
         machineTryCount ++;
-        const p = Math.floor(Math.random() * MACHINEDIE) + 1; // Genera un número de 1 a MACHINEDIE
+        const p = Math.floor(Math.random() * C.MACHINEDIE) + 1; // Genera un número de 1 a MACHINEDIE
         // console.log(`Calculo p_machine: ${p}`)
-        if (p <= 67) { 
+        if (p <= C.MACHINE_WIN_RANGE) { 
             CEI();
         }
     }
 
     function p_tick_human(){
         if (!canTriggerCE) return;
-        const p = Math.floor(Math.random() * HUMANDIE) + 1; // Genera un número de 1 a MACHINEDIE
-        if (p <= 33) { 
+        const p = Math.floor(Math.random() * C.HUMANDIE) + 1; // Genera un número de 1 a HUMANDIE
+        if (p <= C.HUMAN_WIN_RANGE) { 
             CED();
         }
     }
@@ -169,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage("pause");
 
         // Aplicar demora solo en CED
-        const d = demora[j % demora.length];
+        const d = C.DEMORA[j % C.DEMORA.length];
         j++;
 
         if (d > 0) {
