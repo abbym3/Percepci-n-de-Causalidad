@@ -1,4 +1,4 @@
-import { ref, push, get, update} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { ref, push, get, update, increment} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
@@ -10,32 +10,35 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ===============================
 
     const C = {};
-
+    let c = null;
     const configRef = ref(db, 'Configuración');
-    let configuracionCargada = false;  // Variable separada
 
     get(configRef).then((snapshot) => {
         if (snapshot.exists()) {
+            saveNextLine(`Aqui se comprueba que exite el objeto C: ${performance.now()}`)
             const config = snapshot.val();
+            c = 'C1'
 
-            if (config.C1 <= 100) {
+            if (config.C1.iniciados - config.C1.falsos_positivos <= 100) {
+                saveNextLine(`Aqui se comprueba que C1_i - C1_fp es <= X: ${performance.now()}`)
                 C.HUMAN_WIN_RANGE = 33;
                 C.HUMANDIE = 500;
                 C.MACHINE_WIN_RANGE = 67;
                 C.MACHINEDIE = 500;
                 C.DEMORA = [0];
-                configuracionCargada = true;  
 
-                update(configRef, { C1: config.C1 + 1 })
+                const updates = {};
+                    updates[`${c}/iniciados`] = increment(1); 
+
+                update(configRef, updates)
                 .then(() => {
-                    console.log("C1 incrementado a:", config.C1 + 1);
+                    saveNextLine(`Aqui se actualiza el valor de C: ${performance.now()}`)
+                    console.log("config.C1.iniciados incrementado a:", config.C1.iniciados + 1);
+                    console.log("Configuración cargada. El juego iniciará en 30s.");
+                    setTimeout(iniciarJuego, 30000);
                 });
             }
-            
-            if (configuracionCargada) {  
-                console.log("Configuración cargada. El juego iniciará en 30s.");
-                setTimeout(iniciarJuego, 30000);
-            } else {
+            else {
                 console.error("La configuración no se ha cargado correctamente.");
                 location.replace('index.html');
             }
@@ -439,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     window.addEventListener('beforeunload', () => {
         if (gameFinished) return; //Si el participante finalizo el juego no sé ejecuta el guardado de NFDJ aunque cierre la ventana
         saveNextLine(['NFDJ', new Date().toLocaleString()]);
+        save_falsos_positivos();
         saveNextLine(['PTM', machineTryCount]);
         syncLocalBackups();
         localStorage.removeItem('currentUserId');
@@ -492,6 +496,15 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 //console.error("Error al guardar en Firebase:", error);
                 backupLocally(contentArray); // Guardar localmente si falla
             });
+    }
+
+    function save_falsos_positivos(){
+        const updates2 = {};
+        updates2[`${c}/falsos_positivos`] = increment(1);
+        update(configRef, updates2)
+        .then(() => {
+            console.log(`Falsos positivos de ${c} incrementados correctamente.`);
+        });
     }
 
     // ==============================
