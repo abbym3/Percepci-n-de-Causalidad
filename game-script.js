@@ -1,4 +1,4 @@
-import { ref, push, get, update, increment} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { ref, push, update, increment, runTransaction} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
@@ -8,45 +8,60 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ===============================  
     // CONFIGURACIÓN DEL EXPERIMENTO 
     // ===============================
+    
+    function assign_values_C(CONFIG, HUMAN_WIN_RANGE, HUMANDIE, MACHINE_WIN_RANGE, MACHINEDIE, DEMORA){
+        CONFIG.HUMAN_WIN_RANGE = HUMAN_WIN_RANGE;
+        CONFIG.HUMANDIE = HUMANDIE;
+        CONFIG.MACHINE_WIN_RANGE = MACHINE_WIN_RANGE;
+        CONFIG.MACHINEDIE = MACHINEDIE
+        CONFIG.DEMORA = DEMORA;
+        return CONFIG;
+    }
 
-    const C = {};
-    let c = null;
-    const configRef = ref(db, 'Configuración');
+    let CONFIG = {};
+    let groups_js = ['C1','C2','C3','C4','C5'];
+    let selected_group = null;
 
-    get(configRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            saveNextLine(`Aqui se comprueba que exite el objeto C: ${performance.now()}`)
-            const config = snapshot.val();
-            c = 'C1'
-
-            if (config.C1.iniciados - config.C1.falsos_positivos <= 100) {
-                saveNextLine(`Aqui se comprueba que C1_i - C1_fp es <= X: ${performance.now()}`)
-                C.HUMAN_WIN_RANGE = 33;
-                C.HUMANDIE = 500;
-                C.MACHINE_WIN_RANGE = 67;
-                C.MACHINEDIE = 500;
-                C.DEMORA = [0];
-
-                const updates = {};
-                    updates[`${c}/iniciados`] = increment(1); 
-
-                update(configRef, updates)
-                .then(() => {
-                    saveNextLine(`Aqui se actualiza el valor de C: ${performance.now()}`)
-                    console.log("config.C1.iniciados incrementado a:", config.C1.iniciados + 1);
-                    console.log("Configuración cargada. El juego iniciará en 30s.");
-                    setTimeout(iniciarJuego, 30000);
-                });
-            }
-            else {
-                console.error("La configuración no se ha cargado correctamente.");
-                location.replace('index.html');
-            }
-            
-        } else {
-            console.error("No se pudo cargar la configuración.");
-            location.replace('index.html');
+    const groupsRef = ref(db, 'Configuración');
+    runTransaction(groupsRef, (groups_fb) => {
+        if (!groups_fb) return groups_fb;
+        let available_groups = [];
+        
+        for (const group_js of groups_js){
+            if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos <= 20)
+                available_groups.push(group_js)
         }
+        selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
+
+        if (selected_group == null) {
+            return undefined; 
+        }else{
+            groups_fb[selected_group].iniciados += 1
+        }
+        return groups_fb;  
+    }).then((result)=>{
+            if (!result.committed || !selected_group) {
+                console.error("La configuración no se ha cargado correctamente o no hay grupos disponibles.");
+                location.replace('index.html');
+                return;
+            }
+            if (selected_group === 'C1') {
+                CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
+            } 
+            if (selected_group === 'C2') {
+                CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
+            } 
+            if (selected_group === 'C3') {
+                CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
+            } 
+            if (selected_group === 'C4') {
+                CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
+            } 
+            if (selected_group === 'C5') {
+                CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
+            } 
+            console.log("Configuración cargada. El juego iniciará en 30s.");
+            setTimeout(iniciarJuego, 30000);
     });
 
     // ==============================
@@ -138,9 +153,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage('reset');
         //gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
-        saveNextLine(['DEM', JSON.stringify(C.DEMORA)]);
-        saveNextLine(['HD', C.HUMANDIE]);
-        saveNextLine(['MD', C.MACHINEDIE]);
+        saveNextLine(['DEM', JSON.stringify(CONFIG.DEMORA)]);
+        saveNextLine(['HD', CONFIG.HUMANDIE]);
+        saveNextLine(['MD', CONFIG.MACHINEDIE]);
         //showScreen(gameScreen);
     }
 
@@ -163,17 +178,17 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function p_tick_machine(){
         if (!canTriggerCE) return;
         machineTryCount ++;
-        const p = Math.floor(Math.random() * C.MACHINEDIE) + 1; // Genera un número de 1 a MACHINEDIE
+        const p = Math.floor(Math.random() * CONFIG.MACHINEDIE) + 1; // Genera un número de 1 a MACHINEDIE
         // console.log(`Calculo p_machine: ${p}`)
-        if (p <= C.MACHINE_WIN_RANGE) { 
+        if (p <= CONFIG.MACHINE_WIN_RANGE) { 
             CEI();
         }
     }
 
     function p_tick_human(){
         if (!canTriggerCE) return;
-        const p = Math.floor(Math.random() * C.HUMANDIE) + 1; // Genera un número de 1 a HUMANDIE
-        if (p <= C.HUMAN_WIN_RANGE) { 
+        const p = Math.floor(Math.random() * CONFIG.HUMANDIE) + 1; // Genera un número de 1 a HUMANDIE
+        if (p <= CONFIG.HUMAN_WIN_RANGE) { 
             CED();
         }
     }
@@ -201,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage("pause");
 
         // Aplicar demora solo en CED
-        const d = C.DEMORA[j % C.DEMORA.length];
+        const d = CONFIG.DEMORA[j % CONFIG.DEMORA.length];
         j++;
 
         if (d > 0) {
@@ -499,11 +514,11 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function save_falsos_positivos(){
-        const updates2 = {};
-        updates2[`${c}/falsos_positivos`] = increment(1);
-        update(configRef, updates2)
+        const updates = {};
+        updates[`${selected_group}/falsos_positivos`] = increment(1);
+        update(groupsRef, updates)
         .then(() => {
-            console.log(`Falsos positivos de ${c} incrementados correctamente.`);
+            console.log(`Falsos positivos de ${selected_group} incrementados correctamente.`);
         });
     }
 
