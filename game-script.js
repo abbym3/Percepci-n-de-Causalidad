@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     document.addEventListener('visibilitychange', () => {
         if (document.hidden && !invalidated && !gameFinished) {
             invalidated = true;
+            save_falsos_positivos();
             saveNextLine(['NFDJ', new Date().toLocaleString()]);
             saveNextLine(['PTM', machineTryCount]);
             syncLocalBackups();
@@ -457,6 +458,9 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     window.addEventListener('beforeunload', () => {
         if (gameFinished) return; //Si el participante finalizo el juego no sé ejecuta el guardado de NFDJ aunque cierre la ventana
         saveNextLine(['NFDJ', new Date().toLocaleString()]);
+        if (!invalidated) { // Si el participante cambia de ventana invalidated = True (false aqui) para evitar guardar falsos positivos 2 veces         
+          save_falsos_positivos();
+        }
         save_falsos_positivos();
         saveNextLine(['PTM', machineTryCount]);
         syncLocalBackups();
