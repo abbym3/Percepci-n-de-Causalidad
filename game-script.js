@@ -461,7 +461,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         if (!invalidated) { // Si el participante cambia de ventana invalidated = True (false aqui) para evitar guardar falsos positivos 2 veces         
           save_falsos_positivos();
         }
-        save_falsos_positivos();
         saveNextLine(['PTM', machineTryCount]);
         syncLocalBackups();
         localStorage.removeItem('currentUserId');
