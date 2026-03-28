@@ -162,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         worker.postMessage('reset');
         //gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
+        saveNextLine(['SG', selected_group]);
         saveNextLine(['DEM', JSON.stringify(CONFIG.DEMORA)]);
         saveNextLine(['HD', `${CONFIG.HUMAN_WIN_RANGE}/${CONFIG.HUMANDIE}`]);
         saveNextLine(['MD', `${CONFIG.MACHINE_WIN_RANGE}/${CONFIG.MACHINEDIE}`]);
