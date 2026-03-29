@@ -1,9 +1,11 @@
-import { ref, push, update, increment, runTransaction} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { ref, push, update, increment, runTransaction, remove} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { db } from "./firebase-init.js"; 
 
 document.addEventListener("DOMContentLoaded", function () {  // Esperar a que todos los elementos del DOM estén completamente cargados
 
-    if (!localStorage.getItem('currentUserId')) { location.replace('index.html'); return; }
+    const UserID = localStorage.getItem('currentUserId');
+    if (!UserID) { location.replace('index.html'); return; }
+    const UserID_cut = UserID.split('_')[0];
 
     // ===============================  
     // CONFIGURACIÓN DEL EXPERIMENTO 
@@ -20,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     let CONFIG = {};
     let groups_js = ['C1','C2','C3','C4','C5'];
-    let selected_group = null;
 
     const groupsRef = ref(db, 'Configuración');
     runTransaction(groupsRef, (groups_fb) => {
@@ -31,20 +32,23 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos < 1)
                 available_groups.push(group_js)
         }
-        selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
+        const selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
 
         if (selected_group == null) {
             return undefined; 
         }else{
             groups_fb[selected_group].iniciados += 1
+            if (!groups_fb.select) groups_fb.select = {};
+            groups_fb.select[UserID_cut] = selected_group;
         }
         return groups_fb;  
     }).then((result)=>{
-            if (!result.committed || !selected_group) {
+            if (!result.committed || !result.snapshot.exists()) {
                 console.error("La configuración no se ha cargado correctamente o no hay grupos disponibles.");
                 location.replace('index.html');
                 return;
             }
+            const selected_group = result.snapshot.val().select[UserID_cut];
             if (selected_group === 'C1') {
                 CONFIG = assign_values_C(CONFIG, 5, 100, 15, 100, [0])
             } 
@@ -62,6 +66,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             } 
             console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
+            const selectRef = ref(db, `Configuración/select/${UserID_cut}`);
+            remove(selectRef);
     });
 
     // ==============================
@@ -155,8 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         //gameStartTime = performance.now(); // Marca el inicio real del juego
         //console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['DEM', JSON.stringify(CONFIG.DEMORA)]);
-        saveNextLine(['HD', CONFIG.HUMANDIE]);
-        saveNextLine(['MD', CONFIG.MACHINEDIE]);
+        saveNextLine(['HD', `${CONFIG.HUMAN_WIN_RANGE}/${CONFIG.HUMANDIE}`]);
+        saveNextLine(['MD', `${CONFIG.MACHINE_WIN_RANGE}/${CONFIG.MACHINEDIE}`]);
         //showScreen(gameScreen);
     }
 
