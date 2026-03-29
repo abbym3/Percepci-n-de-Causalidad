@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // Métricas globales
     let score = 0;            // Total de CE (CED + CEI)
     let average = 0;          // Porcentaje de aciertos
+    let fpGuardado = false;   
 
     // Marcas de tiempo / filas de guardado
     let gameStartTime = 0;
@@ -524,6 +525,8 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     function save_falsos_positivos(){
+        if (fpGuardado) return;
+        fpGuardado = true;
         const updates = {};
         updates[`${selected_group}/falsos_positivos`] = increment(1);
         update(groupsRef, updates)
