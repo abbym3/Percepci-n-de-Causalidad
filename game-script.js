@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
 
     let CONFIG = {};
     let groups_js = ['C1','C2','C3','C4','C5'];
+    let selected_group = null;
 
     const groupsRef = ref(db, 'Configuración');
     runTransaction(groupsRef, (groups_fb) => {
@@ -32,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos < 1)
                 available_groups.push(group_js)
         }
-        const selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
+        const js_selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
 
-        if (selected_group == null) {
+        if (js_selected_group == null) {
             return undefined; 
         }else{
-            groups_fb[selected_group].iniciados += 1
+            groups_fb[js_selected_group].iniciados += 1
             if (!groups_fb.select) groups_fb.select = {};
-            groups_fb.select[UserID_cut] = selected_group;
+            groups_fb.select[UserID_cut] = js_selected_group;
         }
         return groups_fb;  
     }).then((result)=>{
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 location.replace('index.html');
                 return;
             }
-            const selected_group = result.snapshot.val().select[UserID_cut];
+            selected_group = result.snapshot.val().select[UserID_cut];
             if (selected_group === 'C1') {
                 CONFIG = assign_values_C(CONFIG, 5, 100, 15, 100, [0])
             } 
