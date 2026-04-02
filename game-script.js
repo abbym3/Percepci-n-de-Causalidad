@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         let available_groups = [];
         
         for (const group_js of groups_js){
-            if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos < 1)
+            if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos <= 20)
                 available_groups.push(group_js)
         }
         const js_selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
@@ -416,7 +416,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         resultsHead.style.color = isCorrect? "green":"red";
         resultsText.textContent = getResultText(isCorrect, average, score);
 
-        if(score < 3){
+        if(score < 100){
             setTimeout(() => {
                 canTriggerCE = true;
                 acceptingClicks = true;
