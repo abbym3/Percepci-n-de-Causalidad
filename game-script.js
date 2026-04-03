@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             if (selected_group === 'C5') {
                 CONFIG = assign_values_C(CONFIG, 15, 100, 5, 100, [0])
             } 
-            console.log("Configuración cargada. El juego iniciará en 30s.");
+            //console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
             const selectRef = ref(db, `Configuración/select/${UserID_cut}`);
             remove(selectRef);
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         //gameStartTime = performance.now(); // Marca el inicio real del juego
-        console.log("Inicio de juego:", gameStartTime)
+        //console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['SG', selected_group]);
         saveNextLine(['DEM', JSON.stringify(CONFIG.DEMORA)]);
         saveNextLine(['HD', `${CONFIG.HUMAN_WIN_RANGE}/${CONFIG.HUMANDIE}`]);
@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ================================
 
     function handle100msTick(){
-        console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
+        //console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
         if (!canTriggerCE) return;
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
@@ -532,7 +532,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         updates[`${selected_group}/falsos_positivos`] = increment(1);
         update(groupsRef, updates)
         .then(() => {
-            console.log(`Falsos positivos de ${selected_group} incrementados correctamente.`);
+            //console.log(`Falsos positivos de ${selected_group} incrementados correctamente.`);
         });
     }
 
