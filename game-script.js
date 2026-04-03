@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     function iniciarJuego() {
         worker.postMessage('reset');
         //gameStartTime = performance.now(); // Marca el inicio real del juego
-        //console.log("Inicio de juego:", gameStartTime)
+        console.log("Inicio de juego:", gameStartTime)
         saveNextLine(['SG', selected_group]);
         saveNextLine(['DEM', JSON.stringify(CONFIG.DEMORA)]);
         saveNextLine(['HD', `${CONFIG.HUMAN_WIN_RANGE}/${CONFIG.HUMANDIE}`]);
@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // ================================
 
     function handle100msTick(){
-        //console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
+        console.log(`W:100ms|P:${getTrainingTime()}s`);//(`W:100ms|P:${getTrainingTime()}`);
         if (!canTriggerCE) return;
         if(i > 0 && typeof shotsPer10sInterval[i - 1] === "number"){  // Para ejecutar adjustP1BasedOnClicks se debe tener registrado el número de clicks en el primer intervalo de 10s (i>0)
             adjustP1BasedOnClicks(shotsPer10sInterval[i - 1]); 
@@ -416,7 +416,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         resultsHead.style.color = isCorrect? "green":"red";
         resultsText.textContent = getResultText(isCorrect, average, score);
 
-        if(score < 100){
+        if(score < 3){
             setTimeout(() => {
                 canTriggerCE = true;
                 acceptingClicks = true;
