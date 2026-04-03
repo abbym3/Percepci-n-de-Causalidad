@@ -215,7 +215,7 @@ body {
   width: var(--gun-size);
   height: auto;
   pointer-events: none;
-  z-index: 3;
+  z-index: 5;
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
 }
 
@@ -249,7 +249,7 @@ body {
   font-size: clamp(2.5rem, 6vw, 4rem);
   opacity: 0;
   pointer-events: none;
-  z-index: 5;
+  z-index: 4;
 }
 .muzzle-flash.active {
   animation: flashBurst 0.1s ease-out;
