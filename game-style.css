@@ -26,6 +26,7 @@ body {
   color: #212529;
   min-height: 100vh;
   overflow: hidden;
+  overflow-x: hidden;  
 }
 
 
@@ -149,6 +150,7 @@ body {
 .pato-container {
   width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: 45vh; 
   background: #c1e0f1;
   border: 5px solid #ffffff;
   border-radius: 24px;
@@ -510,4 +512,35 @@ body {
   .TestScreen-content { max-width: 920px; }
   .ce-buttons-container { gap: 76px; }
   .ce-button { width: clamp(200px, 12vw, 280px); }
+}
+
+
+@media (min-width: 1280px) and (max-width: 1366px) and (max-height: 800px) {
+  .pato-container {
+    max-height: 38vh;
+  }
+  .pato-wrapper {
+    width: min(32%, 160px);
+  }
+  .Screen h1 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin-bottom: 0.8rem;
+  }
+  #shootButton {
+    padding: 0.7rem 1.8rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .pato.fall-back {
+    animation: none !important;
+    transform: rotate(90deg);
+    opacity: 0;
+  }
 }
