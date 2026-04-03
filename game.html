@@ -2,59 +2,89 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <title>¡Dispara al Pato!</title>
   <link rel="stylesheet" href="game-style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <script type ="module" src="game-script.js" defer></script>
-  <script type="module" src="firebase-init.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="game-script.js" defer></script>
+  <script type="module" src="firebase-init.js" defer></script>
 </head>
 <body>
+
+  <!-- ══════════════════════════════════════
+       PANTALLA 1 — INSTRUCCIONES
+  ══════════════════════════════════════ -->
   <div id="InstructionsScreen" class="Screen ScreenOn">
-    <h1>🎯 Instrucciones</h1>
-    <p>Prepárate para disparar y derribar al pato que aparecerá al centro de la pantalla. Para disparar debes apretar el botón que dice “disparar”. El pato puede ser derribado ya sea por tu disparo o bien por un pulso de la computadora que tú no puedes ver. Cuando el pato caiga, aparecerá una pregunta “¿Quién derribó al pato?” y dos botones “yo” y “máquina”. Tu tarea consistirá en señalar quién crees que derribó al pato, tú con tu disparo o la computadora con un pulso. Si tu respuesta es correcta aparecerá en la pantalla la palabra “correcto” y tu porcentaje de aciertos, si es incorrecta aparecerá la palabra “incorrecto” y tu porcentaje de aciertos.</p>
-    <p>El juego comenzará en unos segundos...</p>
+    <div class="Screen__inner">
+      <h1>🎯 Instrucciones</h1>
+      <div class="instructions-cards">
+        <p>Prepárate para disparar y derribar al pato que aparecerá al centro de la pantalla.
+           Para disparar debes apretar el botón que dice "disparar". El pato puede ser derribado
+           ya sea por tu disparo o bien por un pulso de la computadora que tú no puedes ver.
+           Cuando el pato caiga, aparecerá una pregunta "¿Quién derribó al pato?" y dos botones
+           "yo" y "máquina". Tu tarea consistirá en señalar quién crees que derribó al pato,
+           tú con tu disparo o la computadora con un pulso. Si tu respuesta es correcta aparecerá
+           en la pantalla la palabra "correcto" y tu porcentaje de aciertos, si es incorrecta
+           aparecerá la palabra "incorrecto" y tu porcentaje de aciertos.</p>
+      </div>
+      <p class="instructions-start">El juego comenzará en unos segundos...</p>
+    </div>
   </div>
 
+  <!-- ══════════════════════════════════════
+       PANTALLA 2 — JUEGO
+  ══════════════════════════════════════ -->
   <div id="GameScreen" class="Screen">
-    <h1>¡Dispara al Pato!</h1>
+    <div class="Screen__inner">
+      <h1>¡Dispara al Pato!</h1>
 
-    <!-- envolvente para maquetar en columna -->
-    <div class="game-area">
-      <!-- cuadro azul -->
-      <div class="pato-container">
-        <!-- círculo blanco con el pato centrado matemáticamente -->
-        <div class="pato-wrapper">
-          <img src="img/pato.png" alt="Pato arcade" class="pato" id="pato">
+      <div class="game-area">
+
+        <!-- Cuadro azul con el pato -->
+        <div class="pato-container">
+          <div class="pato-wrapper">
+            <img src="img/pato.png" alt="Pato arcade" class="pato" id="pato">
+          </div>
+        </div>
+
+        <!-- Arma superpuesta al borde inferior del cuadro -->
+        <div class="weapon-container">
+          <img src="img/arma2.png" alt="Arma derecha" class="arma" id="weaponRight">
+          <span id="muzzleFlash" class="muzzle-flash">💥</span>
+        </div>
+
+      </div><!-- /game-area -->
+
+      <button id="shootButton">DISPARAR</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANTALLA 3 — TEST
+  ══════════════════════════════════════ -->
+  <div id="TestScreen" class="Screen">
+    <div class="Screen__inner">
+      <div class="TestScreen-content">
+        <h1>¿Quién derribó al pato? 🤔</h1>
+        <div class="ce-buttons-container">
+          <button id="ceButtonLeft"  class="ce-button"></button>
+          <button id="ceButtonRight" class="ce-button"></button>
         </div>
       </div>
-
-      <!-- arma, fuera del cuadro azul y centrada debajo -->
-      <div class="weapon-container">
-        <img src="img/arma2.png" alt="Arma derecha" class="arma" id="weaponRight">
-        <span id="muzzleFlash" class="muzzle-flash">💥</span>
-      </div>
-    </div>
-
-    <button id="shootButton">DISPARAR</button>
-  </div>
-
-  <div id="TestScreen" class="Screen">
-    <div class="TestScreen-content">
-      <h1>¿Quién derribó al pato? 🤔</h1>
-      
-      <div class="ce-buttons-container">
-        <button id="ceButtonLeft" class="ce-button"></button>
-        <button id="ceButtonRight" class="ce-button"></button>
-      </div>
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════
+       PANTALLA 4 — RESULTADOS
+  ══════════════════════════════════════ -->
   <div id="ResultsScreen" class="Screen">
-    <div class="ResultsScreen-content">
-      <h1 id = "resultsHead">Resultados</h1>
-      <p id = "resultsText">Aquí irán los resultados</p>
+    <div class="Screen__inner">
+      <div class="ResultsScreen-content">
+        <h1 id="resultsHead">Resultados</h1>
+        <p  id="resultsText">Aquí irán los resultados</p>
+      </div>
     </div>
   </div>
+
 </body>
 </html>

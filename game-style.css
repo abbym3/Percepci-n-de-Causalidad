@@ -1,43 +1,44 @@
-:root{
-  --gun-size: clamp(150px, 14vw, 220px);
-  --gun-overlap: clamp(60px,8vw, 90px);
-  --btn-gap: clamp(22px, 3.2vw, 40px);
-  --weapon-to-button-gap: clamp(30px, 4vw, 55px); 
+/* ═══════════════════════════════════════════════════════════
+   VARIABLES
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --gun-size:              clamp(150px, 14vw, 220px);
+  --gun-overlap:           clamp(60px,  8vw,  90px);
+  --btn-gap:               clamp(22px,  3.2vw,40px);
+  --weapon-to-button-gap:  clamp(30px,  4vw,  55px);
 }
 
-/* ============ BODY ============ */
+
+/* ═══════════════════════════════════════════════════════════
+   RESET MÍNIMO
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img { display: block; max-width: 100%; height: auto; }
+button { font-family: 'Poppins', sans-serif; cursor: pointer; border: none; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   BODY
+   ═══════════════════════════════════════════════════════════ */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #212529;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  padding: 1rem;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* ============ TÍTULOS ============ */
-h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  color: white;
-  text-align: center;
-  margin-bottom: 2rem;
-  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
 
-/* ============ PANTALLAS ============ */
+/* ═══════════════════════════════════════════════════════════
+   PANTALLAS  (.Screen / .ScreenOn)
+   — Mantiene los nombres exactos que usa el JS —
+   ═══════════════════════════════════════════════════════════ */
 .Screen {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;                        /* top/right/bottom/left = 0 */
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -45,111 +46,132 @@ h1 {
   pointer-events: none;
   transition: opacity 0.5s ease-in-out;
   z-index: 10;
-  padding: 1rem;
-  box-sizing: border-box;
+  overflow-y: auto;
+  padding: clamp(1rem, 3vw, 2rem);
 }
 
-.ScreenOn{
+.ScreenOn {
   opacity: 1;
   pointer-events: all;
 }
 
-/* ============ INSTRUCCIONES ============ */
+/* Contenedor interno: limita ancho y garantiza columna centrada */
+.Screen__inner {
+  width: 100%;
+  max-width: min(92vw, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   TÍTULOS GLOBALES
+   ═══════════════════════════════════════════════════════════ */
+.Screen h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  margin-bottom: clamp(1.2rem, 4vw, 2rem);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   PANTALLA 1 — INSTRUCCIONES
+   ═══════════════════════════════════════════════════════════ */
 #InstructionsScreen h1 {
   font-size: clamp(2rem, 6vw, 3.5rem);
-  color: white;
-  margin-bottom: 2rem;
   animation: fadeInDown 0.8s ease-out;
 }
 
+/* Tarjetas de texto */
+.instructions-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
 #InstructionsScreen p {
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: rgba(255,255,255,0.95);
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto 1.5rem;
-  line-height: 1.6;
-  background: rgba(255, 255, 255, 0.15);
+  line-height: 1.7;
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
-  padding: 1.5rem 2rem;
+  padding: clamp(1rem, 3vw, 1.6rem) clamp(1.2rem, 4vw, 2rem);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
   animation: fadeInUp 0.8s ease-out 0.2s backwards;
 }
 
+.instructions-start {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  margin-top: 0.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform:translateY(-30px); }
+  to   { opacity:1; transform:translateY(0); }
 }
-
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-/* ============ PANTALLA DE JUEGO ============ */
-#GameScreen {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
 
+/* ═══════════════════════════════════════════════════════════
+   PANTALLA 2 — JUEGO
+   ═══════════════════════════════════════════════════════════ */
 #GameScreen h1 {
   font-size: clamp(1.8rem, 5vw, 2.5rem);
-  color: #ffffff;
   font-weight: 700;
-  margin-bottom: 3.5rem;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: clamp(1rem, 3.5vw, 2rem);
   animation: bounce 0.6s ease-out;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.game-area{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
+/* Columna que contiene cuadro + arma + botón */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   animation: scaleIn 0.5s ease-out;
 }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* ============ CONTENEDOR DEL PATO ============ */
+/* ── Cuadro azul del pato ── */
 .pato-container {
   width: 100%;
-  max-width: 700px;
   aspect-ratio: 16 / 9;
-  background:#c1e0f1;
+  background: #c1e0f1;
   border: 5px solid #ffffff;
   border-radius: 24px;
   position: relative;
   overflow: visible;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   margin-bottom: 0;
-  margin-top: -10px;
 }
 
+/* Círculo blanco con el pato, centrado matemáticamente */
 .pato-wrapper {
   width: min(38%, 220px);
-  background:  #fcf6ff;
+  background: #fcf6ff;
   padding: min(1.5vw, 12px);
   border-radius: 50%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   position: absolute;
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  margin: 0;
   transition: transform 0.3s ease;
 }
-
 .pato-wrapper:hover {
   transform: translate(-50%, -50%) scale(1.05);
 }
@@ -157,7 +179,6 @@ h1 {
 .pato {
   width: 100%;
   height: auto;
-  display: block;
   transform-origin: center bottom;
   will-change: transform;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
@@ -169,27 +190,28 @@ h1 {
 }
 
 @keyframes duckImpactAnimation {
-  0% { transform: perspective(800px) rotateX(0deg) translateZ(0); }
-  15% { transform: perspective(800px) rotateX(-35deg) translateZ(10px); }
-  30% { transform: perspective(800px) rotateX(18deg) translateZ(6px); }
-  45% { transform: perspective(800px) rotateX(-12deg) translateZ(8px); }
-  60% { transform: perspective(800px) rotateX(6deg) translateZ(5px); }
-  75% { transform: perspective(800px) rotateX(-50deg) translateZ(-5px); }
-  90% { transform: perspective(800px) rotateX(-80deg) translateZ(-10px); }
-  100% { transform: perspective(800px) rotateX(-90deg) translateZ(-15px); }
+  0%   { transform: perspective(800px) rotateX(0deg)   translateZ(0);    }
+  15%  { transform: perspective(800px) rotateX(-35deg)  translateZ(10px); }
+  30%  { transform: perspective(800px) rotateX(18deg)   translateZ(6px);  }
+  45%  { transform: perspective(800px) rotateX(-12deg)  translateZ(8px);  }
+  60%  { transform: perspective(800px) rotateX(6deg)    translateZ(5px);  }
+  75%  { transform: perspective(800px) rotateX(-50deg)  translateZ(-5px); }
+  90%  { transform: perspective(800px) rotateX(-80deg)  translateZ(-10px);}
+  100% { transform: perspective(800px) rotateX(-90deg)  translateZ(-15px);}
 }
 
-/* ============ ARMA ============ */
-.weapon-container{
-  display:flex;
-  justify-content:center;
-  width:100%;
+/* ── Fila del arma ── */
+.weapon-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   margin-top: calc(-1 * var(--gun-overlap));
   margin-bottom: var(--weapon-to-button-gap);
 }
 
-.arma{
-  position: static;
+.arma {
   width: var(--gun-size);
   height: auto;
   pointer-events: none;
@@ -197,195 +219,174 @@ h1 {
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
 }
 
+/* Retroceso */
 .retroceso_derecha {
   transform-origin: center;
   animation: sacudida 0.1s ease, retrocesoVertical 0.3s ease-out;
   will-change: transform;
 }
-
 @keyframes retrocesoVertical {
-  0%   { transform: translateY(0) scale(1); }
-  20%  { transform: translateY(-10px) scale(1.2); }
-  40%  { transform: translateY(20px) scale(0.85); }
-  60%  { transform: translateY(-15px) scale(1.1); }
-  80%  { transform: translateY(10px) scale(0.95); }
-  100% { transform: translateY(0) scale(1); }
+  0%   { transform: translateY(0) scale(1);     }
+  20%  { transform: translateY(-10px) scale(1.2);}
+  40%  { transform: translateY(20px) scale(0.85);}
+  60%  { transform: translateY(-15px) scale(1.1);}
+  80%  { transform: translateY(10px) scale(0.95);}
+  100% { transform: translateY(0) scale(1);     }
 }
-
 @keyframes sacudida {
-  0%, 100% { transform: translate(0); }
-  25% { transform: translate(-2px, -3px); }
-  50% { transform: translate(3px, -5px); }
-  75% { transform: translate(-1px, -2px); }
+  0%,100% { transform: translate(0); }
+  25%     { transform: translate(-2px,-3px); }
+  50%     { transform: translate(3px,-5px);  }
+  75%     { transform: translate(-1px,-2px); }
 }
 
-/* ============ BOTÓN DISPARAR ============ */
+/* Flash de boca */
+.muzzle-flash {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.muzzle-flash.active {
+  animation: flashBurst 0.1s ease-out;
+}
+@keyframes flashBurst {
+  0%   { transform: translate(-50%,-50%) scale(0);   opacity:0; }
+  50%  { transform: translate(-50%,-50%) scale(1.2); opacity:1; }
+  100% { transform: translate(-50%,-50%) scale(0);   opacity:0; }
+}
+
+/* ── Botón disparar ── */
 #shootButton {
-  margin-top: 0;
-  padding: 1.2rem 3rem;
-  font-size: clamp(1rem, 3vw, 1.3rem);
+  padding: clamp(0.9rem, 2vw, 1.2rem) clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
   font-weight: 700;
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-  border: none;
+  color: #ffffff;
   border-radius: 50px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  outline: none !important;
-
+  outline: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
-
+#shootButton:hover         { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 35px rgba(0,0,0,0.3); }
+#shootButton:active        { transform: scale(0.98); }
 #shootButton:focus,
-#shootButton:focus-visible,
-#shootButton:active {
-  outline: none !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
-}
-
-#shootButton:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-}
-
-#shootButton:active {
-  transform: translateY(0) scale(0.98);
-}
-
+#shootButton:focus-visible { outline: none; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
 #shootButton:disabled {
   background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   cursor: not-allowed;
   transform: none;
 }
 
-/* ============ PANTALLA DE TEST ============ */
-#TestScreen {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Animaciones de GameScreen */
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-10px); }
+}
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(0.9); }
+  to   { opacity:1; transform:scale(1);   }
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   PANTALLA 3 — TEST
+   ═══════════════════════════════════════════════════════════ */
 #TestScreen h1 {
   font-size: clamp(1.8rem, 5vw, 2.8rem);
-  color: white;
-  margin-bottom: clamp(16px, 5vw, 28px);
   animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
 }
 
 .TestScreen-content {
   text-align: center;
-  width: min(92vw, 600px);
-  max-width: 600px;
-  margin-inline: auto;
-  padding: 20px;
-  padding-inline: 0;
-  display: grid;
-  justify-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .ce-buttons-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(16px, 6vw, 28px);
-  margin: clamp(12px, 4vw, 20px) 0;
+  gap: clamp(16px, 6vw, 76px);
+  margin: clamp(12px, 4vw, 24px) 0;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .ce-button {
+  width: clamp(110px, 22vw, 220px);
   aspect-ratio: 1 / 1;
-  width: clamp(110px, 42vw, 160px);
   border-radius: 50%;
-  border: 4px solid #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  color: white;
-  font-size: clamp(0.95rem, 3.2vw, 1.2rem);
-  font-weight: bold;
+  border: 4px solid #ffffff;
+  color: #ffffff;
+  font-size: clamp(0.95rem, 3vw, 1.3rem);
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
-
 .ce-button::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
+  inset: 0;
   border-radius: 50%;
-  /* background: rgba(255, 255, 255, 0.3); */
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
+  background: rgba(255,255,255,0.2);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.ce-button:hover::before { opacity: 1; }
+.ce-button:hover  { transform: scale(1.1) rotate(5deg); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.ce-button:active { transform: scale(0.95); }
+
+.ce-button.red   { background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%); }
+.ce-button.green { background: linear-gradient(135deg, #51cf66 0%, #2f9e44 100%); }
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
 }
 
-.ce-button:hover::before {
-  width: 100%;
-  height: 100%;
-}
 
-.ce-button:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-}
-
-.ce-button:active {
-  transform: scale(0.95);
-}
-
-.ce-button.red {
-  background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
-}
-
-.ce-button.green {
-  background: linear-gradient(135deg, #51cf66 0%, #2f9e44 100%);
-}
-
-/* ============ PANTALLA DE RESULTADOS ============ */
-#ResultsScreen {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
+/* ═══════════════════════════════════════════════════════════
+   PANTALLA 4 — RESULTADOS
+   ═══════════════════════════════════════════════════════════ */
 .ResultsScreen-content {
   text-align: center;
+  width: 100%;
   max-width: 700px;
-  padding: 3rem 2.5rem;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 5vw, 2.5rem);
   background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
   border-radius: 32px;
-  border: none;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 70px rgba(0,0,0,0.4), 0 10px 30px rgba(0,0,0,0.2);
   animation: slideUp 0.6s ease-out;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(50px); }
-  to { opacity: 1; transform: translateY(0); }
+#resultsHead {
+  font-size: clamp(1.8rem, 5vw, 3rem) !important;
+  color: #1f2937 !important;
+  text-shadow: none !important;
+  margin-bottom: 1.2rem;
 }
 
+/* El JS colorea #resultsHead vía style="color:green/red/…"
+   Estos selectores replican exactamente la lógica del original */
 #resultsHead[style*="green"] ~ #resultsText {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 3px solid #86efac;
@@ -406,156 +407,107 @@ h1 {
 }
 
 #resultsText {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-  font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
-  color: #1f2937;
+  font-size: clamp(1.1rem, 3vw, 1.7rem);
   font-weight: 600;
-  text-align: center;
   line-height: 1.8;
-  padding: 2rem 2.5rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  color: #1f2937;
+  padding: clamp(1rem, 3vw, 2rem);
   border-radius: 20px;
-  border: 3px solid #86efac;
-  margin: 0 auto;
-  max-width: 90%;
-  box-shadow: 0 8px 20px rgba(134, 239, 172, 0.3);
 }
 
-/* ============ RESPONSIVE ============ */
-@media (max-width: 600px) {
-  .Screen {
-    padding: 1rem;
-  }
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(50px); }
+  to   { opacity:1; transform:translateY(0);    }
+}
 
-  #InstructionsScreen p {
-    padding: 1rem 1.5rem;
-  }
 
-  .ce-buttons-container {
-    gap: clamp(15px, 6vw, 30px);
-  }
+/* ═══════════════════════════════════════════════════════════
+   ANIMACIÓN COMPARTIDA
+   ═══════════════════════════════════════════════════════════ */
+@keyframes pulse {
+  0%,100% { transform: scale(1);    }
+  50%     { transform: scale(1.02); }
+}
 
-  .ResultsScreen-content {
-    padding: 2rem 1.5rem;
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+
+/* Móvil muy pequeño */
+@media (max-width: 380px) {
+  :root {
+    --gun-size:             clamp(120px, 30vw, 150px);
+    --gun-overlap:          clamp(30px,   7vw,  50px);
+    --weapon-to-button-gap: clamp(20px,   5vw,  35px);
+  }
+  #shootButton {
+    font-size: 0.9rem;
+    padding: 0.75rem 1.4rem;
+  }
+  .ce-button {
+    width: clamp(100px, 40vw, 130px);
   }
 }
 
+/* Móvil normal (el original usaba 430px) */
 @media (max-width: 430px) {
-  :root{
-    --gun-size: clamp(150px, 27vw, 160px);
-    --gun-overlap: clamp(35px, 7vw, 55px);
-    --btn-gap: clamp(18px, 3vw, 32px);
-    --weapon-to-button-gap: clamp(32px, 6vw, 55px);
+  :root {
+    --gun-size:             clamp(150px, 27vw, 160px);
+    --gun-overlap:          clamp(35px,   7vw,  55px);
+    --btn-gap:              clamp(18px,   3vw,  32px);
+    --weapon-to-button-gap: clamp(32px,   6vw,  55px);
   }
-  
-  #shootButton { 
-    font-size: 1rem; 
-    padding: .85rem 1.5rem; 
+  #shootButton {
+    font-size: 1rem;
+    padding: 0.85rem 1.5rem;
   }
-  
   .ce-buttons-container {
     gap: clamp(16px, 8vw, 24px);
     margin: clamp(8px, 3vw, 16px) 0;
   }
-  
   .ce-button {
     width: clamp(104px, 44vw, 148px);
   }
 }
 
-@media (min-width: 900px) {
-  #TestScreen h1 { 
-    margin-bottom: 50px; 
-  }
+/* Landscape móvil bajo */
+@media (max-height: 500px) and (orientation: landscape) {
+  .Screen { align-items: flex-start; }
+  .Screen__inner { padding-top: 0.5rem; }
+  .Screen h1 { font-size: clamp(1.2rem, 4vw, 1.8rem); margin-bottom: 0.6rem; }
+  .pato-container { aspect-ratio: 21 / 9; }
 }
 
+/* Escritorio mediano */
+@media (min-width: 900px) {
+  #TestScreen h1 { margin-bottom: 50px; }
+}
+
+/* Escritorio grande */
 @media (min-width: 1024px) {
-  .pato-container {
-    margin-top: -25px; 
-  }
+  .pato-container { margin-top: -25px; }
 
   #TestScreen h1 {
     font-size: clamp(2rem, 2.5vw, 3rem);
-    margin-bottom: 76px; 
+    margin-bottom: 76px;
   }
-
-  .TestScreen-content {
-    max-width: 800px;   
-    padding: 32px 24px;
-  }
-
-  .ce-buttons-container {
-    gap: 48px;        
-    margin: 24px 0 8px;
-  }
-
+  .TestScreen-content { max-width: 800px; padding: 32px 24px; }
+  .ce-buttons-container { gap: 48px; margin: 24px 0 8px; }
   .ce-button {
     width: clamp(180px, 14vw, 240px);
     border-width: 6px;
     font-size: clamp(1.1rem, 1.6vw, 1.4rem);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   }
-
   .Screen h1 {
     font-size: clamp(2rem, 2.6vw, 3rem);
     margin-bottom: 2rem;
   }
-
-  .Screen p, 
-  .Screen #resultsText {
-    font-size: clamp(1.2rem, 1.5vw, 1.6rem);
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto 1.5rem;
-  }
 }
 
+/* Pantallas muy grandes */
 @media (min-width: 1440px) {
-  .TestScreen-content { 
-    max-width: 920px; 
-  }
-  
-  .ce-buttons-container { 
-    gap: 76px; 
-  }
-  
-  .ce-button { 
-    width: clamp(200px, 12vw, 280px); 
-  }
-}
-
-/* ============ EFECTO DE DISPARO ============ */
-
-.weapon-container {
-  position: relative;
-}
-
-.muzzle-flash {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.muzzle-flash.active {
-  animation: flashBurst 0.1s ease-out; /* Súper rápido, igual que sacudida */
-}
-
-@keyframes flashBurst {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-  }
+  .TestScreen-content { max-width: 920px; }
+  .ce-buttons-container { gap: 76px; }
+  .ce-button { width: clamp(200px, 12vw, 280px); }
 }
