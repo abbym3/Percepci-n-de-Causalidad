@@ -539,6 +539,7 @@ body {
   :root {
     --weapon-to-button-gap: clamp(14px, 2vw, 28px);
     --gun-overlap:          clamp(50px, 6vw, 75px);
+    --gun-size:             clamp(130px, 10vw, 160px);
   }
   .pato-container {
     max-height: 40vh;
@@ -553,5 +554,8 @@ body {
   #shootButton {
     padding: 0.7rem 1.8rem;
     font-size: 0.95rem;
+  }
+  .muzzle-flash {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
   }
 }
