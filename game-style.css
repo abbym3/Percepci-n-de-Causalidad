@@ -464,6 +464,9 @@ body {
   .ce-button {
     width: clamp(100px, 40vw, 130px);
   }
+  .muzzle-flash {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
 }
 
 /* Móvil normal */
@@ -485,6 +488,9 @@ body {
   .ce-button {
     width: clamp(104px, 44vw, 148px);
   }
+  .muzzle-flash {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
 }
 
 /* Landscape móvil bajo */
@@ -495,8 +501,12 @@ body {
   :root {
     --weapon-to-button-gap: clamp(10px, 2vw, 20px);
     --gun-overlap:          clamp(30px, 5vw, 55px);
+    --gun-size:             clamp(100px, 12vw, 130px);
   }
   .pato-container { aspect-ratio: 21 / 9; max-height: 40vh; }
+  .muzzle-flash {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+  }
 }
 
 /* Escritorio mediano */
