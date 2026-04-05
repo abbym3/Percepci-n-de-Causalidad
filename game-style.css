@@ -4,8 +4,8 @@
 :root {
   --gun-size:              clamp(150px, 14vw, 220px);
   --gun-overlap:           clamp(60px,  8vw,  90px);
-  --btn-gap:               clamp(22px,  3.2vw,40px);
-  --weapon-to-button-gap:  clamp(30px,  4vw,  55px);
+  --btn-gap:               clamp(22px,  3.2vw, 40px);
+  --weapon-to-button-gap:  clamp(20px,  3vw,  45px);
 }
 
 
@@ -19,24 +19,26 @@ button { font-family: 'Poppins', sans-serif; cursor: pointer; border: none; }
 
 /* ═══════════════════════════════════════════════════════════
    BODY
+   — overflow-y: auto garantiza que el botón nunca se pierda
+     aunque el usuario aplique zoom. overflow-x permanece
+     oculto para evitar scroll lateral.
    ═══════════════════════════════════════════════════════════ */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #212529;
   min-height: 100vh;
-  overflow: hidden;
-  overflow-x: hidden;  
+  overflow-x: hidden;
+  overflow-y: auto;        /* ← corregido: evita que el botón quede cortado */
 }
 
 
 /* ═══════════════════════════════════════════════════════════
    PANTALLAS  (.Screen / .ScreenOn)
-   — Mantiene los nombres exactos que usa el JS —
    ═══════════════════════════════════════════════════════════ */
 .Screen {
   position: fixed;
-  inset: 0;                        /* top/right/bottom/left = 0 */
+  inset: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -47,8 +49,9 @@ body {
   pointer-events: none;
   transition: opacity 0.5s ease-in-out;
   z-index: 10;
-  overflow-y: auto;
-  padding: clamp(1rem, 3vw, 2rem);
+  overflow-y: auto;           /* scroll interno si el contenido excede la ventana */
+  overflow-x: hidden;
+  padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.5rem);
 }
 
 .ScreenOn {
@@ -56,7 +59,7 @@ body {
   pointer-events: all;
 }
 
-/* Contenedor interno: limita ancho y garantiza columna centrada */
+/* Contenedor interno: columna centrada con ancho máximo */
 .Screen__inner {
   width: 100%;
   max-width: min(92vw, 760px);
@@ -75,7 +78,7 @@ body {
   color: #ffffff;
   text-align: center;
   text-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  margin-bottom: clamp(1.2rem, 4vw, 2rem);
+  margin-bottom: clamp(1rem, 3.5vw, 1.8rem);
 }
 
 
@@ -87,7 +90,6 @@ body {
   animation: fadeInDown 0.8s ease-out;
 }
 
-/* Tarjetas de texto */
 .instructions-cards {
   display: flex;
   flex-direction: column;
@@ -133,11 +135,11 @@ body {
 #GameScreen h1 {
   font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 700;
-  margin-bottom: clamp(1rem, 3.5vw, 2rem);
+  margin-bottom: clamp(0.8rem, 2.5vw, 1.5rem);
   animation: bounce 0.6s ease-out;
 }
 
-/* Columna que contiene cuadro + arma + botón */
+/* Columna principal: cuadro + arma + botón */
 .game-area {
   display: flex;
   flex-direction: column;
@@ -146,11 +148,14 @@ body {
   animation: scaleIn 0.5s ease-out;
 }
 
-/* ── Cuadro azul del pato ── */
+/* ── Cuadro azul del pato ──
+   max-height limita en pantallas bajas pero no aplana
+   innecesariamente en monitores normales (55vh en vez de 45vh).
+   overflow: visible permite que la pistola sobresalga. */
 .pato-container {
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 45vh; 
+  max-height: 55vh;
   background: #c1e0f1;
   border: 5px solid #ffffff;
   border-radius: 24px;
@@ -160,7 +165,7 @@ body {
   margin-bottom: 0;
 }
 
-/* Círculo blanco con el pato, centrado matemáticamente */
+/* Círculo blanco con el pato, centrado en el cuadro */
 .pato-wrapper {
   width: min(38%, 220px);
   background: #fcf6ff;
@@ -202,7 +207,9 @@ body {
   100% { transform: perspective(800px) rotateX(-90deg)  translateZ(-15px);}
 }
 
-/* ── Fila del arma ── */
+/* ── Fila del arma ──
+   margin-top negativo hace que la pistola "suba" sobre el borde
+   inferior del cuadro, igual que en la imagen de referencia. */
 .weapon-container {
   position: relative;
   display: flex;
@@ -214,6 +221,7 @@ body {
 }
 
 .arma {
+  position: relative;
   width: var(--gun-size);
   height: auto;
   pointer-events: none;
@@ -228,12 +236,12 @@ body {
   will-change: transform;
 }
 @keyframes retrocesoVertical {
-  0%   { transform: translateY(0) scale(1);     }
-  20%  { transform: translateY(-10px) scale(1.2);}
-  40%  { transform: translateY(20px) scale(0.85);}
-  60%  { transform: translateY(-15px) scale(1.1);}
-  80%  { transform: translateY(10px) scale(0.95);}
-  100% { transform: translateY(0) scale(1);     }
+  0%   { transform: translateY(0) scale(1);      }
+  20%  { transform: translateY(-10px) scale(1.2); }
+  40%  { transform: translateY(20px) scale(0.85); }
+  60%  { transform: translateY(-15px) scale(1.1); }
+  80%  { transform: translateY(10px) scale(0.95); }
+  100% { transform: translateY(0) scale(1);       }
 }
 @keyframes sacudida {
   0%,100% { transform: translate(0); }
@@ -242,24 +250,31 @@ body {
   75%     { transform: translate(-1px,-2px); }
 }
 
+/* ── Wrapper del arma: contexto de posición para el flash ── */
+.arma-wrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+}
+
 /* Flash de boca */
 .muzzle-flash {
   position: absolute;
-  top: 15%;
+  top: 20%;
   left: 50%;
-  transform: translate(-50%,-50%) scale(0);
+  transform: translate(-50%, -5%) scale(0);
   font-size: clamp(2.5rem, 6vw, 4rem);
   opacity: 0;
   pointer-events: none;
   z-index: 4;
 }
 .muzzle-flash.active {
-  animation: flashBurst 0.1s ease-out;
+  animation: flashBurst 0.25s ease-out forwards;
 }
 @keyframes flashBurst {
-  0%   { transform: translate(-50%,-50%) scale(0);   opacity:0; }
-  50%  { transform: translate(-50%,-50%) scale(1.2); opacity:1; }
-  100% { transform: translate(-50%,-50%) scale(0);   opacity:0; }
+  0%   { transform: translate(-50%, -60%) scale(0);   opacity: 0; }
+  40%  { transform: translate(-50%, -60%) scale(1.3); opacity: 1; }
+  100% { transform: translate(-50%, -60%) scale(0);   opacity: 0; }
 }
 
 /* ── Botón disparar ── */
@@ -278,6 +293,8 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   user-select: none;
+  /* Evita que el botón quede flotando fuera de la vista */
+  flex-shrink: 0;
 }
 #shootButton:hover         { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 35px rgba(0,0,0,0.3); }
 #shootButton:active        { transform: scale(0.98); }
@@ -290,7 +307,6 @@ body {
   transform: none;
 }
 
-/* Animaciones de GameScreen */
 @keyframes bounce {
   0%,100% { transform: translateY(0); }
   50%     { transform: translateY(-10px); }
@@ -387,8 +403,6 @@ body {
   margin-bottom: 1.2rem;
 }
 
-/* El JS colorea #resultsHead vía style="color:green/red/…"
-   Estos selectores replican exactamente la lógica del original */
 #resultsHead[style*="green"] ~ #resultsText {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border: 3px solid #86efac;
@@ -441,7 +455,7 @@ body {
   :root {
     --gun-size:             clamp(120px, 30vw, 150px);
     --gun-overlap:          clamp(30px,   7vw,  50px);
-    --weapon-to-button-gap: clamp(20px,   5vw,  35px);
+    --weapon-to-button-gap: clamp(16px,   4vw,  28px);
   }
   #shootButton {
     font-size: 0.9rem;
@@ -452,13 +466,13 @@ body {
   }
 }
 
-/* Móvil normal (el original usaba 430px) */
+/* Móvil normal */
 @media (max-width: 430px) {
   :root {
     --gun-size:             clamp(150px, 27vw, 160px);
     --gun-overlap:          clamp(35px,   7vw,  55px);
     --btn-gap:              clamp(18px,   3vw,  32px);
-    --weapon-to-button-gap: clamp(32px,   6vw,  55px);
+    --weapon-to-button-gap: clamp(24px,   5vw,  40px);
   }
   #shootButton {
     font-size: 1rem;
@@ -478,7 +492,11 @@ body {
   .Screen { align-items: flex-start; }
   .Screen__inner { padding-top: 0.5rem; }
   .Screen h1 { font-size: clamp(1.2rem, 4vw, 1.8rem); margin-bottom: 0.6rem; }
-  .pato-container { aspect-ratio: 21 / 9; }
+  :root {
+    --weapon-to-button-gap: clamp(10px, 2vw, 20px);
+    --gun-overlap:          clamp(30px, 5vw, 55px);
+  }
+  .pato-container { aspect-ratio: 21 / 9; max-height: 40vh; }
 }
 
 /* Escritorio mediano */
@@ -486,10 +504,10 @@ body {
   #TestScreen h1 { margin-bottom: 50px; }
 }
 
-/* Escritorio grande */
+/* Escritorio grande (≥ 1024 px)
+   — Se elimina el margin-top negativo de .pato-container que
+     desplazaba el layout en monitores normales. */
 @media (min-width: 1024px) {
-  .pato-container { margin-top: -25px; }
-
   #TestScreen h1 {
     font-size: clamp(2rem, 2.5vw, 3rem);
     margin-bottom: 76px;
@@ -503,7 +521,7 @@ body {
   }
   .Screen h1 {
     font-size: clamp(2rem, 2.6vw, 3rem);
-    margin-bottom: 2rem;
+    margin-bottom: 1.8rem;
   }
 }
 
@@ -514,10 +532,16 @@ body {
   .ce-button { width: clamp(200px, 12vw, 280px); }
 }
 
-
+/* Laptops compactas (1280–1366 px, alto ≤ 800 px)
+   — Reduce el cuadro del pato y el pato mismo para que el botón
+     siempre sea visible sin scroll. */
 @media (min-width: 1280px) and (max-width: 1366px) and (max-height: 800px) {
+  :root {
+    --weapon-to-button-gap: clamp(14px, 2vw, 28px);
+    --gun-overlap:          clamp(50px, 6vw, 75px);
+  }
   .pato-container {
-    max-height: 38vh;
+    max-height: 40vh;
   }
   .pato-wrapper {
     width: min(32%, 160px);
@@ -529,18 +553,5 @@ body {
   #shootButton {
     padding: 0.7rem 1.8rem;
     font-size: 0.95rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  .pato.fall-back {
-    animation: none !important;
-    transform: rotate(90deg);
-    opacity: 0;
   }
 }
