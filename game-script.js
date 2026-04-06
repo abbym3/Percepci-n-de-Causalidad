@@ -33,19 +33,31 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos < 20)
                 available_groups.push(group_js)
         }
-        const js_selected_group = available_groups[Math.floor(Math.random() * available_groups.length)];
-
-        if (js_selected_group == null) {
-            return undefined; 
-        }else{
-            groups_fb[js_selected_group].iniciados += 1
-            if (!groups_fb.select) groups_fb.select = {};
-            groups_fb.select[UserID_cut] = js_selected_group;
+        
+        // Verificar que hay grupos
+        if (available_groups.length === 0) {
+            return undefined;
         }
+
+        let js_selected_group = available_groups[0];
+
+        for (let i = 1; i < available_groups.length; i++) {
+            let personas_en_actual = groups_fb[available_groups[i]].iniciados - groups_fb[available_groups[i]].falsos_positivos;
+            let personas_en_menor = groups_fb[js_selected_group].iniciados - groups_fb[js_selected_group].falsos_positivos;
+            
+            if (personas_en_actual < personas_en_menor) {
+                js_selected_group = available_groups[i];
+            }
+        }
+
+        groups_fb[js_selected_group].iniciados += 1
+        if (!groups_fb.select) groups_fb.select = {};
+        groups_fb.select[UserID_cut] = js_selected_group;
+        
         return groups_fb;  
     }).then((result)=>{
             if (!result.committed || !result.snapshot.exists()) {
-                console.error("La configuración no se ha cargado correctamente o no hay grupos disponibles.");
+                alert("La configuración no se ha cargado correctamente o no hay grupos disponibles.");
                 location.replace('index.html');
                 return;
             }
