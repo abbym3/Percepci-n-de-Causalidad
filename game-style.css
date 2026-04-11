@@ -263,7 +263,7 @@ body {
   top: 20%;
   left: 48%;
   transform: translate(-50%, -5%) scale(0);
-  font-size: calc(var(--gun-size) * 0.3);
+  font-size: calc(var(--gun-size) * 0.28);
   opacity: 0;
   pointer-events: none;
   z-index: 4;
