@@ -21,23 +21,13 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     }
 
     let CONFIG = {};
-    let groups_js = ['C1','C2','C3','C4','C5'];
     let selected_group = null;
 
     const groupsRef = ref(db, 'Configuración');
     runTransaction(groupsRef, (groups_fb) => {
         if (!groups_fb) return groups_fb;
-        let available_groups = [];
-        
-        for (const group_js of groups_js){
-            if(groups_fb[group_js].iniciados - groups_fb[group_js].falsos_positivos < 20)
-                available_groups.push(group_js)
-        }
-        
-        // Verificar que hay grupos
-        if (available_groups.length === 0) {
-            return undefined;
-        }
+
+        let available_groups = ['C1','C2','C3','C4','C5'];
 
         let js_selected_group = available_groups[0];
 
@@ -428,7 +418,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         resultsHead.style.color = isCorrect? "green":"red";
         resultsText.textContent = getResultText(isCorrect, average, score);
 
-        if(score < 3){
+        if(score < 100){
             setTimeout(() => {
                 canTriggerCE = true;
                 acceptingClicks = true;
