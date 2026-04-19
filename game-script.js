@@ -53,19 +53,19 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             }
             selected_group = result.snapshot.val().select[UserID_cut];
             if (selected_group === 'C1') {
-                CONFIG = assign_values_C(CONFIG, 5, 100, 15, 100, [0])
+                CONFIG = assign_values_C(CONFIG, 25, 500, 75, 500, [0])
             } 
             if (selected_group === 'C2') {
                 CONFIG = assign_values_C(CONFIG, 33, 500, 67, 500, [0])
             } 
             if (selected_group === 'C3') {
-                CONFIG = assign_values_C(CONFIG, 10, 100, 10, 100, [0])
+                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
             } 
             if (selected_group === 'C4') {
                 CONFIG = assign_values_C(CONFIG, 67, 500, 33, 500, [0])
             } 
             if (selected_group === 'C5') {
-                CONFIG = assign_values_C(CONFIG, 15, 100, 5, 100, [0])
+                CONFIG = assign_values_C(CONFIG, 75, 500, 25, 500, [0])
             } 
             //console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
