@@ -25,6 +25,33 @@
     <div class="loading-text">CARGANDO</div>
   </div>
 
+  <div id="consentScreen" class="hidden">
+    <div class="consent-card">
+      <h2>Carta de consentimiento informado</h2>
+      <p>
+        El presente estudio tiene como propósito evaluar la precisión con la que usted identifica
+        eventos causados por su propia conducta y eventos independientes de la misma. La tarea
+        tiene una duración aproximada de 25 minutos. Su participación es completamente voluntaria,
+        puede retirarse en cualquier momento sin necesidad de dar explicaciones y <strong>sin ninguna
+        consecuencia negativa</strong>.
+      </p>
+      <p>
+        La información recolectada será <strong>confidencial y anónima</strong>, por lo que no se incluirán datos
+        que permitan identificarle. Los resultados obtenidos se utilizarán únicamente con fines
+        académicos (i.e., en congresos, carteles y/o artículos académicos).
+      </p>
+      <p>
+        Al seleccionar "Acepto", confirma que ha leído esta información y que acepta participar
+        de manera voluntaria.
+      </p>
+      <label class="consent-check">
+        <input type="checkbox" id="consentCheckbox" />
+        Acepto participar
+      </label>
+      <button class="consent-btn" id="consentBtn" disabled>Acepto</button>
+    </div>
+  </div>
+
   <div class="container">
     <div class="logo">
       <img src="img/logo.png" alt="Logo">
@@ -63,6 +90,32 @@
       setTimeout(() => {
         document.getElementById('loadingScreen').classList.add('hidden');
         document.body.classList.remove('loading');
+
+        // NUEVO: mostrar consentimiento, ocultar formulario hasta que acepte
+        const consentScreen = document.getElementById('consentScreen');
+        const container = document.querySelector('.container');
+        const consentCheckbox = document.getElementById('consentCheckbox');
+        const consentBtn = document.getElementById('consentBtn');
+
+        container.style.display = 'none';
+        consentScreen.classList.remove('hidden');
+
+        consentCheckbox.addEventListener('change', () => {
+          if (consentCheckbox.checked) {
+            consentBtn.disabled = false;
+            consentBtn.classList.add('enabled');
+          } else {
+            consentBtn.disabled = true;
+            consentBtn.classList.remove('enabled');
+          }
+        });
+
+        consentBtn.addEventListener('click', () => {
+          if (!consentCheckbox.checked) return;
+          consentScreen.classList.add('hidden');
+          container.style.display = '';
+        });
+
       }, 500);
     });
   </script>
