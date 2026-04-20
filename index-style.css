@@ -260,22 +260,21 @@ body:not(.loading) .container {
   transition: opacity 0.5s ease-in;
 }
 
+/* Consent Screen */
 #consentScreen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+  min-height: 100%;
+  display: block;
+  padding: 1.5rem 1rem;
   box-sizing: border-box;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   z-index: 100;
   overflow-y: auto;
 }
+
 #consentScreen .consent-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
@@ -286,20 +285,24 @@ body:not(.loading) .container {
   max-width: 480px;
   width: 100%;
   font-family: 'Poppins', sans-serif;
+  margin: 0 auto;
 }
+
 #consentScreen .consent-card h2 {
-  font-size: 1.3rem;
+  font-size: 1.45rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
   color: #2d3748;
   text-align: center;
 }
+
 #consentScreen .consent-card p {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #4a5568;
   line-height: 1.7;
   margin-bottom: 1rem;
 }
+
 #consentScreen .consent-check {
   display: flex;
   align-items: center;
@@ -308,10 +311,11 @@ body:not(.loading) .container {
   margin: 1.5rem 0 1.8rem 0;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.97rem;
+  font-size: 1.1rem;
   color: #2d3748;
   font-weight: 600;
 }
+
 #consentScreen .consent-check input[type="checkbox"] {
   width: 20px;
   height: 20px;
@@ -319,6 +323,7 @@ body:not(.loading) .container {
   accent-color: #764ba2;
   flex-shrink: 0;
 }
+
 #consentScreen .consent-btn {
   width: 100%;
   padding: 16px;
@@ -334,20 +339,31 @@ body:not(.loading) .container {
   opacity: 0.5;
   transition: all 0.3s ease;
 }
+
 #consentScreen .consent-btn.enabled {
   opacity: 1;
   cursor: pointer;
 }
+
 #consentScreen .consent-btn.enabled:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
+
 #consentScreen.hidden {
   display: none;
 }
 
 @media (max-width: 600px) {
   #consentScreen .consent-card {
-    padding: 1.8rem 1.2rem;
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+  #consentScreen .consent-card h2 {
+    font-size: 1.2rem;
+  }
+  #consentScreen .consent-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
 }
