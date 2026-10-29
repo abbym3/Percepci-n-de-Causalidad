@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     runTransaction(groupsRef, (groups_fb) => {
         if (!groups_fb) return groups_fb;
 
-        let available_groups = ['C1','C2','C3','C4','C5'];
+        let available_groups = ['C1','C2','C3','C4','C5','C6','C7'];
 
         let js_selected_group = available_groups[0];
 
@@ -66,6 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
             } 
             if (selected_group === 'C5') {
                 CONFIG = assign_values_C(CONFIG, 75, 500, 25, 500, [0])
+            } 
+            if (selected_group === 'C6') {
+                CONFIG = assign_values_C(CONFIG, 12, 500, 88, 500, [0])
+            } 
+            if (selected_group === 'C7') {
+                CONFIG = assign_values_C(CONFIG, 4, 500, 96, 500, [0])
             } 
             //console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
