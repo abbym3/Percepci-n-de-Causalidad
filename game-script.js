@@ -11,23 +11,25 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // CONFIGURACIÓN DEL EXPERIMENTO 
     // ===============================
     
-    function assign_values_C(CONFIG, HUMAN_WIN_RANGE, HUMANDIE, MACHINE_WIN_RANGE, MACHINEDIE, DEMORA){
-        CONFIG.HUMAN_WIN_RANGE = HUMAN_WIN_RANGE;
-        CONFIG.HUMANDIE = HUMANDIE;
-        CONFIG.MACHINE_WIN_RANGE = MACHINE_WIN_RANGE;
-        CONFIG.MACHINEDIE = MACHINEDIE
-        CONFIG.DEMORA = DEMORA;
-        return CONFIG;
+    function assign_values_C(HUMAN_WIN_RANGE, HUMANDIE, MACHINE_WIN_RANGE, MACHINEDIE, DEMORA){
+        return {
+            HUMAN_WIN_RANGE,
+            HUMANDIE,
+            MACHINE_WIN_RANGE,
+            MACHINEDIE,
+            DEMORA
+        };
     }
 
     let CONFIG = {};
     let selected_group = null;
 
     const groupsRef = ref(db, 'Configuración');
+
     runTransaction(groupsRef, (groups_fb) => {
         if (!groups_fb) return groups_fb;
 
-        let available_groups = ['C1','C2','C3','C4','C5','C6','C7'];
+        let available_groups = Object.keys(groups_fb).filter(k => k !== 'select');
 
         let js_selected_group = available_groups[0];
 
@@ -45,40 +47,34 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         groups_fb.select[UserID_cut] = js_selected_group;
         
         return groups_fb;  
+
     }).then((result)=>{
             if (!result.committed || !result.snapshot.exists()) {
                 alert("La configuración no se ha cargado correctamente o no hay grupos disponibles.");
                 location.replace('index.html');
                 return;
             }
-            selected_group = result.snapshot.val().select[UserID_cut];
-            if (selected_group === 'C1') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C2') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C3') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C4') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C5') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C6') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
-            if (selected_group === 'C7') {
-                CONFIG = assign_values_C(CONFIG, 50, 500, 50, 500, [0])
-            } 
+
+            const data = result.snapshot.val();
+            selected_group = data.select[UserID_cut];
+            const grupoData = data[selected_group];
+
+            CONFIG = assign_values_C(
+                grupoData.HUMAN_WIN_RANGE,
+                grupoData.HUMANDIE,
+                grupoData.MACHINE_WIN_RANGE,
+                grupoData.MACHINEDIE,
+                grupoData.DEMORA
+            );
+
+            console.log("Configuración cargada:", CONFIG);
+
             //console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
             const selectRef = ref(db, `Configuración/select/${UserID_cut}`);
             remove(selectRef);
     });
-
+    
     // ==============================
     // VARIABLES
     // ==============================
