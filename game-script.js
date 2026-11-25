@@ -11,13 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     // CONFIGURACIÓN DEL EXPERIMENTO 
     // ===============================
     
-    function assign_values_C(HUMAN_WIN_RANGE, HUMANDIE, MACHINE_WIN_RANGE, MACHINEDIE, DEMORA){
+    function assign_values_C(HUMAN_WIN_RANGE, HUMANDIE, MACHINE_WIN_RANGE, MACHINEDIE, DEMORA, EPD_CED) {
         return {
             HUMAN_WIN_RANGE,
             HUMANDIE,
             MACHINE_WIN_RANGE,
             MACHINEDIE,
-            DEMORA
+            DEMORA,
+            EPD_CED
         };
     }
 
@@ -29,7 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     runTransaction(groupsRef, (groups_fb) => {
         if (!groups_fb) return groups_fb;
 
-        let available_groups = Object.keys(groups_fb).filter(k => k !== 'select');
+        let available_groups = Object.keys(groups_fb).filter(
+            k => k !== 'select' && k !== 'EPD_CED'
+        );
+        //console.log("Grupos disponibles:", available_groups);
 
         let js_selected_group = available_groups[0];
 
@@ -55,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 return;
             }
 
+            // Obterner los datos del grupo seleccionado y la configuración de EPD_CED
             const data = result.snapshot.val();
             selected_group = data.select[UserID_cut];
             const grupoData = data[selected_group];
@@ -64,11 +69,14 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 grupoData.HUMANDIE,
                 grupoData.MACHINE_WIN_RANGE,
                 grupoData.MACHINEDIE,
-                grupoData.DEMORA
+                grupoData.DEMORA,
+                data.EPD_CED
             );
+            
+            CONFIG.EPD_CED = Number(CONFIG.EPD_CED) || 1;  // 0, null, undefined o NaN -> 1 ensayo por demora
+            EPD_CED = CONFIG.EPD_CED; // Inicializar EPD_CED con el valor de la configuracion
 
-            console.log("Configuración cargada:", CONFIG);
-
+            //console.log("Configuración cargada:", CONFIG);
             //console.log("Configuración cargada. El juego iniciará en 30s.");
             setTimeout(iniciarJuego, 30000);
             const selectRef = ref(db, `Configuración/select/${UserID_cut}`);
@@ -101,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
     let trainingTime = 0;           // Tiempo total de entrenamiento (s, con 3 decimales)
     let i = 0;                      // Índice del bloque de 10s actual
     let j = 0;                      // Índice de la demora actual
+    let EPD_CED = 0;                // Ensayos por demora para CED
     let shotsPer10sInterval = [];   // Disparos por cada bloque de 10s
     let canTriggerCE = true;        // Solo si es true se pueden disparar CEI/CED nuevos
     let answerLocked = false;       // Bloquea los botones de respuesta después de un click
@@ -229,9 +238,18 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         acceptingClicks = false;
         worker.postMessage("pause");
 
-        // Aplicar demora solo en CED
+        //console.log(`Ensayos por demora restantes (EPD_CED): ${EPD_CED}`);
+
+        // Aplicar la demora actual y recien despues descontar el ensayo,
+        // para que cada demora reciba exactamente CONFIG.EPD_CED ensayos
         const d = CONFIG.DEMORA[j % CONFIG.DEMORA.length];
-        j++;
+        EPD_CED--;
+        if (EPD_CED <= 0) {
+            j++;
+            EPD_CED = CONFIG.EPD_CED; // Reinicia el contador de ensayos por demora
+        }
+
+        //console.log(`Demora aplicada: ${d}ms`);
 
         if (d > 0) {
             delayTime(d);
