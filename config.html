@@ -63,6 +63,7 @@
     .campos { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:18px 26px; }
     .campos label { display:flex; flex-direction:column; gap:7px; font-family:var(--mono); font-size:14px; letter-spacing:.04em; color:var(--muted); }
     .campos label.ancho { grid-column:span 2; }
+    .campos label .ayuda { font-size:12px; opacity:.7; letter-spacing:.02em; }
 
     input { font-family:var(--mono); font-size:18px; background:#0c0c0d; color:var(--text); border:1px solid #3a3a40; border-radius:4px; padding:9px 11px; width:100%; }
     input:focus { outline:none; border-color:var(--accent); }
@@ -139,6 +140,16 @@
     </div>
   </header>
 
+  <section id="globalConfig" class="grupo" hidden>
+    <h3>General <b>todos los grupos</b></h3>
+    <div class="campos">
+      <label class="ancho">EPD_CED
+        <span class="ayuda">Ensayos por demora: cuantos CED se repiten con cada valor de DEMORA antes de pasar al siguiente.</span>
+        <input type="number" id="EPD_CED" min="1" step="1" value="1" disabled>
+      </label>
+    </div>
+  </section>
+
   <div id="gruposContainer"></div>
 
   <section id="panelParticipantes" hidden>
@@ -164,6 +175,7 @@
     const RUTA_CONFIG = 'Configuración';
     const RUTA_PARTICIPANTES = 'participantes';   // fija: ya no se muestra en pantalla
     const GRUPOS_POR_DEFECTO = 1;                 // "Crear desde cero" empieza con un solo grupo
+    const EPD_POR_DEFECTO = 1;                    // 1 = una repeticion por demora (como antes de EPD_CED)
     let maxGrupos = 10;
 
     const CAMPOS = [
@@ -183,6 +195,7 @@
     let db = null, auth = null;
     let modo = 'cargando';      // cargando | consulta | edicion | nuevo | error
     let baseline = {};          // configuración tal como estaba en Firebase (normalizada)
+    let baselineEPD = null;     // Configuración/EPD_CED tal como estaba (null = no existe)
     let hayConfig = false;
     let horaConsulta = null;
     let sinGuardar = false;
@@ -249,6 +262,8 @@
       for (const k of Object.keys(data || {})) {
         if (/^C\d+$/.test(k)) baseline[k] = normalizarGrupo(data[k]);
       }
+      const epd = data ? data.EPD_CED : undefined;
+      baselineEPD = (epd === undefined || epd === null || isNaN(Number(epd))) ? null : Number(epd);
       hayConfig = Object.keys(baseline).length > 0;
       horaConsulta = new Date();
     }
@@ -280,6 +295,7 @@
 
     function setEditable(b) {
       cont.querySelectorAll('input').forEach(i => { i.disabled = !b; });
+      $('EPD_CED').disabled = !b;
       $('numGrupos').disabled = !b;
     }
 
@@ -293,12 +309,14 @@
       const n = Math.max(...idx);
       maxGrupos = Math.max(10, n);
       ajustarGrupos(n);
+      $('EPD_CED').value = baselineEPD === null ? EPD_POR_DEFECTO : baselineEPD;
       for (const g of Object.keys(baseline)) llenarGrupo(g.slice(1), baseline[g]);
     }
 
     function renderDefectos() {
       cont.innerHTML = '';
       maxGrupos = 10;
+      $('EPD_CED').value = baselineEPD === null ? EPD_POR_DEFECTO : baselineEPD;
       ajustarGrupos(GRUPOS_POR_DEFECTO);
     }
 
@@ -323,6 +341,16 @@
         }
       }
       return { obj, errores };
+    }
+
+    // EPD_CED no pertenece a ningun grupo: vive en Configuración/EPD_CED
+    function leerEPD() {
+      const txt = $('EPD_CED').value.trim();
+      const v = Number(txt);
+      if (txt === '' || isNaN(v) || !Number.isInteger(v) || v < 1) {
+        return { valor: null, errores: ['EPD_CED: usa un número entero de 1 o más'] };
+      }
+      return { valor: v, errores: [] };
     }
 
     function calcularDiff() {
@@ -354,12 +382,20 @@
           lineas.push(`${g}: se ELIMINARÁ el grupo completo`);
         }
       }
+      const rEPD = leerEPD();
+      errores.push(...rEPD.errores);
+      if (rEPD.valor !== null && rEPD.valor !== baselineEPD) {
+        cambios['EPD_CED'] = rEPD.valor;
+        lineas.push(`EPD_CED: ${baselineEPD === null ? 'sin definir' : baselineEPD} → ${rEPD.valor}`);
+      }
+
       return { n, form, errores, cambios, lineas, eliminados };
     }
 
     // ================= Modos y cabecera =================
     function actualizarCambios() {
       cont.querySelectorAll('.cambiado').forEach(el => el.classList.remove('cambiado'));
+      $('EPD_CED').classList.remove('cambiado');
       cont.querySelectorAll('.badge-nuevo').forEach(b => { b.hidden = true; });
       let n = 0;
 
@@ -367,6 +403,7 @@
         const d = calcularDiff();
         n = d.lineas.length;
         for (const [path, val] of Object.entries(d.cambios)) {
+          if (path === 'EPD_CED') { $('EPD_CED').classList.add('cambiado'); continue; }
           const [g, campo] = path.split('/');
           if (campo) {
             const c = CAMPOS.find(x => x.k === campo);
@@ -422,6 +459,7 @@
       $('btnGuardar').textContent  = modo === 'nuevo' ? 'Guardar configuración nueva' : 'Guardar cambios';
       $('btnCancelar').textContent = modo === 'nuevo' ? 'Cancelar y volver a la consulta' : 'Descartar cambios';
       setEditable(modo === 'edicion' || modo === 'nuevo');
+      $('globalConfig').hidden = !(modo === 'consulta' || modo === 'edicion' || modo === 'nuevo');
       $('lblNum').hidden = !(modo === 'edicion' || modo === 'nuevo');   // en consulta no se muestra
       actualizarCambios();
     }
@@ -477,6 +515,7 @@
     });
 
     cont.addEventListener('input', actualizarCambios);
+    $('EPD_CED').addEventListener('input', actualizarCambios);
     $('numGrupos').addEventListener('input', e => {
       const n = parseInt(e.target.value);
       if (!isNaN(n)) { ajustarGrupos(n); actualizarCambios(); }
@@ -486,6 +525,11 @@
     function verificar(fresco, cambios) {
       const fallos = [];
       for (const [path, val] of Object.entries(cambios)) {
+        if (path === 'EPD_CED') {
+          const act = fresco.EPD_CED;
+          if (Number(act) !== Number(val)) fallos.push(`EPD_CED: esperado ${val}, hay ${act === undefined ? 'nada' : act}`);
+          continue;
+        }
         const [g, campo] = path.split('/');
         const nodo = fresco[g];
         if (!campo) {
@@ -523,6 +567,8 @@
           const snap = await get(ref(db, RUTA_CONFIG));
           const actuales = snap.exists() ? Object.keys(snap.val()).filter(k => /^C\d+$/.test(k)) : [];
           for (const g of actuales) if (!(g in cambios)) cambios[g] = null;
+          const rEPDn = leerEPD();
+          if (rEPDn.valor !== null) cambios['EPD_CED'] = rEPDn.valor;
           textoConfirmar = actuales.length
             ? `Vas a REEMPLAZAR la configuración actual (${actuales.length} grupos) por una nueva de ${d.n} grupo${d.n === 1 ? '' : 's'}.`
             : `Se guardará una configuración nueva de ${d.n} grupo${d.n === 1 ? '' : 's'}.`;
