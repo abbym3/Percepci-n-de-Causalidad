@@ -144,8 +144,8 @@
     <h3>General <b>todos los grupos</b></h3>
     <div class="campos">
       <label class="ancho">EPD_CED
-        <span class="ayuda">Ensayos por demora: cuantos CED se repiten con cada valor de DEMORA antes de pasar al siguiente.</span>
-        <input type="number" id="EPD_CED" min="1" step="1" value="1" disabled>
+        <span class="ayuda">Ensayos por demora: cuantos CED se repiten con cada valor de DEMORA antes de pasar al siguiente. Con <b>0</b> no se aplica ninguna demora y DEMORA se ignora.</span>
+        <input type="number" id="EPD_CED" min="0" step="1" value="1" disabled>
       </label>
     </div>
   </section>
@@ -347,8 +347,8 @@
     function leerEPD() {
       const txt = $('EPD_CED').value.trim();
       const v = Number(txt);
-      if (txt === '' || isNaN(v) || !Number.isInteger(v) || v < 1) {
-        return { valor: null, errores: ['EPD_CED: usa un número entero de 1 o más'] };
+      if (txt === '' || isNaN(v) || !Number.isInteger(v) || v < 0) {
+        return { valor: null, errores: ['EPD_CED: usa un número entero de 0 o más (0 = sin demora)'] };
       }
       return { valor: v, errores: [] };
     }

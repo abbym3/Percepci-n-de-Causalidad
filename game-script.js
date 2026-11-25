@@ -73,8 +73,16 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
                 data.EPD_CED
             );
             
-            CONFIG.EPD_CED = Number(CONFIG.EPD_CED) || 1;  // 0, null, undefined o NaN -> 1 ensayo por demora
-            EPD_CED = CONFIG.EPD_CED; // Inicializar EPD_CED con el valor de la configuracion
+            // EPD_CED = 0 es la condicion sin demora; si el nodo falta o no es un
+            // entero valido se usa 1 (una repeticion por demora).
+            // Ojo: Number(null), Number('') y Number([]) dan 0, que ahora significa
+            // "sin demora", asi que hay que descartarlos antes de convertir.
+            const crudo = CONFIG.EPD_CED;
+            const esNumerico = typeof crudo === 'number' ||
+                               (typeof crudo === 'string' && crudo.trim() !== '');
+            const epd = esNumerico ? Number(crudo) : NaN;
+            CONFIG.EPD_CED = (Number.isInteger(epd) && epd >= 0) ? epd : 1;
+            EPD_CED = CONFIG.EPD_CED; // Ensayos que le quedan a la demora actual
 
             //console.log("Configuración cargada:", CONFIG);
             //console.log("Configuración cargada. El juego iniciará en 30s.");
@@ -238,17 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         acceptingClicks = false;
         worker.postMessage("pause");
 
-        //console.log(`Ensayos por demora restantes (EPD_CED): ${EPD_CED}`);
-
-        // Aplicar la demora actual y recien despues descontar el ensayo,
-        // para que cada demora reciba exactamente CONFIG.EPD_CED ensayos
-        const d = CONFIG.DEMORA[j % CONFIG.DEMORA.length];
-        EPD_CED--;
-        if (EPD_CED <= 0) {
-            j++;
-            EPD_CED = CONFIG.EPD_CED; // Reinicia el contador de ensayos por demora
-        }
-
+        const d = demoraActual();
         //console.log(`Demora aplicada: ${d}ms`);
 
         if (d > 0) {
@@ -256,6 +254,21 @@ document.addEventListener("DOMContentLoaded", function () {  // Esperar a que to
         } else {
             activateCE(0);
         }
+    }
+
+    // Demora que le toca a este CED, y avanza el contador de ensayos.
+    // CONFIG.EPD_CED = 0 -> condicion sin demora: siempre 0, DEMORA no se usa.
+    // CONFIG.EPD_CED = n -> cada valor de DEMORA se repite n veces antes de pasar al siguiente.
+    function demoraActual() {
+        if (CONFIG.EPD_CED === 0) return 0;
+
+        const d = CONFIG.DEMORA[j % CONFIG.DEMORA.length];
+        EPD_CED--;                                // se descuenta despues de usar la demora
+        if (EPD_CED <= 0) {
+            j++;                                  // pasar al siguiente valor de DEMORA
+            EPD_CED = CONFIG.EPD_CED;
+        }
+        return d;
     }
 
     function delayTime(d) {
